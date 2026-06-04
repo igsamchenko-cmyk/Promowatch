@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { classifyDeal, colors as refinedColors } from "./classifier.mjs";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dataDir = join(root, "data");
@@ -300,8 +301,8 @@ function parseCards(html, source) {
     const price = numberFrom(card.match(/class="sale-price">([^<]+)/)?.[1] || card.match(/data-analytics-price="([^"]+)/)?.[1]);
     if (!externalId || !name || !old || !price || price >= old) return null;
 
-    const category = normalizeCategory(name);
-    const subcategory = inferSubcategory(name, category);
+    const classification = classifyDeal(name);
+    const { category, subcategory } = classification;
     const end = parseSaleEnd(card);
     const oldRounded = round2(old);
     const priceRounded = round2(price);
@@ -321,7 +322,7 @@ function parseCards(html, source) {
       sourceUrl: source.url,
       productUrl: decodeHtml(card.match(/href="(https:\/\/de-deshevshe\.com\.ua\/product\/[^"]+)/)?.[1] || ""),
       image: decodeHtml(card.match(/<img[^>]+src="([^"]+)/)?.[1] || ""),
-      color: colors[category] || colors["Інше"],
+      color: refinedColors[category] || refinedColors["Інше"],
       importedVia: "de-deshevshe-ajax",
       discountPct: round2((1 - priceRounded / oldRounded) * 100)
     };
