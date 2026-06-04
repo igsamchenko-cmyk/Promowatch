@@ -9,6 +9,7 @@ const dataDir = join(root, "data");
 const sources = [
   { store: "АТБ", slug: "atbmarket.com", url: "https://de-deshevshe.com.ua/city/lviv/shop/atbmarket.com/" },
   { store: "Сільпо", slug: "silpo.ua", url: "https://de-deshevshe.com.ua/city/lviv/shop/silpo.ua/" },
+  { store: "Метро", slug: "metro.zakaz.ua", url: "https://de-deshevshe.com.ua/city/lviv/shop/metro.zakaz.ua/" },
   { store: "Рукавичка", slug: "rukavychka.ua", url: "https://de-deshevshe.com.ua/city/lviv/shop/rukavychka.ua/" },
   { store: "Близенько", slug: "blyzenko.ua", url: "https://de-deshevshe.com.ua/city/lviv/shop/blyzenko.ua/" },
   { store: "Ашан", slug: "auchan.zakaz.ua", url: "https://de-deshevshe.com.ua/city/lviv/shop/auchan.zakaz.ua/" }
