@@ -157,6 +157,12 @@
       background: var(--soft);
     }
 
+    .theme-toggle-btn.active {
+      background: var(--green-soft);
+      color: var(--green);
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
     .sun-icon { display: block; width: 16px; height: 16px; }
     .moon-icon { display: none; width: 16px; height: 16px; }
 
@@ -352,6 +358,26 @@
       display: flex;
       flex-direction: column;
       gap: 0;
+      max-height: 500px;
+      overflow: hidden;
+      transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.3s ease,
+                  padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  margin 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  border-color 0.3s ease,
+                  box-shadow 0.3s ease;
+    }
+
+    .filters.collapsed-panel {
+      max-height: 0 !important;
+      opacity: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      border-color: transparent !important;
+      pointer-events: none;
+      box-shadow: none !important;
     }
 
     .filters-main-row {
@@ -1228,6 +1254,11 @@
       </div>
       <div class="nav-actions">
         <span class="nav-badge">Львів</span>
+        <button id="toggleFiltersPanelBtn" class="theme-toggle-btn" aria-label="Показати/приховати пошукову панель" title="Показати/приховати пошукову панель">
+          <svg class="filter-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 15px; height: 15px;">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+          </svg>
+        </button>
         <button id="themeToggle" class="theme-toggle-btn" aria-label="Перемикач теми">
           <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="4"></circle>
@@ -2090,6 +2121,49 @@
     toggleFiltersBtn.addEventListener("click", () => {
       const isCollapsed = advancedFilters.classList.toggle("collapsed");
       toggleFiltersBtn.classList.toggle("active", !isCollapsed);
+    });
+
+    // Toggle Search/Filters panel visibility logic
+    const toggleFiltersPanelBtn = document.getElementById("toggleFiltersPanelBtn");
+    const filtersPanel = document.querySelector(".filters");
+    let isExplicitlyHidden = localStorage.getItem("filtersHidden") === "true";
+    let lastScrollY = window.scrollY;
+
+    if (isExplicitlyHidden) {
+      filtersPanel.classList.add("collapsed-panel");
+      toggleFiltersPanelBtn.classList.remove("active");
+    } else {
+      toggleFiltersPanelBtn.classList.add("active");
+    }
+
+    toggleFiltersPanelBtn.addEventListener("click", () => {
+      isExplicitlyHidden = !isExplicitlyHidden;
+      localStorage.setItem("filtersHidden", isExplicitlyHidden);
+      
+      if (isExplicitlyHidden) {
+        filtersPanel.classList.add("collapsed-panel");
+        toggleFiltersPanelBtn.classList.remove("active");
+      } else {
+        filtersPanel.classList.remove("collapsed-panel");
+        toggleFiltersPanelBtn.classList.add("active");
+      }
+    });
+
+    // Auto-collapse filters on scroll down, restore on scroll up
+    window.addEventListener("scroll", () => {
+      if (isExplicitlyHidden) return;
+      
+      const currentScrollY = window.scrollY;
+      
+      // Auto-collapse if scroll down past 100px
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        filtersPanel.classList.add("collapsed-panel");
+      } else if (currentScrollY < lastScrollY) {
+        // Auto-expand on scroll up
+        filtersPanel.classList.remove("collapsed-panel");
+      }
+      
+      lastScrollY = currentScrollY;
     });
 
     loadImportedData().finally(() => {
