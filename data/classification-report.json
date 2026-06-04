@@ -1,0 +1,200 @@
+{
+  "generatedAt": "2026-06-04T11:49:49.641Z",
+  "fixed": true,
+  "changedDeals": 0,
+  "before": {
+    "ok": true,
+    "totalDeals": 4031,
+    "issueCount": 0,
+    "issues": [
+      {
+        "name": "ice_cream_has_only_ice_cream",
+        "description": "У Заморозка -> Морозиво не повинні бути вареники, пельмені, піца чи овочі.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "frozen_dumplings_do_not_contain_ice_cream",
+        "description": "У варениках, пельменях і піці не повинно бути морозива.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "meat_has_no_fish",
+        "description": "Риба та морепродукти не повинні потрапляти у м'ясо.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "chicken_has_only_chicken",
+        "description": "Курятина не повинна містити рибу, індичку, свинину чи яловичину.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "hard_cheese_has_no_cottage_cheese",
+        "description": "Кисломолочний сир, сирки й молочні десерти не повинні бути у твердому сирі.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "coffee_tea_not_sweets",
+        "description": "Чай і кава не повинні залітати у солодощі через смакові слова.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "ice_cream_not_sweets",
+        "description": "Морозиво не повинно бути у солодощах.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "non_alcoholic_not_alcohol",
+        "description": "Безалкогольні напої не повинні бути в алкоголі.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "pet_food_not_meat_or_fish",
+        "description": "Корм із куркою, яловичиною чи лососем має лишатися товарами для тварин.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "personal_care_not_grocery",
+        "description": "Гігієна й побутова хімія не повинні бути у бакалії.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "grocery_not_obvious_dairy_or_drink",
+        "description": "Напої, сиркова паста й молочні продукти не повинні бути у бакалії; каші та пластівці є винятком.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "grocery_not_fish",
+        "description": "Кілька, тунець, шпроти та інша явна риба не повинні бути у бакалії.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "meat_not_pasta_snack_or_flavor",
+        "description": "Паста, вермішель, чипси й картопляне пюре зі смаком курки не повинні бути у м'ясі.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "produce_not_flavored_goods",
+        "description": "Смакові назви соусів, напоїв, чипсів, цукерок і йогуртів не повинні бути овочами чи фруктами.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "dairy_not_cereal_or_pasta",
+        "description": "Каші, пластівці, макарони й вермішель не повинні бути у молочці.",
+        "count": 0,
+        "examples": []
+      }
+    ]
+  },
+  "after": {
+    "ok": true,
+    "totalDeals": 4031,
+    "issueCount": 0,
+    "issues": [
+      {
+        "name": "ice_cream_has_only_ice_cream",
+        "description": "У Заморозка -> Морозиво не повинні бути вареники, пельмені, піца чи овочі.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "frozen_dumplings_do_not_contain_ice_cream",
+        "description": "У варениках, пельменях і піці не повинно бути морозива.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "meat_has_no_fish",
+        "description": "Риба та морепродукти не повинні потрапляти у м'ясо.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "chicken_has_only_chicken",
+        "description": "Курятина не повинна містити рибу, індичку, свинину чи яловичину.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "hard_cheese_has_no_cottage_cheese",
+        "description": "Кисломолочний сир, сирки й молочні десерти не повинні бути у твердому сирі.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "coffee_tea_not_sweets",
+        "description": "Чай і кава не повинні залітати у солодощі через смакові слова.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "ice_cream_not_sweets",
+        "description": "Морозиво не повинно бути у солодощах.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "non_alcoholic_not_alcohol",
+        "description": "Безалкогольні напої не повинні бути в алкоголі.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "pet_food_not_meat_or_fish",
+        "description": "Корм із куркою, яловичиною чи лососем має лишатися товарами для тварин.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "personal_care_not_grocery",
+        "description": "Гігієна й побутова хімія не повинні бути у бакалії.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "grocery_not_obvious_dairy_or_drink",
+        "description": "Напої, сиркова паста й молочні продукти не повинні бути у бакалії; каші та пластівці є винятком.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "grocery_not_fish",
+        "description": "Кілька, тунець, шпроти та інша явна риба не повинні бути у бакалії.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "meat_not_pasta_snack_or_flavor",
+        "description": "Паста, вермішель, чипси й картопляне пюре зі смаком курки не повинні бути у м'ясі.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "produce_not_flavored_goods",
+        "description": "Смакові назви соусів, напоїв, чипсів, цукерок і йогуртів не повинні бути овочами чи фруктами.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "dairy_not_cereal_or_pasta",
+        "description": "Каші, пластівці, макарони й вермішель не повинні бути у молочці.",
+        "count": 0,
+        "examples": []
+      }
+    ]
+  },
+  "changedExamples": []
+}
