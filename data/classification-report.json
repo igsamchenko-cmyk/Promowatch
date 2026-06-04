@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-04T17:43:37.149Z",
+  "generatedAt": "2026-06-04T18:06:53.045Z",
   "fixed": true,
   "changedDeals": 0,
   "before": {
@@ -28,6 +28,12 @@
       {
         "name": "chicken_has_only_chicken",
         "description": "Курятина не повинна містити рибу, індичку, свинину чи яловичину.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "hard_cheese_is_dairy_subcategory",
+        "description": "Твердий, плавлений і м'який сир мають бути підкатегоріями молочних продуктів, а не окремою верхньою категорією.",
         "count": 0,
         "examples": []
       },
@@ -125,6 +131,12 @@
       {
         "name": "chicken_has_only_chicken",
         "description": "Курятина не повинна містити рибу, індичку, свинину чи яловичину.",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "hard_cheese_is_dairy_subcategory",
+        "description": "Твердий, плавлений і м'який сир мають бути підкатегоріями молочних продуктів, а не окремою верхньою категорією.",
         "count": 0,
         "examples": []
       },

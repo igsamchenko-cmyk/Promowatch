@@ -1,6 +1,5 @@
 export const colors = {
   "Молочні": "#245fbd",
-  "Твердий сир": "#d7a018",
   "Ковбаси": "#b12f3b",
   "М'ясо": "#d7352a",
   "Яйця": "#d7a018",
@@ -79,7 +78,7 @@ export function inferCategory(name) {
   if (has(text, rules.nonAlcoholic)) return "Напої";
   if (has(text, rules.plantDrink)) return "Напої";
   if (has(text, rules.cottageDairy)) return "Молочні";
-  if (isHardCheeseProduct(text)) return "Твердий сир";
+  if (isHardCheeseProduct(text)) return "Молочні";
   if (has(text, rules.alcohol)) return "Алкоголь";
   if (has(text, rules.fish)) return "Риба та морепродукти";
   if (has(text, rules.iceCream) || has(text, rules.frozenDumplings) || has(text, rules.frozenOther)) return "Заморозка";
@@ -101,6 +100,17 @@ export function inferCategory(name) {
 export function inferSubcategory(name, category) {
   const text = normalizeText(name);
   if (category === "Молочні") {
+    if (has(text, rules.cottageDairy)) {
+      if (/сирок|сирков|паста сирков|десерт|пудинг|коктейль/.test(text)) return "Сирки та десерти";
+      if (/сир кисломол|творог|кисломолочн[а-яіїєґ]* сир/.test(text)) return "Кисломолочний сир";
+    }
+    if (isHardCheeseProduct(text)) {
+      if (/моцарел/.test(text)) return "Моцарела";
+      if (/сулугун/.test(text)) return "Сулугуні";
+      if (/плавлен/.test(text)) return "Плавлений сир";
+      if (/камамбер|(^|\s)брі(\s|$)|крем-сир|philadelphia|фета|фелата/.test(text)) return "М'які сири";
+      return "Твердий/напівтвердий сир";
+    }
     if (/айран|(^|\s)тан(\s|$)|напій кисломол|лактонія|actimel/.test(text)) return "Кисломолочні напої";
     if (/закваск/.test(text)) return "Закваски";
     if (/йогурт/.test(text)) return "Йогурти";
@@ -109,17 +119,8 @@ export function inferSubcategory(name, category) {
     if (/вершк/.test(text)) return "Вершки";
     if (/масло(?!.*тіла)/.test(text)) return "Масло";
     if (/згущ/.test(text)) return "Згущене молоко";
-    if (/сирок|сирков|паста сирков|десерт|пудинг|коктейль/.test(text)) return "Сирки та десерти";
-    if (/сир кисломол|творог|кисломолочн[а-яіїєґ]* сир/.test(text)) return "Кисломолочний сир";
     if (/молоко/.test(text)) return "Молоко";
     return "Інша молочка";
-  }
-  if (category === "Твердий сир") {
-    if (/моцарел/.test(text)) return "Моцарела";
-    if (/сулугун/.test(text)) return "Сулугуні";
-    if (/плавлен/.test(text)) return "Плавлений сир";
-    if (/камамбер|(^|\s)брі(\s|$)|крем-сир|philadelphia|фета|фелата/.test(text)) return "М'які сири";
-    return "Твердий/напівтвердий сир";
   }
   if (category === "Ковбаси") {
     if (/сосиск|сардель/.test(text)) return "Сосиски та сардельки";
