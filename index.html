@@ -2127,7 +2127,6 @@
     const toggleFiltersPanelBtn = document.getElementById("toggleFiltersPanelBtn");
     const filtersPanel = document.querySelector(".filters");
     let isExplicitlyHidden = localStorage.getItem("filtersHidden") === "true";
-    let lastScrollY = window.scrollY;
 
     if (isExplicitlyHidden) {
       filtersPanel.classList.add("collapsed-panel");
@@ -2146,24 +2145,22 @@
       } else {
         filtersPanel.classList.remove("collapsed-panel");
         toggleFiltersPanelBtn.classList.add("active");
+        // Scroll to top smoothly so filters are fully visible and layout is stable
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     });
 
-    // Auto-collapse filters on scroll down, restore on scroll up
+    // Auto-collapse filters on scroll down, restore ONLY when scrolling back near the top (< 30px)
     window.addEventListener("scroll", () => {
       if (isExplicitlyHidden) return;
       
       const currentScrollY = window.scrollY;
       
-      // Auto-collapse if scroll down past 100px
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+      if (currentScrollY > 120) {
         filtersPanel.classList.add("collapsed-panel");
-      } else if (currentScrollY < lastScrollY) {
-        // Auto-expand on scroll up
+      } else if (currentScrollY < 30) {
         filtersPanel.classList.remove("collapsed-panel");
       }
-      
-      lastScrollY = currentScrollY;
     });
 
     loadImportedData().finally(() => {
