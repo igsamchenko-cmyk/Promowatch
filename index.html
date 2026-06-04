@@ -1,0 +1,1274 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PromoWatch UA</title>
+  <style>
+    :root {
+      --ink: #16212b;
+      --muted: #687682;
+      --line: #dbe3e9;
+      --surface: #ffffff;
+      --soft: #f4f7f9;
+      --green: #15845d;
+      --green-soft: #e8f5ef;
+      --red: #d83a31;
+      --red-soft: #fdecea;
+      --blue: #245fbd;
+      --amber: #bd7a14;
+      --violet: #7a4b91;
+      --shadow: 0 16px 44px rgba(22, 33, 43, 0.09);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #edf2f5;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button, input, select { font: inherit; }
+
+    button { cursor: pointer; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 22px 18px;
+      background: var(--surface);
+      border-right: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+      font-weight: 850;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      font-weight: 900;
+    }
+
+    .side-title {
+      margin: 22px 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .category-list,
+    .store-list {
+      display: grid;
+      gap: 7px;
+    }
+
+    .category-button {
+      width: 100%;
+      min-height: 40px;
+      border: 0;
+      border-radius: 8px;
+      padding: 9px 11px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: #35424e;
+      background: transparent;
+      text-align: left;
+    }
+
+    .category-button.active {
+      background: var(--green-soft);
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    .store-pill {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: #4a5661;
+      font-size: 13px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex: 0 0 10px;
+    }
+
+    main {
+      min-width: 0;
+      padding: 22px;
+    }
+
+    .hero {
+      min-height: 250px;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 28px;
+      color: #fff;
+      background-image:
+        linear-gradient(90deg, rgba(8, 15, 20, 0.86), rgba(8, 15, 20, 0.5), rgba(8, 15, 20, 0.06)),
+        url("assets/grocery-dashboard-banner.png");
+      background-size: cover;
+      background-position: center;
+      box-shadow: var(--shadow);
+    }
+
+    .hero h1 {
+      margin: 0;
+      max-width: 830px;
+      font-size: clamp(31px, 5vw, 58px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 680px;
+      margin: 12px 0 0;
+      color: rgba(255, 255, 255, 0.87);
+      font-size: 16px;
+    }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .sync {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .chip {
+      min-height: 32px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 6px 10px;
+      color: #44505b;
+      background: var(--surface);
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .chip.good {
+      color: var(--green);
+      background: var(--green-soft);
+      border-color: #c9e9d8;
+    }
+
+    .ghost-button {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      min-height: 36px;
+      padding: 7px 12px;
+      color: #33404b;
+      background: var(--surface);
+      font-weight: 750;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .metric,
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: 0 8px 28px rgba(22, 33, 43, 0.045);
+    }
+
+    .metric {
+      min-height: 104px;
+      padding: 14px;
+    }
+
+    .metric span {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 27px;
+      line-height: 1;
+    }
+
+    .metric small {
+      display: block;
+      margin-top: 9px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .filters {
+      padding: 14px;
+      display: grid;
+      grid-template-columns: minmax(220px, 1.5fr) repeat(6, minmax(130px, 1fr));
+      gap: 10px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 11px;
+      outline: none;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(36, 95, 189, 0.13);
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(330px, 0.86fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .panel-head {
+      padding: 15px 16px 11px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .panel-head h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+
+    .badge {
+      white-space: nowrap;
+      border-radius: 8px;
+      padding: 6px 9px;
+      color: var(--green);
+      background: var(--green-soft);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    .table-footer {
+      min-height: 54px;
+      padding: 10px 16px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .table-footer .ghost-button {
+      min-height: 34px;
+      padding: 6px 11px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 920px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px 16px;
+      border-top: 1px solid var(--line);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      color: var(--muted);
+      background: #f9fbfc;
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    td {
+      font-size: 14px;
+    }
+
+    .product {
+      min-width: 265px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .thumb {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 38px;
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .product-title {
+      font-weight: 850;
+      line-height: 1.25;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .store-name {
+      font-weight: 800;
+    }
+
+    .old {
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+
+    .price {
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .discount {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 8px;
+      padding: 5px 8px;
+      color: var(--red);
+      background: var(--red-soft);
+      font-weight: 900;
+    }
+
+    .source-state {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .select-row {
+      width: 34px;
+    }
+
+    .compare-check {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--green);
+    }
+
+    .side-stack {
+      display: grid;
+      gap: 16px;
+    }
+
+    .cards {
+      display: grid;
+      gap: 12px;
+      padding: 0 14px 14px;
+    }
+
+    .deal-card,
+    .compare-card,
+    .source-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .deal-card {
+      display: grid;
+      gap: 9px;
+    }
+
+    .deal-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .deal-top strong {
+      line-height: 1.25;
+    }
+
+    .bar {
+      height: 8px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #e8edf1;
+    }
+
+    .bar span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), var(--amber));
+    }
+
+    .compare-list,
+    .source-list {
+      display: grid;
+      gap: 10px;
+      padding: 0 14px 14px;
+    }
+
+    .compare-card {
+      display: grid;
+      gap: 5px;
+    }
+
+    .compare-card strong {
+      line-height: 1.25;
+    }
+
+    .empty {
+      margin: 0 14px 14px;
+      padding: 13px;
+      border-radius: 8px;
+      color: var(--muted);
+      background: #f8fafb;
+      border: 1px dashed var(--line);
+      line-height: 1.45;
+    }
+
+    .source-card {
+      display: grid;
+      gap: 6px;
+    }
+
+    .source-card b {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      display: inline-block;
+    }
+
+    @media (max-width: 1320px) {
+      .filters {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      .filters .ghost-button {
+        min-height: 44px;
+      }
+    }
+
+    @media (max-width: 1160px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        position: static;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .category-list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .store-list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 660px) {
+      main {
+        padding: 14px;
+      }
+      .hero {
+        min-height: 300px;
+        padding: 18px;
+      }
+      .topline {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .metrics,
+      .filters,
+      .category-list,
+      .store-list {
+        grid-template-columns: 1fr;
+      }
+      .panel-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .metric strong {
+        font-size: 23px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">₴</div>
+        <span>PromoWatch UA</span>
+      </div>
+
+      <div class="side-title">Категорії</div>
+      <nav class="category-list" id="categoryNav"></nav>
+
+      <div class="side-title">Мережі</div>
+      <div class="store-list" id="storeList"></div>
+    </aside>
+
+    <main>
+      <section class="hero">
+        <div>
+          <h1>Акційні ціни в магазинах України</h1>
+          <p>Робочий дашборд для порівняння товарів за категоріями, містами, мережами, датою завершення акції та ціною за одиницю.</p>
+        </div>
+      </section>
+
+      <div class="topline">
+        <div class="sync">
+          <span class="chip good" id="syncStatus"><span class="status-dot"></span> Відкриті дані завантажено</span>
+          <span class="chip" id="syncCity">Місто: Львів</span>
+          <span class="chip" id="syncSource">Імпорт: локальний seed</span>
+          <span class="chip" id="syncFreshness">Актуальність: сьогодні</span>
+          <span class="chip" id="activeFilters">Фільтр: усі категорії</span>
+        </div>
+        <button class="ghost-button" id="resetButton">Скинути фільтри</button>
+      </div>
+
+      <section class="metrics">
+        <div class="metric">
+          <span>Позицій у вибірці</span>
+          <strong id="metricProducts">0</strong>
+          <small>за активними фільтрами</small>
+        </div>
+        <div class="metric">
+          <span>Середня знижка</span>
+          <strong id="metricDiscount">0%</strong>
+          <small>порівняно зі старою ціною</small>
+        </div>
+        <div class="metric">
+          <span>Найкраща ціна</span>
+          <strong id="metricBest">0 грн</strong>
+          <small id="metricBestLabel">оберіть категорію або місто</small>
+        </div>
+        <div class="metric">
+          <span>До завершення</span>
+          <strong id="metricEnding">немає дати</strong>
+          <small id="metricEndingLabel">найближча активна акція</small>
+        </div>
+      </section>
+
+      <section class="filters panel">
+        <div class="field">
+          <label for="search">Пошук</label>
+          <input id="search" type="search" placeholder="Товар, магазин або категорія">
+        </div>
+        <div class="field">
+          <label for="cityFilter">Місто</label>
+          <select id="cityFilter"></select>
+        </div>
+        <div class="field">
+          <label for="storeFilter">Мережа</label>
+          <select id="storeFilter"></select>
+        </div>
+        <div class="field">
+          <label for="categoryFilter">Категорія</label>
+          <select id="categoryFilter"></select>
+        </div>
+        <div class="field">
+          <label for="subcategoryFilter">Підкатегорія</label>
+          <select id="subcategoryFilter"></select>
+        </div>
+        <div class="field">
+          <label for="sortFilter">Сортування</label>
+          <select id="sortFilter">
+            <option value="discount">Найбільша знижка</option>
+            <option value="unit">Найнижча ціна за одиницю</option>
+            <option value="price">Найнижча акційна ціна</option>
+            <option value="ending">Скоро завершується</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="minDiscount">Мін. знижка</label>
+          <select id="minDiscount">
+            <option value="0">Будь-яка</option>
+            <option value="15">від 15%</option>
+            <option value="25">від 25%</option>
+            <option value="30">від 30%</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="main-grid">
+        <div class="panel" id="resultsPanel">
+          <div class="panel-head">
+            <h2>Порівняння акцій</h2>
+            <span class="badge" id="resultCount">0 позицій</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th class="select-row">✓</th>
+                  <th>Товар</th>
+                  <th>Мережа</th>
+                  <th>Місто</th>
+                  <th>Стара</th>
+                  <th>Акційна</th>
+                  <th>За одиницю</th>
+                  <th>Знижка</th>
+                  <th>Діє до</th>
+                </tr>
+              </thead>
+              <tbody id="dealsTable"></tbody>
+            </table>
+          </div>
+          <div class="table-footer">
+            <span id="tableShown">Показано 0 з 0</span>
+            <button class="ghost-button" id="loadMoreRows">Показати ще</button>
+          </div>
+        </div>
+
+        <div class="side-stack">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Найкращі пропозиції</h2>
+              <span class="badge">сьогодні</span>
+            </div>
+            <div class="cards" id="bestDeals"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Моє порівняння</h2>
+              <span class="badge" id="compareCount">0</span>
+            </div>
+            <div class="compare-list" id="compareList"></div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const deals = [
+      { id: 1, name: "Куряче стегно", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "М'ясо", store: "Сільпо", city: "Львів", old: 12.87, price: 11.58, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#d7352a" },
+      { id: 2, name: "Мандарин Єгипет", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Овочі та фрукти", store: "Сільпо", city: "Львів", old: 6.99, price: 6, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#16845c" },
+      { id: 3, name: "Масло солодковершкове «Молокія» екстра 82%", size: "180 г", unitAmount: 0.18, unitLabel: "кг", category: "Молочні", store: "Сільпо", city: "Львів", old: 134, price: 79.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#245fbd" },
+      { id: 4, name: "Сир кисломолочний Біло 5%", size: "1000 г", unitAmount: 1, unitLabel: "кг", category: "Молочні", store: "Сільпо", city: "Львів", old: 249, price: 154, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#245fbd" },
+      { id: 5, name: "Тунець «Премія» подрібнений у розсолі", size: "185 г", unitAmount: 0.185, unitLabel: "кг", category: "Консерви", store: "Сільпо", city: "Львів", old: 90.49, price: 44.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
+      { id: 6, name: "Сирок глазурований Ферма зі смаком ванілі 23%", size: "36 г", unitAmount: 0.036, unitLabel: "кг", category: "Молочні", store: "Сільпо", city: "Львів", old: 19.49, price: 11.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#245fbd" },
+      { id: 7, name: "Сир «Премія» Моцарела 45%", size: "180 г", unitAmount: 0.18, unitLabel: "кг", category: "Твердий сир", store: "Сільпо", city: "Львів", old: 99, price: 49.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#d7a018" },
+      { id: 8, name: "Сир «Премія» Сулугуні 45%", size: "180 г", unitAmount: 0.18, unitLabel: "кг", category: "Твердий сир", store: "Сільпо", city: "Львів", old: 99, price: 49.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#d7a018" },
+      { id: 9, name: "Салат листовий Зелена Країна мікс з машем", size: "120 г", unitAmount: 0.12, unitLabel: "кг", category: "Овочі та фрукти", store: "Сільпо", city: "Львів", old: 71.99, price: 56.87, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#16845c" },
+      { id: 10, name: "Пиво Kronenbourg «Бланк» з/б", size: "0,33 л", unitAmount: 0.33, unitLabel: "л", category: "Алкоголь", store: "Сільпо", city: "Львів", old: 33.49, price: 22.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#8a3d74" },
+      { id: 11, name: "Молоко згущене «Первомайський МКК» 8,5%", size: "440 г", unitAmount: 0.44, unitLabel: "кг", category: "Молочні", store: "Сільпо", city: "Львів", old: 96.99, price: 59.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#245fbd" },
+      { id: 12, name: "Салат листовий Зелена Країна мікс зі шпинатом", size: "120 г", unitAmount: 0.12, unitLabel: "кг", category: "Овочі та фрукти", store: "Сільпо", city: "Львів", old: 71.99, price: 56.87, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#16845c" },
+      { id: 13, name: "Молоко пастеризоване «Ферма» 2,5%", size: "840 г", unitAmount: 0.84, unitLabel: "кг", category: "Молочні", store: "Сільпо", city: "Львів", old: 67.49, price: 46.9, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#245fbd" },
+      { id: 14, name: "Ананас шматочками «Премія» в легкому сиропі", size: "565 г", unitAmount: 0.565, unitLabel: "кг", category: "Консерви", store: "Сільпо", city: "Львів", old: 91.49, price: 76.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
+      { id: 15, name: "Ковбаса по-домашньому охолоджена", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Ковбаси", store: "Сільпо", city: "Львів", old: 24.62, price: 17.97, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#b12f3b" },
+      { id: 16, name: "Сир Premialle Фелата 45%", size: "160 г", unitAmount: 0.16, unitLabel: "кг", category: "Твердий сир", store: "Сільпо", city: "Львів", old: 75.49, price: 49.9, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#d7a018" },
+      { id: 17, name: "Ковбаски Mr.Grill «Дюссельдорфські» н/к", size: "330 г", unitAmount: 0.33, unitLabel: "кг", category: "Ковбаси", store: "Сільпо", city: "Львів", old: 169, price: 109, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#b12f3b" },
+      { id: 18, name: "Насіння соняшника Сільпо смугасте смажене солоне", size: "70 г", unitAmount: 0.07, unitLabel: "кг", category: "Снеки", store: "Сільпо", city: "Львів", old: 34.99, price: 22.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#5f493f" },
+      { id: 19, name: "Корм для котів PreVital з куркою у желе", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Товари для тварин", store: "Сільпо", city: "Львів", old: 20.99, price: 12.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
+      { id: 20, name: "Олія оливкова «Премія» Extra Virgin", size: "250 мл", unitAmount: 0.25, unitLabel: "л", category: "Бакалія", store: "Сільпо", city: "Львів", old: 239, price: 145, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#d49a21" },
+      { id: 21, name: "Віскі Jack Daniels", size: "1 л", unitAmount: 1, unitLabel: "л", category: "Алкоголь", store: "Сільпо", city: "Львів", old: 1199, price: 899, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#8a3d74" },
+      { id: 22, name: "Корм для котів PreVital з яловичиною у желе", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Товари для тварин", store: "Сільпо", city: "Львів", old: 20.99, price: 12.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
+      { id: 23, name: "Корм для котів E-Zoo з індичкою", size: "85 г", unitAmount: 0.085, unitLabel: "кг", category: "Товари для тварин", store: "Сільпо", city: "Львів", old: 28.99, price: 21.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
+      { id: 24, name: "Корм для котів PreVital з лососем у соусі", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Товари для тварин", store: "Сільпо", city: "Львів", old: 20.99, price: 12.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
+      { id: 25, name: "Корм для котів E-Zoo з куркою", size: "85 г", unitAmount: 0.085, unitLabel: "кг", category: "Товари для тварин", store: "Сільпо", city: "Львів", old: 28.99, price: 21.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
+      { id: 26, name: "Крем-сир «Премія» 20%", size: "135 г", unitAmount: 0.135, unitLabel: "кг", category: "Молочні", store: "Сільпо", city: "Львів", old: 79.99, price: 49.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#245fbd" },
+      { id: 27, name: "Корм для котів PreVital з кроликом та індичкою", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Товари для тварин", store: "Сільпо", city: "Львів", old: 20.99, price: 12.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
+      { id: 28, name: "Набір Home&Care ножі 3 шт. + дошка", size: "1 шт", unitAmount: 1, unitLabel: "шт", category: "Товари для дому", store: "Сільпо", city: "Львів", old: 999, price: 499, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#384551" },
+      { id: 29, name: "Тунець Сільпо смугастий в олії", size: "160 г", unitAmount: 0.16, unitLabel: "кг", category: "Консерви", store: "Сільпо", city: "Львів", old: 249, price: 149, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
+      { id: 30, name: "Крем-гель для душу Dalas Ягідний мікс + Бергамот", size: "2*500 г", unitAmount: 1, unitLabel: "кг", category: "Гігієна", store: "Сільпо", city: "Львів", old: 299, price: 119, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#245fbd" },
+      { id: 31, name: "Тунець Сільпо смугастий у власному соку", size: "160 г", unitAmount: 0.16, unitLabel: "кг", category: "Консерви", store: "Сільпо", city: "Львів", old: 249, price: 149, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
+      { id: 32, name: "Томат Azura Чері сливка", size: "250 г", unitAmount: 0.25, unitLabel: "кг", category: "Овочі та фрукти", store: "Сільпо", city: "Львів", old: 154, price: 123.2, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#16845c" },
+      { id: 33, name: "Огірок екстра", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Овочі та фрукти", store: "Сільпо", city: "Львів", old: 13.4, price: 11.39, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#16845c" },
+      { id: 34, name: "Смажена картопля з часником", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Готові страви", store: "Сільпо", city: "Львів", old: 10.89, price: 8.71, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#d49a21" },
+      { id: 35, name: "Плов з куркою", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Готові страви", store: "Сільпо", city: "Львів", old: 33.9, price: 19.9, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#d49a21" },
+      { id: 36, name: "Яблуко Гренні Сміт відбірне", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Овочі та фрукти", store: "Сільпо", city: "Львів", old: 14.4, price: 12.82, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#16845c" },
+      { id: 37, name: "Багет Французький ВВ", size: "250 г", unitAmount: 0.25, unitLabel: "кг", category: "Хліб", store: "Сільпо", city: "Львів", old: 45.49, price: 29.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#b97811" },
+      { id: 38, name: "Індиче філе", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "М'ясо", store: "Сільпо", city: "Львів", old: 40.07, price: 32.05, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#d7352a" },
+      { id: 39, name: "Арахіс смажений солоний", size: "500 г", unitAmount: 0.5, unitLabel: "кг", category: "Снеки", store: "Сільпо", city: "Львів", old: 129, price: 104.49, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#5f493f" },
+      { id: 40, name: "Куряча четвертина гриль", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Готові страви", store: "Сільпо", city: "Львів", old: 30.9, price: 24.72, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#d49a21" },
+      { id: 41, name: "Картопля Baby LOU свіжа мита size M", size: "900 г", unitAmount: 0.9, unitLabel: "кг", category: "Овочі та фрукти", store: "Сільпо", city: "Львів", old: 67.99, price: 50.31, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#16845c" },
+      { id: 42, name: "Тістечко Медово-горіхове", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Солодощі", store: "Сільпо", city: "Львів", old: 42.9, price: 30.03, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#7c4a88" },
+      { id: 43, name: "Вода мінеральна «Набеглаві»", size: "1 л", unitAmount: 1, unitLabel: "л", category: "Напої", store: "Сільпо", city: "Львів", old: 60.99, price: 44.9, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#245fbd" },
+      { id: 44, name: "Ананас преміум", size: "1 шт", unitAmount: 1, unitLabel: "шт", category: "Овочі та фрукти", store: "Сільпо", city: "Львів", old: 317.9, price: 282.93, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#16845c" }
+    ];
+
+    const sourceHealth = [
+      { name: "Сільпо Львів", state: "Офіційно", detail: "44 позиції з першого відкритого списку silpo.ua/offers/city/lviv" },
+      { name: "АТБ Львів", state: "Є 727 позицій", detail: "Де Дешевше показує 727 акцій; потрібен імпорт пагінації" },
+      { name: "Рукавичка Львів", state: "PDF", detail: "є листівки PDF, потрібен парсер каталогу" },
+      { name: "Близенько Львів", state: "Каталог", detail: "є каталоги, потрібен імпорт сторінок/зображень" },
+      { name: "Ашан Львів", state: "Потрібен конектор", detail: "ціни залежать від магазину/доставки" }
+    ];
+
+    const all = "Усі";
+    const selected = new Set();
+    const pageSize = 250;
+    let visibleLimit = pageSize;
+    const controls = {
+      search: document.querySelector("#search"),
+      city: document.querySelector("#cityFilter"),
+      store: document.querySelector("#storeFilter"),
+      category: document.querySelector("#categoryFilter"),
+      subcategory: document.querySelector("#subcategoryFilter"),
+      sort: document.querySelector("#sortFilter"),
+      minDiscount: document.querySelector("#minDiscount")
+    };
+
+    function unique(values) {
+      return [all, ...Array.from(new Set(values)).sort((a, b) => a.localeCompare(b, "uk"))];
+    }
+
+    function inferSubcategory(item) {
+      const name = item.name.toLowerCase();
+      const category = item.category;
+      if (category === "Молочні") {
+        if (/йогурт/.test(name)) return "Йогурти";
+        if (/кефір/.test(name)) return "Кефір";
+        if (/сметан/.test(name)) return "Сметана";
+        if (/масло/.test(name)) return "Масло";
+        if (/сирок|десерт|пудинг/.test(name)) return "Сирки та десерти";
+        if (/творог|кисломол/.test(name)) return "Кисломолочний сир";
+        if (/молок/.test(name)) return "Молоко";
+        return "Інша молочка";
+      }
+      if (category === "Твердий сир") {
+        if (/моцарел/.test(name)) return "Моцарела";
+        if (/сулугун/.test(name)) return "Сулугуні";
+        if (/плавлен/.test(name)) return "Плавлений сир";
+        if (/камамбер|брі|крем-сир|philadelphia/.test(name)) return "М'які сири";
+        return "Твердий/напівтвердий сир";
+      }
+      if (category === "Ковбаси") {
+        if (/сосиск|сардель/.test(name)) return "Сосиски та сардельки";
+        if (/варен/.test(name)) return "Варені ковбаси";
+        if (/сирокоп|салям|с\/к|сиров/.test(name)) return "Сирокопчені ковбаси";
+        if (/шинка|бекон|балик/.test(name)) return "Шинка та бекон";
+        return "Інші ковбаси";
+      }
+      if (category === "М'ясо") {
+        if (/куряч|курк|стегн|філе/.test(name)) return "Курятина";
+        if (/індич/.test(name)) return "Індичка";
+        if (/свин/.test(name)) return "Свинина";
+        if (/ялович/.test(name)) return "Яловичина";
+        return "Інше м'ясо";
+      }
+      if (category === "Кава та чай") {
+        if (/кава/.test(name)) return "Кава";
+        if (/чай/.test(name)) return "Чай";
+        return "Інше";
+      }
+      if (category === "Напої") {
+        if (/вода/.test(name)) return "Вода";
+        if (/сік|нектар/.test(name)) return "Соки та нектари";
+        return "Інші напої";
+      }
+      if (category === "Овочі та фрукти") {
+        if (/яблу|банан|мандар|ананас|груша|лохин|фрукт/.test(name)) return "Фрукти";
+        if (/огір|томат|помід|картоп|салат|овоч/.test(name)) return "Овочі";
+        return "Інше";
+      }
+      if (category === "Алкоголь") {
+        if (/пиво/.test(name)) return "Пиво";
+        if (/вино|віно|шампан|ігрист|брют|просек|prosecco|frizzante/.test(name)) return "Вино";
+        if (/віскі/.test(name)) return "Віскі";
+        if (/горіл/.test(name)) return "Горілка";
+        return "Інший алкоголь";
+      }
+      if (category === "Солодощі") {
+        if (/шокол/.test(name)) return "Шоколад";
+        if (/печив|вафл/.test(name)) return "Печиво та вафлі";
+        if (/цукер|ірис/.test(name)) return "Цукерки";
+        if (/тістеч|торт/.test(name)) return "Торти та тістечка";
+        if (/батончик|драже/.test(name)) return "Батончики та драже";
+        if (/морозив/.test(name)) return "Морозиво";
+        return "Інші солодощі";
+      }
+      if (category === "Заморозка") {
+        if (/морозив/.test(name)) return "Морозиво";
+        if (/пельмен/.test(name)) return "Пельмені";
+        if (/вареник/.test(name)) return "Вареники";
+        if (/піца/.test(name)) return "Піца";
+        if (/овоч|суміш|броколі|картоп/.test(name)) return "Заморожені овочі";
+        return "Інша заморозка";
+      }
+      if (category === "Бакалія") {
+        if (/макарон|спагеті|паста(?!.*зубн)/.test(name)) return "Макарони";
+        if (/круп|греч|(?:^|[^а-яіїєґ])рис(?![а-яіїєґ])|булгур|кус-?кус|вівсян|пшен|пластівц/.test(name)) return "Крупи";
+        if (/олія|оливкова|соняшникова/.test(name)) return "Олія";
+        if (/борош|цукор|сіль/.test(name)) return "Борошно, цукор, сіль";
+        if (/соус|кетчуп|майонез|гірчиц|заправк|маринад/.test(name)) return "Соуси та заправки";
+        if (/приправа|спеці|бульйон/.test(name)) return "Приправи";
+        return "Інша бакалія";
+      }
+      if (category === "Консерви") {
+        if (/тунець|шпрот|сардин|риба/.test(name)) return "Рибні консерви";
+        if (/горош|кукурудз|квасол|оливки|маслин/.test(name)) return "Овочеві консерви";
+        if (/ананас|персик|фрукт/.test(name)) return "Фруктові консерви";
+        if (/тушк|м'яс|мʼяс|м’яс/.test(name)) return "М'ясні консерви";
+        return "Інші консерви";
+      }
+      if (category === "Побутова хімія") {
+        if (/праль|прання/.test(name)) return "Прання";
+        if (/проклад|тампон|підгуз|уролог/.test(name)) return "Особиста гігієна";
+        if (/доместос|універсальн|чист|миття|посуд/.test(name)) return "Прибирання";
+        if (/шампун|душ|мило|гель|лосьйон|дезодорант|крем(?![-\s]?(сир|суп))(?=.*(універсальн|для|spf|захист|шкіри|облич|тіла|рук|волос|голін|засмаг|зволож|живиль))|крем-?гель|зубн/.test(name)) return "Гігієна";
+        if (/папір|сервет/.test(name)) return "Паперові товари";
+        return "Інше";
+      }
+      if (category === "Снеки") {
+        if (/чіпс/.test(name)) return "Чіпси";
+        if (/сухар|крекер/.test(name)) return "Сухарики та крекери";
+        if (/арахіс|горіх|насіння|фісташ/.test(name)) return "Горіхи та насіння";
+        if (/батончик|драже/.test(name)) return "Батончики та драже";
+        if (/снек/.test(name)) return "Інші снеки";
+        return "Інші снеки";
+      }
+      if (category === "Товари для тварин") {
+        if (/корм.*кот|для кот|кіш/.test(name)) return "Для котів";
+        if (/корм.*собак|для собак|пес/.test(name)) return "Для собак";
+        if (/сухий/.test(name)) return "Сухий корм";
+        if (/вологий|пауч|желе|соус/.test(name)) return "Вологий корм";
+        return "Інше для тварин";
+      }
+      if (category === "Хліб") {
+        if (/хліб/.test(name)) return "Хліб";
+        if (/батон|багет|лаваш|тако|тортиль/.test(name)) return "Батони, багети, лаваш";
+        if (/хлібц/.test(name)) return "Хлібці";
+        if (/круасан|булоч|пряник|випіч/.test(name)) return "Випічка";
+        return "Інший хліб";
+      }
+      if (category === "Готові страви") {
+        if (/плов/.test(name)) return "Плов";
+        if (/крем-суп|(^|\s)суп(\s|$)/.test(name)) return "Супи";
+        if (/гриль/.test(name)) return "Гриль";
+        if (/салат/.test(name)) return "Салати";
+        if (/приправа/.test(name)) return "Приправи до страв";
+        return "Інші готові страви";
+      }
+      return "Інше";
+    }
+
+    function enrichDeals() {
+      deals.forEach(item => {
+        if (!item.subcategory) item.subcategory = inferSubcategory(item);
+      });
+    }
+
+    function discount(item) {
+      return Math.round((1 - item.price / item.old) * 100);
+    }
+
+    function unitPrice(item) {
+      return item.price / item.unitAmount;
+    }
+
+    function money(value) {
+      return `${value.toLocaleString("uk-UA", { minimumFractionDigits: value % 1 ? 2 : 0, maximumFractionDigits: 2 })} грн`;
+    }
+
+    function todayIso() {
+      const parts = new Intl.DateTimeFormat("uk-UA", {
+        timeZone: "Europe/Kyiv",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).formatToParts(new Date()).reduce((acc, part) => {
+        acc[part.type] = part.value;
+        return acc;
+      }, {});
+      return `${parts.year}-${parts.month}-${parts.day}`;
+    }
+
+    function parseIsoDate(value) {
+      if (!value) return null;
+      const [year, month, day] = value.split("-").map(Number);
+      if (!year || !month || !day) return null;
+      return new Date(Date.UTC(year, month - 1, day));
+    }
+
+    function daysLeft(item) {
+      const end = parseIsoDate(item.end);
+      if (!end) return null;
+      const today = parseIsoDate(todayIso());
+      return Math.ceil((end - today) / 86400000);
+    }
+
+    function isActivePromo(item) {
+      const days = daysLeft(item);
+      return days === null || days >= 0;
+    }
+
+    function dateLabel(value) {
+      const date = parseIsoDate(value);
+      if (!date) return "";
+      return date.toLocaleDateString("uk-UA", { timeZone: "UTC", day: "2-digit", month: "2-digit", year: "numeric" });
+    }
+
+    function termLabel(item, compact = false) {
+      const days = daysLeft(item);
+      if (days === null) return "термін не вказано";
+      if (days < 0) return "завершено";
+      if (days === 0) return compact ? "сьогодні" : `до ${dateLabel(item.end)} · сьогодні`;
+      if (days === 1) return compact ? "завтра" : `до ${dateLabel(item.end)} · завтра`;
+      return compact ? `${days} дн.` : `до ${dateLabel(item.end)} · ${days} дн.`;
+    }
+
+    function endingSortValue(item) {
+      const days = daysLeft(item);
+      return days === null ? Number.POSITIVE_INFINITY : days;
+    }
+
+    function formatDateTime(value) {
+      if (!value) return "сьогодні";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "сьогодні";
+      return date.toLocaleString("uk-UA", {
+        timeZone: "Europe/Kyiv",
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function fillSelect(select, values) {
+      select.innerHTML = values.map(value => `<option value="${value}">${value}</option>`).join("");
+    }
+
+    function renderSidebar(categories, stores) {
+      document.querySelector("#categoryNav").innerHTML = categories.map(category => {
+        const count = category === all ? deals.length : deals.filter(item => item.category === category).length;
+        return `<button class="category-button ${controls.category.value === category ? "active" : ""}" data-category="${category}"><span>${category}</span><b>${count}</b></button>`;
+      }).join("");
+
+      const colors = ["#e31e24", "#16845c", "#245fbd", "#b97811", "#8a3d74", "#384551"];
+      document.querySelector("#storeList").innerHTML = stores.filter(store => store !== all).map((store, index) => (
+        `<div class="store-pill"><span class="dot" style="background:${colors[index % colors.length]}"></span>${store}</div>`
+      )).join("");
+    }
+
+    function getFilteredDeals() {
+      const query = controls.search.value.trim().toLowerCase();
+      const city = controls.city.value;
+      const store = controls.store.value;
+      const category = controls.category.value;
+      const subcategory = controls.subcategory.value;
+      const minDiscount = Number(controls.minDiscount.value);
+
+      const filtered = deals.filter(item => {
+        const text = `${item.name} ${item.size} ${item.category} ${item.subcategory} ${item.store} ${item.city}`.toLowerCase();
+        return isActivePromo(item)
+          && (!query || text.includes(query))
+          && (city === all || item.city === city)
+          && (store === all || item.store === store)
+          && (category === all || item.category === category)
+          && (subcategory === all || item.subcategory === subcategory)
+          && discount(item) >= minDiscount;
+      });
+
+      if (controls.sort.value === "discount") filtered.sort((a, b) => discount(b) - discount(a));
+      if (controls.sort.value === "price") filtered.sort((a, b) => a.price - b.price);
+      if (controls.sort.value === "unit") filtered.sort((a, b) => unitPrice(a) - unitPrice(b));
+      if (controls.sort.value === "ending") filtered.sort((a, b) => endingSortValue(a) - endingSortValue(b));
+      return filtered;
+    }
+
+    function renderMetrics(list) {
+      const averageDiscount = list.length ? Math.round(list.reduce((sum, item) => sum + discount(item), 0) / list.length) : 0;
+      const best = list.length ? [...list].sort((a, b) => unitPrice(a) - unitPrice(b))[0] : null;
+      const ending = list.filter(item => daysLeft(item) !== null).sort((a, b) => endingSortValue(a) - endingSortValue(b))[0] || null;
+      document.querySelector("#metricProducts").textContent = list.length;
+      document.querySelector("#metricDiscount").textContent = `${averageDiscount}%`;
+      document.querySelector("#metricBest").textContent = best ? money(unitPrice(best)) : "0 грн";
+      document.querySelector("#metricBestLabel").textContent = best ? `${best.name}, за ${best.unitLabel}` : "оберіть категорію або місто";
+      document.querySelector("#metricEnding").textContent = ending ? termLabel(ending, true) : "немає дати";
+      document.querySelector("#metricEndingLabel").textContent = ending ? `${ending.name}, ${ending.store} · ${dateLabel(ending.end)}` : "джерело не вказало термін";
+    }
+
+    function renderTable(list) {
+      document.querySelector("#resultCount").textContent = `${list.length} позицій`;
+      const visibleRows = list.slice(0, visibleLimit);
+      document.querySelector("#tableShown").textContent = `Показано ${visibleRows.length} з ${list.length}`;
+      document.querySelector("#loadMoreRows").style.display = visibleRows.length < list.length ? "inline-flex" : "none";
+      document.querySelector("#dealsTable").innerHTML = visibleRows.map(item => `
+        <tr>
+          <td class="select-row">
+            <input class="compare-check" type="checkbox" data-id="${item.id}" ${selected.has(item.id) ? "checked" : ""} aria-label="Додати до порівняння">
+          </td>
+          <td>
+            <div class="product">
+              <div class="thumb" style="background:${item.color}">${item.category[0]}</div>
+              <div>
+                <div class="product-title">${item.name}</div>
+                <div class="sub">${item.size} · ${item.category} · ${item.subcategory}</div>
+              </div>
+            </div>
+          </td>
+          <td class="store-name">${item.store}</td>
+          <td>${item.city}</td>
+          <td class="old">${money(item.old)}</td>
+          <td class="price">${money(item.price)}</td>
+          <td>${money(unitPrice(item))} / ${item.unitLabel}</td>
+          <td><span class="discount">-${discount(item)}%</span></td>
+          <td>${termLabel(item)}</td>
+        </tr>
+      `).join("") || `<tr><td colspan="9">Нічого не знайдено. Спробуйте змінити фільтри.</td></tr>`;
+    }
+
+    function renderBestDeals(list) {
+      const best = [...list].sort((a, b) => discount(b) - discount(a)).slice(0, 4);
+      document.querySelector("#bestDeals").innerHTML = best.map(item => `
+        <article class="deal-card">
+          <div class="deal-top">
+            <strong>${item.name} ${item.size}</strong>
+            <span class="discount">-${discount(item)}%</span>
+          </div>
+          <div>${item.store}, ${item.city} · <b>${money(item.price)}</b></div>
+          <div class="sub">${money(unitPrice(item))} / ${item.unitLabel} · ${termLabel(item)}</div>
+          <div class="bar"><span style="width:${Math.min(100, discount(item) * 2.7)}%"></span></div>
+        </article>
+      `).join("") || `<p class="empty">Немає пропозицій за поточними фільтрами.</p>`;
+    }
+
+    function renderComparison() {
+      const items = deals.filter(item => selected.has(item.id)).sort((a, b) => unitPrice(a) - unitPrice(b));
+      document.querySelector("#compareCount").textContent = items.length;
+      document.querySelector("#compareList").innerHTML = items.map(item => `
+        <article class="compare-card">
+          <strong>${item.name} ${item.size}</strong>
+          <span>${item.store}, ${item.city} · <b>${money(item.price)}</b></span>
+          <span class="sub">${money(unitPrice(item))} / ${item.unitLabel} · знижка ${discount(item)}%</span>
+        </article>
+      `).join("") || `<p class="empty">Позначте товари в таблиці, щоб швидко порівняти їх між собою.</p>`;
+    }
+
+    function renderSources() {
+      document.querySelector("#sourceList").innerHTML = sourceHealth.map(source => `
+        <article class="source-card">
+          <b>${source.name}<span class="source-state"><span class="status-dot"></span>${source.state}</span></b>
+          <span class="sub">${source.detail}</span>
+        </article>
+      `).join("");
+    }
+
+    function renderActiveFilters() {
+      const parts = [];
+      if (controls.city.value !== all) parts.push(`місто: ${controls.city.value}`);
+      if (controls.store.value !== all) parts.push(`мережа: ${controls.store.value}`);
+      if (controls.category.value !== all) parts.push(`категорія: ${controls.category.value}`);
+      if (controls.subcategory.value !== all) parts.push(`підкатегорія: ${controls.subcategory.value}`);
+      if (Number(controls.minDiscount.value) > 0) parts.push(`знижка від ${controls.minDiscount.value}%`);
+      if (controls.search.value.trim()) parts.push(`пошук: ${controls.search.value.trim()}`);
+      document.querySelector("#activeFilters").textContent = parts.length ? `Фільтр: ${parts.join(" · ")}` : "Фільтр: усі категорії";
+    }
+
+    function scrollToResults() {
+      document.querySelector("#resultsPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function render() {
+      const list = getFilteredDeals();
+      renderSidebar(unique(deals.map(item => item.category)), unique(deals.map(item => item.store)));
+      renderActiveFilters();
+      renderMetrics(list);
+      renderTable(list);
+      renderBestDeals(list);
+      renderComparison();
+    }
+
+    async function loadImportedData() {
+      try {
+        const response = await fetch("data/deals.json", { cache: "no-store" });
+        if (!response.ok) return;
+        const payload = await response.json();
+        if (!Array.isArray(payload.deals) || !payload.deals.length) return;
+        deals.splice(0, deals.length, ...payload.deals.filter(isActivePromo));
+        if (Array.isArray(payload.sourceHealth)) {
+          sourceHealth.splice(0, sourceHealth.length, ...payload.sourceHealth);
+        }
+        document.querySelector("#syncStatus").innerHTML = '<span class="status-dot"></span> Імпортовано повний асортимент';
+        document.querySelector("#syncCity").textContent = `Місто: ${payload.meta?.city || "Львів"}`;
+        document.querySelector("#syncSource").textContent = `${payload.meta?.total || payload.deals.length} активних позицій · ${payload.meta?.knownEndDate ?? 0} з датою, ${payload.meta?.withoutEndDate ?? 0} без дати`;
+        document.querySelector("#syncFreshness").textContent = `Оновлено: ${formatDateTime(payload.meta?.generatedAt)}`;
+      } catch (error) {
+        document.querySelector("#syncSource").textContent = "Fallback: локальний seed";
+        document.querySelector("#syncFreshness").textContent = "Актуальність: локальні дані";
+      }
+    }
+
+    function initializeFilters() {
+      enrichDeals();
+      fillSelect(controls.city, unique(deals.map(item => item.city)));
+      fillSelect(controls.store, unique(deals.map(item => item.store)));
+      fillSelect(controls.category, unique(deals.map(item => item.category)));
+      updateSubcategoryOptions();
+    }
+
+    function updateSubcategoryOptions() {
+      const current = controls.subcategory.value || all;
+      const category = controls.category.value;
+      const pool = category === all ? deals : deals.filter(item => item.category === category);
+      const options = unique(pool.map(item => item.subcategory || inferSubcategory(item)));
+      fillSelect(controls.subcategory, options);
+      controls.subcategory.value = options.includes(current) ? current : all;
+    }
+
+    document.querySelector("#categoryNav").addEventListener("click", event => {
+      const button = event.target.closest("button[data-category]");
+      if (!button) return;
+      controls.category.value = button.dataset.category;
+      controls.subcategory.value = all;
+      updateSubcategoryOptions();
+      visibleLimit = pageSize;
+      render();
+      scrollToResults();
+    });
+
+    document.querySelector("#dealsTable").addEventListener("change", event => {
+      const checkbox = event.target.closest(".compare-check");
+      if (!checkbox) return;
+      const id = Number(checkbox.dataset.id);
+      if (checkbox.checked) selected.add(id);
+      else selected.delete(id);
+      renderComparison();
+    });
+
+    document.querySelector("#resetButton").addEventListener("click", () => {
+      controls.search.value = "";
+      controls.city.value = all;
+      controls.store.value = all;
+      controls.category.value = all;
+      controls.subcategory.value = all;
+      controls.sort.value = "discount";
+      controls.minDiscount.value = "0";
+      updateSubcategoryOptions();
+      visibleLimit = pageSize;
+      selected.clear();
+      render();
+    });
+
+    document.querySelector("#loadMoreRows").addEventListener("click", () => {
+      visibleLimit += pageSize;
+      render();
+    });
+
+    controls.search.addEventListener("input", () => {
+      visibleLimit = pageSize;
+      render();
+    });
+    [controls.city, controls.store, controls.sort, controls.minDiscount, controls.subcategory].forEach(control => {
+      control.addEventListener("change", () => {
+        visibleLimit = pageSize;
+        render();
+        scrollToResults();
+      });
+    });
+    controls.category.addEventListener("change", () => {
+      controls.subcategory.value = all;
+      updateSubcategoryOptions();
+      visibleLimit = pageSize;
+      render();
+      scrollToResults();
+    });
+    loadImportedData().finally(() => {
+      initializeFilters();
+      render();
+    });
+  </script>
+</body>
+</html>
