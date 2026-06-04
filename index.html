@@ -5,20 +5,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PromoWatch UA</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
     :root {
-      --ink: #16212b;
-      --muted: #687682;
-      --line: #d7e0e7;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --line: rgba(0, 0, 0, 0.08);
       --surface: #ffffff;
-      --soft: #f4f7f9;
-      --green: #15845d;
-      --green-soft: #e8f5ef;
-      --red: #d83a31;
-      --red-soft: #fdecea;
-      --blue: #245fbd;
-      --amber: #bd7a14;
-      --violet: #7a4b91;
-      --shadow: 0 16px 44px rgba(22, 33, 43, 0.09);
+      --soft: #f8fafc;
+      --green: #10b981;
+      --green-soft: rgba(16, 185, 129, 0.08);
+      --red: #ef4444;
+      --red-soft: rgba(239, 68, 68, 0.08);
+      --blue: #3b82f6;
+      --blue-soft: rgba(59, 130, 246, 0.08);
+      --amber: #f59e0b;
+      --amber-soft: rgba(245, 158, 11, 0.08);
+      --violet: #8b5cf6;
+      --shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.06);
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --filter-bg: rgba(255, 255, 255, 0.85);
+      --thumb-bg-fallback: #475569;
+      --meta-pill-bg: #f1f5f9;
+      --meta-pill-color: #475569;
+      --input-bg: #ffffff;
+      --row-hover: #f8fafc;
+      --best-bar: #e2e8f0;
+    }
+
+    [data-theme="dark"] {
+      --ink: #f8fafc;
+      --muted: #94a3b8;
+      --line: rgba(255, 255, 255, 0.08);
+      --surface: #1e293b;
+      --soft: #0f172a;
+      --green: #34d399;
+      --green-soft: rgba(52, 211, 153, 0.12);
+      --red: #f87171;
+      --red-soft: rgba(248, 113, 113, 0.12);
+      --blue: #60a5fa;
+      --blue-soft: rgba(96, 165, 250, 0.12);
+      --amber: #fbbf24;
+      --amber-soft: rgba(251, 191, 36, 0.12);
+      --violet: #a78bfa;
+      --shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --filter-bg: rgba(30, 41, 59, 0.85);
+      --thumb-bg-fallback: #334155;
+      --meta-pill-bg: #334155;
+      --meta-pill-color: #cbd5e1;
+      --input-bg: #0f172a;
+      --row-hover: #1e293b;
+      --best-bar: #334155;
     }
 
     * { box-sizing: border-box; }
@@ -26,44 +66,128 @@
     body {
       margin: 0;
       color: var(--ink);
-      background:
-        linear-gradient(180deg, #eef4f1 0, #f6f8fa 320px, #edf2f5 100%);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      font-family: 'Plus Jakarta Sans', 'Outfit', Inter, ui-sans-serif, system-ui, sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     button, input, select { font: inherit; }
 
-    button { cursor: pointer; }
+    button { cursor: pointer; border: none; background: none; }
 
     .app {
       min-height: 100vh;
       display: block;
     }
 
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      padding: 0 24px;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transition: all 0.3s ease;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 26px;
+      height: 26px;
+      color: var(--green);
+    }
+
+    .brand-name {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+    }
+
+    .brand-accent {
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .nav-badge {
+      font-size: 11px;
+      font-weight: 800;
+      background: var(--green-soft);
+      color: var(--green);
+      padding: 4px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .theme-toggle-btn {
+      background: none;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      color: var(--ink);
+      border-color: var(--muted);
+      background: var(--soft);
+    }
+
+    .sun-icon { display: block; width: 18px; height: 18px; }
+    .moon-icon { display: none; width: 18px; height: 18px; }
+
+    [data-theme="dark"] .sun-icon { display: none; }
+    [data-theme="dark"] .moon-icon { display: block; }
+
     main {
       width: 100%;
       max-width: 1540px;
       margin: 0 auto;
       min-width: 0;
-      padding: 18px 22px 28px;
+      padding: 24px;
     }
 
     .hero {
-      min-height: 158px;
-      border-radius: 8px;
+      min-height: 160px;
+      border-radius: 12px;
       overflow: hidden;
       position: relative;
       display: flex;
       align-items: flex-end;
-      padding: 22px;
+      padding: 32px;
       color: #fff;
       background-image:
-        linear-gradient(90deg, rgba(8, 15, 20, 0.86), rgba(8, 15, 20, 0.5), rgba(8, 15, 20, 0.06)),
+        linear-gradient(90deg, rgba(8, 15, 20, 0.9), rgba(8, 15, 20, 0.6), rgba(8, 15, 20, 0.1)),
         url("assets/grocery-dashboard-banner.png");
       background-size: cover;
       background-position: center;
       box-shadow: var(--shadow);
       isolation: isolate;
+      margin-bottom: 24px;
     }
 
     .hero::after {
@@ -85,80 +209,97 @@
     .hero h1 {
       margin: 0;
       max-width: 830px;
-      font-size: clamp(28px, 3vw, 42px);
-      line-height: 1.05;
-      letter-spacing: 0;
+      font-size: clamp(24px, 3.5vw, 36px);
+      line-height: 1.1;
+      font-weight: 800;
+      letter-spacing: -0.02em;
     }
 
     .hero p {
       max-width: 680px;
-      margin: 12px 0 0;
-      color: rgba(255, 255, 255, 0.87);
-      font-size: 16px;
+      margin: 10px 0 0;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.5;
     }
 
     .topline {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      margin: 16px 0;
+      gap: 16px;
+      margin-bottom: 24px;
     }
 
     .sync {
       display: flex;
       flex-wrap: wrap;
-      gap: 9px;
+      gap: 8px;
     }
 
     .chip {
       min-height: 32px;
       display: inline-flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 6px 10px;
-      color: #44505b;
-      background: var(--surface);
-      font-size: 13px;
-      font-weight: 650;
+      padding: 6px 12px;
+      color: var(--muted);
+      background: var(--card-bg);
+      font-size: 12px;
+      font-weight: 600;
     }
 
     .chip.good {
       color: var(--green);
       background: var(--green-soft);
-      border-color: #c9e9d8;
+      border-color: rgba(16, 185, 129, 0.2);
     }
 
     .ghost-button {
       border: 1px solid var(--line);
       border-radius: 8px;
-      min-height: 36px;
-      padding: 7px 12px;
-      color: #33404b;
-      background: var(--surface);
-      font-weight: 750;
+      min-height: 38px;
+      padding: 8px 16px;
+      color: var(--ink);
+      background: var(--card-bg);
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .ghost-button:hover {
+      background: var(--soft);
+      border-color: var(--muted);
+      transform: translateY(-1px);
+    }
+
+    .ghost-button:active {
+      transform: translateY(0);
     }
 
     .metrics {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin-bottom: 16px;
+      gap: 16px;
+      margin-bottom: 24px;
     }
 
     .metric,
     .panel {
       border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--surface);
-      box-shadow: 0 8px 28px rgba(22, 33, 43, 0.045);
+      border-radius: 12px;
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+      transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     .metric {
-      min-height: 104px;
-      padding: 14px;
+      min-height: 100px;
+      padding: 16px;
       position: relative;
       overflow: hidden;
     }
@@ -175,37 +316,43 @@
       display: block;
       margin-bottom: 8px;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
     .metric strong {
       display: block;
-      font-size: 27px;
-      line-height: 1;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1.1;
     }
 
     .metric small {
       display: block;
-      margin-top: 9px;
+      margin-top: 8px;
       color: var(--muted);
-      line-height: 1.35;
+      font-size: 12px;
+      line-height: 1.4;
     }
 
     .filters {
       position: sticky;
-      top: 0;
-      z-index: 5;
-      max-width: 1220px;
-      margin: 0 auto 16px;
-      padding: 14px;
+      top: 64px;
+      z-index: 90;
+      max-width: 1540px;
+      margin: 0 auto 24px;
+      padding: 16px;
       display: grid;
       grid-template-columns: minmax(260px, 1.35fr) repeat(5, minmax(145px, 1fr));
-      gap: 10px;
+      gap: 12px;
       align-items: end;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 251, 250, 0.98));
-      backdrop-filter: blur(12px);
+      background: var(--filter-bg);
+      backdrop-filter: blur(20px);
+      border-radius: 12px;
+      border: 1px solid var(--line);
     }
 
     .field {
@@ -215,29 +362,36 @@
 
     label {
       color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
     input,
     select {
       width: 100%;
-      min-height: 44px;
+      min-height: 40px;
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 9px 11px;
+      padding: 8px 12px;
       outline: none;
       color: var(--ink);
-      background: #fff;
+      background: var(--input-bg);
+      transition: all 0.2s ease;
     }
 
     .category-rail {
       grid-column: 1 / -1;
       display: flex;
       gap: 8px;
-      padding-top: 2px;
+      padding-top: 4px;
       overflow-x: auto;
-      scrollbar-width: thin;
+      scrollbar-width: none;
+    }
+
+    .category-rail::-webkit-scrollbar {
+      display: none;
     }
 
     .category-chip {
@@ -245,64 +399,73 @@
       flex: 0 0 auto;
       border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 6px 11px;
-      color: #33404b;
-      background: #fff;
-      font-size: 13px;
-      font-weight: 800;
+      padding: 6px 14px;
+      color: var(--muted);
+      background: var(--card-bg);
+      font-size: 12px;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+
+    .category-chip:hover {
+      color: var(--ink);
+      border-color: var(--muted);
+      transform: translateY(-1px);
     }
 
     .category-chip.active {
       color: #fff;
       border-color: var(--green);
-      background: linear-gradient(135deg, var(--green), #1d6ca7);
-      box-shadow: 0 8px 20px rgba(21, 132, 93, 0.2);
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      box-shadow: 0 6px 15px rgba(16, 185, 129, 0.25);
     }
 
     input:focus,
     select:focus {
       border-color: var(--blue);
-      box-shadow: 0 0 0 3px rgba(36, 95, 189, 0.13);
+      box-shadow: 0 0 0 3px var(--blue-soft);
     }
 
     .main-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 16px;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
       align-items: start;
     }
 
     .panel-head {
-      padding: 15px 16px 11px;
+      padding: 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
+      border-bottom: 1px solid var(--line);
     }
 
     .panel-head h2 {
       margin: 0;
-      font-size: 18px;
-      line-height: 1.2;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--ink);
     }
 
     .badge {
       white-space: nowrap;
-      border-radius: 8px;
-      padding: 6px 9px;
+      border-radius: 6px;
+      padding: 4px 8px;
       color: var(--green);
       background: var(--green-soft);
-      font-size: 12px;
-      font-weight: 850;
+      font-size: 11px;
+      font-weight: 800;
     }
 
     .table-wrap {
-      overflow-x: hidden;
+      overflow-x: auto;
     }
 
     .table-footer {
       min-height: 54px;
-      padding: 10px 16px;
+      padding: 12px 16px;
       border-top: 1px solid var(--line);
       display: flex;
       align-items: center;
@@ -314,7 +477,7 @@
 
     .table-footer .ghost-button {
       min-height: 34px;
-      padding: 6px 11px;
+      padding: 6px 12px;
     }
 
     table {
@@ -326,7 +489,7 @@
 
     th,
     td {
-      padding: 11px 12px;
+      padding: 14px 16px;
       border-top: 1px solid var(--line);
       text-align: left;
       vertical-align: middle;
@@ -334,17 +497,19 @@
 
     th {
       color: var(--muted);
-      background: #f7faf9;
-      font-size: 12px;
-      font-weight: 850;
+      background: var(--soft);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
     tbody tr {
-      transition: background 0.16s ease;
+      transition: background-color 0.2s ease;
     }
 
     tbody tr:hover {
-      background: #fbfdfc;
+      background: var(--row-hover);
     }
 
     td {
@@ -355,22 +520,23 @@
       min-width: 0;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .thumb {
-      width: 46px;
-      height: 46px;
-      border-radius: 8px;
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
       display: grid;
       place-items: center;
-      flex: 0 0 46px;
+      flex: 0 0 48px;
       color: #fff;
-      font-weight: 900;
+      font-weight: 800;
       overflow: hidden;
       position: relative;
-      background: var(--thumb-bg, #384551);
-      border: 1px solid rgba(20, 32, 42, 0.08);
+      background: linear-gradient(135deg, var(--thumb-bg, #475569), rgba(0, 0, 0, 0.2));
+      border: 1px solid var(--line);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
 
     .thumb img {
@@ -387,6 +553,7 @@
       inset: 0;
       display: grid;
       place-items: center;
+      font-size: 16px;
     }
 
     .thumb.has-image span {
@@ -398,8 +565,9 @@
     }
 
     .product-title {
-      font-weight: 850;
-      line-height: 1.25;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--ink);
       display: -webkit-box;
       overflow: hidden;
       -webkit-box-orient: vertical;
@@ -409,66 +577,69 @@
     .sub {
       color: var(--muted);
       font-size: 12px;
-      line-height: 1.35;
+      line-height: 1.4;
     }
 
     .product-meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 5px;
-      margin-top: 5px;
+      gap: 4px;
+      margin-top: 6px;
     }
 
     .meta-pill {
       min-width: 0;
-      border-radius: 999px;
-      padding: 3px 7px;
-      color: #4d5b66;
-      background: #edf3f1;
-      font-size: 11px;
-      font-weight: 760;
+      border-radius: 6px;
+      padding: 2px 6px;
+      color: var(--meta-pill-color);
+      background: var(--meta-pill-bg);
+      font-size: 10px;
+      font-weight: 700;
       line-height: 1.2;
     }
 
     .store-name {
       font-weight: 800;
+      color: var(--ink);
     }
 
     .price-cell,
     .promo-cell {
       display: grid;
-      gap: 4px;
+      gap: 2px;
       min-width: 0;
     }
 
     .price {
       font-size: 16px;
-      font-weight: 900;
+      font-weight: 800;
+      color: var(--ink);
       white-space: nowrap;
     }
 
     .old-price {
       width: fit-content;
       max-width: 100%;
-      border-radius: 7px;
-      padding: 2px 6px;
+      border-radius: 6px;
+      padding: 1px 5px;
       color: var(--muted);
-      background: #f0f4f6;
+      background: var(--soft);
       font-size: 11px;
-      font-weight: 750;
+      font-weight: 600;
+      text-decoration: line-through;
       white-space: nowrap;
     }
 
     .unit-price {
-      color: #2d3843;
+      color: var(--muted);
       line-height: 1.25;
       font-size: 11px;
-      font-weight: 750;
+      font-weight: 600;
     }
 
     .promo-term {
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
       line-height: 1.25;
     }
 
@@ -476,10 +647,23 @@
       display: inline-flex;
       align-items: center;
       border-radius: 8px;
-      padding: 5px 8px;
+      padding: 4px 8px;
       color: var(--red);
       background: var(--red-soft);
-      font-weight: 900;
+      font-weight: 800;
+      font-size: 12px;
+      border: 1px solid rgba(239, 68, 68, 0.1);
+      width: fit-content;
+      animation: pulse-glow 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% {
+        box-shadow: 0 0 0 0px var(--red-soft);
+      }
+      50% {
+        box-shadow: 0 0 8px 2px var(--red-soft);
+      }
     }
 
     .source-state {
@@ -488,8 +672,8 @@
       gap: 6px;
       white-space: nowrap;
       color: var(--green);
-      font-size: 12px;
-      font-weight: 800;
+      font-size: 11px;
+      font-weight: 700;
     }
 
     .select-row {
@@ -497,35 +681,43 @@
     }
 
     .compare-check {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       accent-color: var(--green);
+      cursor: pointer;
     }
 
     .side-stack {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
+      grid-template-columns: 1fr;
+      gap: 24px;
     }
 
     .cards {
       display: grid;
       gap: 12px;
-      padding: 0 14px 14px;
+      padding: 16px;
     }
 
     .deal-card,
     .compare-card,
     .source-card {
       border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 12px;
-      background: #fff;
+      border-radius: 10px;
+      padding: 14px;
+      background: var(--card-bg);
+      transition: all 0.2s ease;
+    }
+
+    .deal-card:hover,
+    .compare-card:hover {
+      box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+      transform: translateY(-1px);
     }
 
     .deal-card {
       display: grid;
-      gap: 9px;
+      gap: 10px;
     }
 
     .deal-card-media {
@@ -541,7 +733,7 @@
 
     .deal-body {
       display: grid;
-      gap: 9px;
+      gap: 6px;
       min-width: 0;
     }
 
@@ -552,59 +744,65 @@
     }
 
     .deal-top strong {
-      line-height: 1.25;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.3;
     }
 
     .bar {
-      height: 8px;
+      height: 6px;
       border-radius: 999px;
       overflow: hidden;
-      background: #e8edf1;
+      background: var(--best-bar);
     }
 
     .bar span {
       display: block;
       height: 100%;
-      background: linear-gradient(90deg, var(--green), var(--amber));
+      background: linear-gradient(90deg, var(--green), var(--blue));
     }
 
     .compare-list,
     .source-list {
       display: grid;
-      gap: 10px;
-      padding: 0 14px 14px;
+      gap: 12px;
+      padding: 16px;
     }
 
     .compare-card {
       display: grid;
-      gap: 7px;
+      gap: 8px;
     }
 
     .compare-card strong {
-      line-height: 1.25;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.3;
     }
 
     .compare-top {
       display: grid;
-      grid-template-columns: 48px 1fr;
+      grid-template-columns: 44px 1fr;
       gap: 10px;
       align-items: center;
     }
 
     .compare-top .thumb {
-      width: 48px;
-      height: 48px;
-      flex-basis: 48px;
+      width: 44px;
+      height: 44px;
+      flex-basis: 44px;
     }
 
     .empty {
-      margin: 0 14px 14px;
-      padding: 13px;
+      margin: 0;
+      padding: 16px;
       border-radius: 8px;
       color: var(--muted);
-      background: #f8fafb;
+      background: var(--soft);
       border: 1px dashed var(--line);
-      line-height: 1.45;
+      line-height: 1.5;
+      font-size: 13px;
+      text-align: center;
     }
 
     .source-card {
@@ -617,6 +815,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
+      color: var(--ink);
     }
 
     .status-dot {
@@ -642,14 +841,11 @@
     }
 
     @media (max-width: 1320px) {
-      .filters {
-        grid-template-columns: 1fr 1fr 1fr;
-      }
-      .side-stack {
+      .main-grid {
         grid-template-columns: 1fr;
       }
-      .filters .ghost-button {
-        min-height: 44px;
+      .filters {
+        grid-template-columns: 1fr 1fr 1fr;
       }
     }
 
@@ -657,10 +853,15 @@
       .metrics {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+      .filters {
+        grid-template-columns: 1fr 1fr;
+      }
     }
 
-    /* ----- Phone: turn the wide table into stacked cards ----- */
     @media (max-width: 720px) {
+      .navbar {
+        padding: 0 16px;
+      }
       .table-wrap {
         overflow-x: visible;
       }
@@ -678,8 +879,9 @@
       tbody tr {
         display: block;
         position: relative;
-        padding: 14px 14px 12px;
+        padding: 16px;
         border-top: 1px solid var(--line);
+        background: var(--card-bg);
       }
       tbody td {
         display: flex;
@@ -687,7 +889,7 @@
         justify-content: space-between;
         gap: 14px;
         min-width: 0;
-        padding: 5px 0;
+        padding: 6px 0;
         border: 0;
         font-size: 14px;
         text-align: right;
@@ -697,8 +899,10 @@
         content: attr(data-label);
         flex: 0 0 auto;
         color: var(--muted);
-        font-size: 12px;
-        font-weight: 800;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
       }
       td.cell-product {
         padding-right: 34px;
@@ -707,9 +911,6 @@
         display: none;
       }
       td.cell-product .product {
-        min-width: 0;
-      }
-      td.cell-product {
         text-align: left;
       }
       .product-title,
@@ -719,8 +920,8 @@
       }
       td.select-row {
         position: absolute;
-        top: 12px;
-        right: 10px;
+        top: 14px;
+        right: 12px;
         width: auto;
         padding: 0;
       }
@@ -733,43 +934,61 @@
       .table-footer {
         flex-direction: column;
         align-items: flex-start;
+        gap: 12px;
       }
     }
 
-    @media (max-width: 640px) {
+    @media (max-width: 540px) {
       main {
-        padding: 14px;
+        padding: 16px;
       }
       .hero {
-        min-height: 200px;
-        padding: 18px;
+        padding: 24px;
+        min-height: 180px;
       }
       .topline {
         align-items: flex-start;
         flex-direction: column;
+        gap: 12px;
       }
       .filters {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
+        top: 64px;
+      }
+      .metrics {
+        grid-template-columns: 1fr;
+        gap: 12px;
       }
       .panel-head {
         align-items: flex-start;
         flex-direction: column;
-      }
-      .metric strong {
-        font-size: 23px;
-      }
-    }
-
-    @media (max-width: 430px) {
-      .metrics,
-      .filters {
-        grid-template-columns: 1fr;
+        gap: 8px;
       }
     }
   </style>
 </head>
 <body>
   <div class="app">
+    <header class="navbar">
+      <div class="nav-brand">
+        <svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 12h20M12 2v20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14"/>
+        </svg>
+        <span class="brand-name">PromoWatch <span class="brand-accent">UA</span></span>
+      </div>
+      <div class="nav-actions">
+        <span class="nav-badge">Львів</span>
+        <button id="themeToggle" class="theme-toggle-btn" aria-label="Перемикач теми">
+          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+          </svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
     <main>
       <section class="hero">
         <div>
@@ -912,7 +1131,7 @@
     </main>
   </div>
 
-  <script>
+    <script>
     const deals = [];
 
     const sourceHealth = [];
@@ -950,7 +1169,7 @@
         if (/сулугун/.test(name)) return "Сулугуні";
         if (/плавлен/.test(name)) return "Плавлений сир";
         if (/камамбер|брі|крем-сир|philadelphia|фета|фелата/.test(name)) return "М'які сири";
-        if (/тверд[а-яіїєґ]* сир|сир .*тверд|напівтверд|пармезан|гауд|чеддер|голланд|російськ|(^|\s)сир(\s|$|,)|сири(\s|$)|сиру(\s|$)/.test(name)) return "Твердий/напівтвердий сир";
+        if (/тверд[а-яіїєґ]* сир|сир .*тверд|напівтверд|пармезан|гауд|чеддер|голланд|російськ|(^|\s)сир(\s|$|,)|сири(\s|$)/.test(name)) return "Твердий/напівтвердий сир";
         if (/сметан/.test(name)) return "Сметана";
         if (/масло/.test(name)) return "Масло";
         if (/молок/.test(name)) return "Молоко";
@@ -962,6 +1181,10 @@
         if (/сирокоп|салям|с\/к|сиров/.test(name)) return "Сирокопчені ковбаси";
         if (/шинка|бекон|балик/.test(name)) return "Шинка та бекон";
         return "Інші ковбаси";
+      }
+      if (category === "Яйця") {
+        if (/перепел/.test(name)) return "Перепелині яйця";
+        return "Курячі яйця";
       }
       if (category === "М'ясо") {
         if (/куряч|курк|стегн|філе/.test(name)) return "Курятина";
@@ -1008,6 +1231,13 @@
         if (/піца/.test(name)) return "Піца";
         if (/овоч|суміш|броколі|картоп/.test(name)) return "Заморожені овочі";
         return "Інша заморозка";
+      }
+      if (category === "Риба та морепродукти") {
+        if (/крабов/.test(name)) return "Крабові палички";
+        if (/оселед/.test(name)) return "Оселедець";
+        if (/кревет|міді|кальмар|морепродукт/.test(name)) return "Морепродукти";
+        if (/ікра/.test(name)) return "Ікра";
+        return "Риба";
       }
       if (category === "Бакалія") {
         if (/макарон|спагеті|паста(?!.*зубн)/.test(name)) return "Макарони";
@@ -1057,12 +1287,13 @@
       }
       if (category === "Готові страви") {
         if (/плов/.test(name)) return "Плов";
-        if (/крем-суп|(^|\s)суп(\s|$)/.test(name)) return "Супи";
+        if (/crem-суп|(^|\s)суп(\s|$)/.test(name)) return "Супи";
         if (/гриль/.test(name)) return "Гриль";
         if (/салат/.test(name)) return "Салати";
         if (/приправа/.test(name)) return "Приправи до страв";
         return "Інші готові страви";
       }
+      if (category === "Товари для дому") return "Дім та кухня";
       return "Інше";
     }
 
@@ -1139,9 +1370,6 @@
       return item.price / amount;
     }
 
-    // Some source rows have broken size strings (e.g. "0.75мл" for a 0.75 L bottle,
-    // single-piece goods labelled in grams). That produces absurd per-unit prices
-    // like 549 787 грн/л. We only trust per-unit prices inside a sane band.
     function unitPricePlausible(item) {
       if (typeof item._unitPricePlausible === "boolean") return item._unitPricePlausible;
       const value = unitPrice(item);
@@ -1151,7 +1379,6 @@
       return value > 0;
     }
 
-    // Ascending sort key: implausible / missing values sink to the bottom.
     function unitSortValue(item) {
       if (Number.isFinite(item._unitSort)) return item._unitSort;
       return unitPricePlausible(item) ? unitPrice(item) : Number.POSITIVE_INFINITY;
@@ -1166,6 +1393,7 @@
     }
 
     function money(value) {
+      if (value === null || typeof value === "undefined") return "0 грн";
       return `${value.toLocaleString("uk-UA", { minimumFractionDigits: value % 1 ? 2 : 0, maximumFractionDigits: 2 })} грн`;
     }
 
@@ -1178,13 +1406,13 @@
 
     function productThumb(item, extraClass = "") {
       const image = /^https:\/\//.test(item.image || "") ? item.image : "";
-      const color = item.color || "#384551";
+      const color = item.color || "#475569";
       const fallback = (item.category || "?")[0];
       const imageMarkup = image
         ? `<img src="${escapeAttribute(image)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('image-missing');this.remove();">`
         : "";
       return `
-        <div class="thumb ${extraClass} ${image ? "has-image" : ""}" style="--thumb-bg:${color};background:${color}">
+        <div class="thumb ${extraClass} ${image ? "has-image" : ""}" style="--thumb-bg:${color};background:linear-gradient(135deg, ${color}, rgba(0,0,0,0.25))">
           ${imageMarkup}
           <span>${fallback}</span>
         </div>
@@ -1258,15 +1486,11 @@
       });
     }
 
-    function fillSelect(select, values) {
-      select.innerHTML = values.map(value => `<option value="${value}">${value}</option>`).join("");
-    }
-
     function searchTokens(value) {
       return String(value || "")
         .toLowerCase()
         .replace(/[’ʼ`´]/g, "'")
-        .replace(/[^a-zа-яіїєґ0-9%]+/gi, " ")
+        .replace(/[^a-zа-яіїєґ0-9%']+/gi, " ")
         .trim()
         .split(/\s+/)
         .filter(Boolean);
@@ -1356,27 +1580,20 @@
     }
 
     function renderBestDeals(list) {
-      const best = [];
-      list.forEach(item => {
-        const index = best.findIndex(current => item._discount > current._discount);
-        if (index === -1) {
-          if (best.length < 4) best.push(item);
-        } else {
-          best.splice(index, 0, item);
-          if (best.length > 4) best.pop();
-        }
-      });
+      const best = [...list]
+        .sort((a, b) => discount(b) - discount(a))
+        .slice(0, 4);
       document.querySelector("#bestDeals").innerHTML = best.map(item => `
         <article class="deal-card deal-card-media">
           ${productThumb(item, "deal-image")}
           <div class="deal-body">
-          <div class="deal-top">
-            <strong>${item.name} ${item.size}</strong>
-            <span class="discount">-${discount(item)}%</span>
-          </div>
-          <div>${item.store}, ${item.city} · <b>${money(item.price)}</b></div>
-          <div class="sub">${unitPriceLabel(item)} · ${termLabel(item)}</div>
-          <div class="bar"><span style="width:${Math.min(100, discount(item) * 2.7)}%"></span></div>
+            <div class="deal-top">
+              <strong>${item.name} ${item.size}</strong>
+              <span class="discount">-${discount(item)}%</span>
+            </div>
+            <div>${item.store}, ${item.city} · <b>${money(item.price)}</b></div>
+            <div class="sub">${unitPriceLabel(item)} · ${termLabel(item)}</div>
+            <div class="bar"><span style="width:${Math.min(100, discount(item) * 2.7)}%"></span></div>
           </div>
         </article>
       `).join("") || `<p class="empty">Немає пропозицій за поточними фільтрами.</p>`;
@@ -1423,19 +1640,69 @@
       document.querySelector("#activeFilters").textContent = parts.length ? `Фільтр: ${parts.join(" · ")}` : "Фільтр: усі категорії";
     }
 
-    function renderCategoryRail() {
-      const counts = deals.reduce((acc, item) => {
+    function updateSelectOptions(select, options, currentValue) {
+      const isSelected = options.includes(currentValue) ? currentValue : all;
+      select.innerHTML = options.map(val => `<option value="${val}">${val}</option>`).join("");
+      select.value = isSelected;
+    }
+
+    function updateFiltersDynamic() {
+      const queryTokens = searchTokens(controls.search.value);
+      const store = controls.store.value;
+      const category = controls.category.value;
+      const subcategory = controls.subcategory.value;
+      const minDiscount = Number(controls.minDiscount.value);
+
+      // 1. Available stores
+      const dealsForStores = deals.filter(item => {
+        return (!queryTokens.length || queryTokens.every(token => item._searchText.includes(token)))
+          && (category === all || item.category === category)
+          && (subcategory === all || item.subcategory === subcategory)
+          && discount(item) >= minDiscount;
+      });
+      const availableStores = unique(dealsForStores.map(item => item.store).filter(Boolean));
+
+      // 2. Available categories
+      const dealsForCategories = deals.filter(item => {
+        return (!queryTokens.length || queryTokens.every(token => item._searchText.includes(token)))
+          && (store === all || item.store === store)
+          && (subcategory === all || item.subcategory === subcategory)
+          && discount(item) >= minDiscount;
+      });
+      const availableCategories = unique(dealsForCategories.map(item => item.category).filter(Boolean));
+
+      // 3. Available subcategories
+      const dealsForSubcategories = deals.filter(item => {
+        return (!queryTokens.length || queryTokens.every(token => item._searchText.includes(token)))
+          && (store === all || item.store === store)
+          && (category === all || item.category === category)
+          && discount(item) >= minDiscount;
+      });
+      const availableSubcategories = unique(dealsForSubcategories.map(item => item.subcategory || inferSubcategory(item)).filter(Boolean));
+
+      updateSelectOptions(controls.store, availableStores, store);
+      updateSelectOptions(controls.category, availableCategories, category);
+      updateSelectOptions(controls.subcategory, availableSubcategories, subcategory);
+
+      // 4. Category Rail counts
+      const dealsForRail = deals.filter(item => {
+        return (!queryTokens.length || queryTokens.every(token => item._searchText.includes(token)))
+          && (store === all || item.store === store)
+          && discount(item) >= minDiscount;
+      });
+
+      const counts = dealsForRail.reduce((acc, item) => {
         acc.set(item.category, (acc.get(item.category) || 0) + 1);
         return acc;
       }, new Map());
+
       categoryRailItems = [
-        { category: all, count: deals.length },
+        { category: all, count: dealsForRail.length },
         ...Array.from(counts.entries())
-        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "uk"))
-        .slice(0, 11)
-        .map(([category, count]) => ({ category, count }))
+          .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "uk"))
+          .slice(0, 15)
+          .map(([cat, count]) => ({ category: cat, count }))
       ];
-      updateCategoryRailState();
     }
 
     function updateCategoryRailState() {
@@ -1450,6 +1717,7 @@
     }
 
     function render() {
+      updateFiltersDynamic();
       const list = getFilteredDeals();
       renderActiveFilters();
       renderMetrics(list);
@@ -1490,19 +1758,6 @@
 
     function initializeFilters() {
       enrichDeals();
-      fillSelect(controls.store, unique(deals.map(item => item.store)));
-      fillSelect(controls.category, unique(deals.map(item => item.category)));
-      updateSubcategoryOptions();
-      renderCategoryRail();
-    }
-
-    function updateSubcategoryOptions() {
-      const current = controls.subcategory.value || all;
-      const category = controls.category.value;
-      const pool = category === all ? deals : deals.filter(item => item.category === category);
-      const options = unique(pool.map(item => item.subcategory || inferSubcategory(item)));
-      fillSelect(controls.subcategory, options);
-      controls.subcategory.value = options.includes(current) ? current : all;
     }
 
     document.querySelector("#dealsTable").addEventListener("change", event => {
@@ -1521,7 +1776,6 @@
       controls.subcategory.value = all;
       controls.sort.value = "discount";
       controls.minDiscount.value = "0";
-      updateSubcategoryOptions();
       visibleLimit = pageSize;
       selected.clear();
       renderComparison();
@@ -1538,7 +1792,6 @@
       if (!button) return;
       controls.category.value = button.dataset.category || all;
       controls.subcategory.value = all;
-      updateSubcategoryOptions();
       visibleLimit = pageSize;
       render();
       scrollToResults();
@@ -1554,11 +1807,22 @@
     });
     controls.category.addEventListener("change", () => {
       controls.subcategory.value = all;
-      updateSubcategoryOptions();
       visibleLimit = pageSize;
       render();
       scrollToResults();
     });
+
+    // Theme toggle logic
+    const themeToggleBtn = document.getElementById("themeToggle");
+    const currentTheme = localStorage.getItem("theme") || "light";
+    document.documentElement.setAttribute("data-theme", currentTheme);
+
+    themeToggleBtn.addEventListener("click", () => {
+      const theme = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", theme);
+      localStorage.setItem("theme", theme);
+    });
+
     loadImportedData().finally(() => {
       initializeFilters();
       renderSources();
@@ -1566,5 +1830,6 @@
       render();
     });
   </script>
+
 </body>
 </html>
