@@ -383,13 +383,6 @@
       gap: 4px;
     }
 
-    .filters-main-row .category-field {
-      width: 220px;
-      flex: 0 0 220px;
-      display: grid;
-      gap: 4px;
-    }
-
     .filters-main-row label {
       display: none;
     }
@@ -451,7 +444,7 @@
 
     .filters-advanced-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 8px;
       margin-bottom: 8px;
     }
@@ -483,44 +476,7 @@
       font-size: 13px;
     }
 
-    .category-rail {
-      grid-column: 1 / -1;
-      display: flex;
-      gap: 8px;
-      padding-top: 4px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
 
-    .category-rail::-webkit-scrollbar {
-      display: none;
-    }
-
-    .category-chip {
-      min-height: 28px;
-      flex: 0 0 auto;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 4px 10px;
-      color: var(--muted);
-      background: var(--card-bg);
-      font-size: 11px;
-      font-weight: 700;
-      transition: all 0.2s ease;
-    }
-
-    .category-chip:hover {
-      color: var(--ink);
-      border-color: var(--muted);
-      transform: translateY(-1px);
-    }
-
-    .category-chip.active {
-      color: #fff;
-      border-color: var(--green);
-      background: linear-gradient(135deg, var(--green), var(--blue));
-      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
-    }
 
     input:focus,
     select:focus {
@@ -1056,24 +1012,7 @@
       .filters-advanced-grid {
         grid-template-columns: 1fr;
       }
-      .filters-main-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 6px;
-      }
-      .filters-main-row .search-field {
-        grid-column: 1 / -1;
-      }
-      .filters-main-row .category-field {
-        width: 100%;
-        flex: auto;
-      }
-      .filters-main-row .btn-toggle-filters {
-        width: 100%;
-        min-height: 34px;
-        padding: 0 8px;
-        gap: 4px;
-      }
+
       .metrics {
         grid-template-columns: 1fr;
         gap: 8px;
@@ -1278,10 +1217,6 @@
             <label for="search">Пошук</label>
             <input id="search" type="search" placeholder="Пошук акцій за назвою товару...">
           </div>
-          <div class="field category-field">
-            <label for="categoryFilter">Категорія</label>
-            <select id="categoryFilter"></select>
-          </div>
           <button type="button" class="btn-toggle-filters" id="toggleFiltersBtn">
             <svg class="filters-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="4" y1="21" x2="4" y2="14"></line>
@@ -1305,6 +1240,10 @@
               <select id="storeFilter"></select>
             </div>
             <div class="field">
+              <label for="categoryFilter">Категорія</label>
+              <select id="categoryFilter"></select>
+            </div>
+            <div class="field">
               <label for="subcategoryFilter">Підкатегорія</label>
               <select id="subcategoryFilter"></select>
             </div>
@@ -1326,7 +1265,6 @@
               </select>
             </div>
           </div>
-          <div class="category-rail" id="categoryRail" aria-label="Швидкий вибір категорії"></div>
         </div>
       </section>
 
@@ -1406,7 +1344,7 @@
     const pageSize = 90;
     let visibleLimit = pageSize;
     let searchTimer = null;
-    let categoryRailItems = [];
+
     const dataVersion = "2026-06-04-fast-search";
     const controls = {
       search: document.querySelector("#search"),
@@ -1414,8 +1352,7 @@
       category: document.querySelector("#categoryFilter"),
       subcategory: document.querySelector("#subcategoryFilter"),
       sort: document.querySelector("#sortFilter"),
-      minDiscount: document.querySelector("#minDiscount"),
-      categoryRail: document.querySelector("#categoryRail")
+      minDiscount: document.querySelector("#minDiscount")
     };
 
     function unique(values) {
@@ -1956,32 +1893,6 @@
       updateSelectOptions(controls.category, availableCategories, category);
       updateSelectOptions(controls.subcategory, availableSubcategories, subcategory);
 
-      // 4. Category Rail counts
-      const dealsForRail = deals.filter(item => {
-        return (!queryTokens.length || queryTokens.every(token => item._searchText.includes(token)))
-          && (store === all || item.store === store)
-          && discount(item) >= minDiscount;
-      });
-
-      const counts = dealsForRail.reduce((acc, item) => {
-        acc.set(item.category, (acc.get(item.category) || 0) + 1);
-        return acc;
-      }, new Map());
-
-      categoryRailItems = [
-        { category: all, count: dealsForRail.length },
-        ...Array.from(counts.entries())
-          .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "uk"))
-          .slice(0, 15)
-          .map(([cat, count]) => ({ category: cat, count }))
-      ];
-    }
-
-    function updateCategoryRailState() {
-      controls.categoryRail.innerHTML = categoryRailItems.map(({ category, count }) => {
-        const active = (controls.category.value || all) === category ? " active" : "";
-        return `<button class="category-chip${active}" type="button" data-category="${escapeAttribute(category)}">${category} · ${count}</button>`;
-      }).join("");
     }
 
     function scrollToResults() {
@@ -2008,7 +1919,6 @@
       renderMetrics(list);
       renderTable(list);
       renderBestDeals(list);
-      updateCategoryRailState();
     }
 
     function renderAfterSearchInput() {
@@ -2072,15 +1982,7 @@
       render();
     });
 
-    controls.categoryRail.addEventListener("click", event => {
-      const button = event.target.closest(".category-chip");
-      if (!button) return;
-      controls.category.value = button.dataset.category || all;
-      controls.subcategory.value = all;
-      visibleLimit = pageSize;
-      render();
-      scrollToResults();
-    });
+
 
     controls.search.addEventListener("input", renderAfterSearchInput);
     [controls.store, controls.sort, controls.minDiscount, controls.subcategory].forEach(control => {
