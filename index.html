@@ -345,14 +345,99 @@
       max-width: 1540px;
       margin: 0 auto 24px;
       padding: 16px;
-      display: grid;
-      grid-template-columns: minmax(260px, 1.35fr) repeat(5, minmax(145px, 1fr));
-      gap: 12px;
-      align-items: end;
       background: var(--filter-bg);
       backdrop-filter: blur(20px);
       border-radius: 12px;
       border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .filters-main-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      width: 100%;
+    }
+
+    .filters-main-row .search-field {
+      flex: 1;
+      display: grid;
+      gap: 6px;
+    }
+
+    .filters-main-row .category-field {
+      width: 240px;
+      flex: 0 0 240px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .filters-main-row label {
+      display: none;
+    }
+
+    .btn-toggle-filters {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 0 16px;
+      min-height: 40px;
+      color: var(--ink);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .btn-toggle-filters:hover {
+      background: var(--soft);
+      border-color: var(--muted);
+    }
+
+    .btn-toggle-filters.active {
+      background: var(--green-soft);
+      color: var(--green);
+      border-color: var(--green);
+    }
+
+    .filters-icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    .filters-advanced {
+      display: block;
+      overflow: hidden;
+      max-height: 500px;
+      transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, padding 0.3s ease-in-out, margin 0.3s ease-in-out;
+      opacity: 1;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      margin-top: 12px;
+      width: 100%;
+    }
+
+    .filters-advanced.collapsed {
+      max-height: 0;
+      opacity: 0;
+      padding-top: 0;
+      border-top-color: transparent;
+      margin-top: 0;
+      pointer-events: none;
+    }
+
+    .filters-advanced-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 12px;
     }
 
     .field {
@@ -844,7 +929,7 @@
       .main-grid {
         grid-template-columns: 1fr;
       }
-      .filters {
+      .filters-advanced-grid {
         grid-template-columns: 1fr 1fr 1fr;
       }
     }
@@ -853,7 +938,7 @@
       .metrics {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
-      .filters {
+      .filters-advanced-grid {
         grid-template-columns: 1fr 1fr;
       }
     }
@@ -951,9 +1036,17 @@
         flex-direction: column;
         gap: 12px;
       }
-      .filters {
+      .filters-advanced-grid {
         grid-template-columns: 1fr;
-        top: 64px;
+      }
+      .filters-main-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+      .filters-main-row .category-field {
+        width: 100%;
+        flex: auto;
       }
       .metrics {
         grid-template-columns: 1fr;
@@ -1161,40 +1254,61 @@
       </section>
 
       <section class="filters panel">
-        <div class="field">
-          <label for="search">Пошук</label>
-          <input id="search" type="search" placeholder="Товар, магазин або категорія">
+        <div class="filters-main-row">
+          <div class="field search-field">
+            <label for="search">Пошук</label>
+            <input id="search" type="search" placeholder="Пошук акцій за назвою товару...">
+          </div>
+          <div class="field category-field">
+            <label for="categoryFilter">Категорія</label>
+            <select id="categoryFilter"></select>
+          </div>
+          <button type="button" class="btn-toggle-filters" id="toggleFiltersBtn">
+            <svg class="filters-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="4" y1="21" x2="4" y2="14"></line>
+              <line x1="4" y1="10" x2="4" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12" y2="3"></line>
+              <line x1="20" y1="21" x2="20" y2="16"></line>
+              <line x1="20" y1="12" x2="20" y2="3"></line>
+              <line x1="1" y1="14" x2="7" y2="14"></line>
+              <line x1="9" y1="8" x2="15" y2="8"></line>
+              <line x1="17" y1="16" x2="23" y2="16"></line>
+            </svg>
+            <span>Фільтри</span>
+          </button>
         </div>
-        <div class="field">
-          <label for="storeFilter">Мережа</label>
-          <select id="storeFilter"></select>
+
+        <div class="filters-advanced collapsed" id="advancedFilters">
+          <div class="filters-advanced-grid">
+            <div class="field">
+              <label for="storeFilter">Мережа</label>
+              <select id="storeFilter"></select>
+            </div>
+            <div class="field">
+              <label for="subcategoryFilter">Підкатегорія</label>
+              <select id="subcategoryFilter"></select>
+            </div>
+            <div class="field">
+              <label for="sortFilter">Сортування</label>
+              <select id="sortFilter">
+                <option value="discount">Найбільша знижка</option>
+                <option value="price">Найнижча акційна ціна</option>
+                <option value="ending">Скоро завершується</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="minDiscount">Мін. знижка</label>
+              <select id="minDiscount">
+                <option value="0">Будь-яка</option>
+                <option value="15">від 15%</option>
+                <option value="25">від 25%</option>
+                <option value="30">від 30%</option>
+              </select>
+            </div>
+          </div>
+          <div class="category-rail" id="categoryRail" aria-label="Швидкий вибір категорії"></div>
         </div>
-        <div class="field">
-          <label for="categoryFilter">Категорія</label>
-          <select id="categoryFilter"></select>
-        </div>
-        <div class="field">
-          <label for="subcategoryFilter">Підкатегорія</label>
-          <select id="subcategoryFilter"></select>
-        </div>
-        <div class="field">
-          <label for="sortFilter">Сортування</label>
-          <select id="sortFilter">
-            <option value="discount">Найбільша знижка</option>
-            <option value="price">Найнижча акційна ціна</option>
-            <option value="ending">Скоро завершується</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="minDiscount">Мін. знижка</label>
-          <select id="minDiscount">
-            <option value="0">Будь-яка</option>
-            <option value="15">від 15%</option>
-            <option value="25">від 25%</option>
-            <option value="30">від 30%</option>
-          </select>
-        </div>
-        <div class="category-rail" id="categoryRail" aria-label="Швидкий вибір категорії"></div>
       </section>
 
       <section class="main-grid">
@@ -1976,6 +2090,15 @@
 
     window.addEventListener("resize", updateStickyHeaderHeight);
     window.addEventListener("load", updateStickyHeaderHeight);
+
+    const toggleFiltersBtn = document.getElementById("toggleFiltersBtn");
+    const advancedFilters = document.getElementById("advancedFilters");
+
+    toggleFiltersBtn.addEventListener("click", () => {
+      const isCollapsed = advancedFilters.classList.toggle("collapsed");
+      toggleFiltersBtn.classList.toggle("active", !isCollapsed);
+      setTimeout(updateStickyHeaderHeight, 310);
+    });
 
     loadImportedData().finally(() => {
       initializeFilters();
