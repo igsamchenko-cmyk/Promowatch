@@ -358,24 +358,14 @@
       display: flex;
       flex-direction: column;
       gap: 0;
-      max-height: 500px;
-      overflow: hidden;
-      transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                   opacity 0.3s ease,
-                  padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                  margin 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                  border-color 0.3s ease,
                   box-shadow 0.3s ease;
     }
 
     .filters.collapsed-panel {
-      max-height: 0 !important;
-      opacity: 0 !important;
-      padding-top: 0 !important;
-      padding-bottom: 0 !important;
-      margin-top: 0 !important;
-      margin-bottom: 0 !important;
-      border-color: transparent !important;
+      transform: translateY(-100%);
+      opacity: 0;
       pointer-events: none;
       box-shadow: none !important;
     }
@@ -1188,6 +1178,7 @@
         z-index: 85;
         background: var(--card-bg) !important;
         box-shadow: inset 0 -1px 0 var(--line);
+        transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .side-stack {
         display: grid;
@@ -2002,7 +1993,9 @@
     if (filtersEl) {
       const resizeObserver = new ResizeObserver(entries => {
         for (let entry of entries) {
-          document.documentElement.style.setProperty("--filters-height", `${entry.target.offsetHeight}px`);
+          if (!entry.target.classList.contains("collapsed-panel")) {
+            document.documentElement.style.setProperty("--filters-height", `${entry.target.offsetHeight}px`);
+          }
         }
       });
       resizeObserver.observe(filtersEl);
@@ -2128,10 +2121,21 @@
     const filtersPanel = document.querySelector(".filters");
     let isExplicitlyHidden = localStorage.getItem("filtersHidden") === "true";
 
-    if (isExplicitlyHidden) {
+    function collapseFilters() {
       filtersPanel.classList.add("collapsed-panel");
+      document.documentElement.style.setProperty("--filters-height", "0px");
+    }
+
+    function expandFilters() {
+      filtersPanel.classList.remove("collapsed-panel");
+      document.documentElement.style.setProperty("--filters-height", `${filtersPanel.offsetHeight}px`);
+    }
+
+    if (isExplicitlyHidden) {
+      collapseFilters();
       toggleFiltersPanelBtn.classList.remove("active");
     } else {
+      expandFilters();
       toggleFiltersPanelBtn.classList.add("active");
     }
 
@@ -2140,10 +2144,10 @@
       localStorage.setItem("filtersHidden", isExplicitlyHidden);
       
       if (isExplicitlyHidden) {
-        filtersPanel.classList.add("collapsed-panel");
+        collapseFilters();
         toggleFiltersPanelBtn.classList.remove("active");
       } else {
-        filtersPanel.classList.remove("collapsed-panel");
+        expandFilters();
         toggleFiltersPanelBtn.classList.add("active");
         // Scroll to top smoothly so filters are fully visible and layout is stable
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -2157,9 +2161,9 @@
       const currentScrollY = window.scrollY;
       
       if (currentScrollY > 120) {
-        filtersPanel.classList.add("collapsed-panel");
+        collapseFilters();
       } else if (currentScrollY < 30) {
-        filtersPanel.classList.remove("collapsed-panel");
+        expandFilters();
       }
     });
 
