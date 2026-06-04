@@ -38,5 +38,15 @@
     "count": 2587,
     "pages": 56,
     "error": null
+  },
+  {
+    "source": {
+      "store": "Сільпо",
+      "slug": "silpo.ua",
+      "url": "https://de-deshevshe.com.ua/city/lviv/shop/silpo.ua/"
+    },
+    "count": 4858,
+    "pages": 109,
+    "error": null
   }
 ]
