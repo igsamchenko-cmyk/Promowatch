@@ -40,7 +40,7 @@ const rules = {
   coffeeTea: /кава|чай|цикор|maccoffee|jacobs|monarch|nescafe|tea moments|lipton|lovare|ahmad/,
   plantDrink: /напій.*(вівсян|мигдал|соєв|рисов|кокос|гречан)|vega milk|oat&|oat\s*banana/,
   nonAlcoholic: /безалкогольн/,
-  alcohol: /слабоалкогольн|пиво|вино|віно|віскі|лікер|горіл|сидр|шампан|ігрист|брют|просек|prosecco|frizzante|аперитив|бренді|коньяк|(^|[^а-яіїєґ])ром(у|ом|а)?(?=[^а-яіїєґ]|$)|(^|[^а-яіїєґ])джин(у|ом|а)?(?=[^а-яіїєґ]|$)|текіл|вермут|бальзам.*\d+%/,
+  alcohol: /слабоалкогольн|пиво|вино(?!град)|віно(?!град)|віскі|лікер|горіл|сидр|шампан|ігрист|брют|просек|prosecco|frizzante|аперитив|бренді|коньяк|(^|[^а-яіїєґ])ром(у|ом|а)?(?=[^а-яіїєґ]|$)|(^|[^а-яіїєґ])джин(у|ом|а)?(?=[^а-яіїєґ]|$)|текіл|вермут|бальзам.*\d+%/,
   fish: /крабов|оселед|кревет|міді|кальмар|морепродукт|ікра|шпрот|сардин|скумбр|форел|сьомг|(^|[^а-яіїєґ])хек([^а-яіїєґ]|$)|минтай|лосос|тунець|масляна|анчоус|(^|[^а-яіїєґ])риб(а|н|к|н[а-яіїєґ])|(^|[^а-яіїєґ])кільк/,
   iceCream: /морозив|ескімо|пломбір|сорбет|ice\s*laska|хладик|ласка.*ескімо|лімо.*пломбір/,
   frozenDumplings: /пельмен|вареник|гіоза|gyoza/,
@@ -79,10 +79,10 @@ export function inferCategory(name) {
   if (has(text, rules.plantDrink)) return "Напої";
   if (has(text, rules.cottageDairy)) return "Молочні";
   if (isHardCheeseProduct(text)) return "Молочні";
-  if (has(text, rules.alcohol)) return "Алкоголь";
-  if (has(text, rules.fish)) return "Риба та морепродукти";
   if (has(text, rules.iceCream) || has(text, rules.frozenDumplings) || has(text, rules.frozenOther)) return "Заморозка";
   if (has(text, rules.sweets)) return "Солодощі";
+  if (has(text, rules.alcohol)) return "Алкоголь";
+  if (has(text, rules.fish)) return "Риба та морепродукти";
   if (has(text, rules.snacks)) return "Снеки";
   if (has(text, rules.ready)) return "Готові страви";
   if (has(text, rules.sausage)) return "Ковбаси";
@@ -174,7 +174,7 @@ export function inferSubcategory(name, category) {
   }
   if (category === "Алкоголь") {
     if (/пиво/.test(text)) return "Пиво";
-    if (/вино|віно|шампан|ігрист|брют|просек|prosecco|frizzante/.test(text)) return "Вино";
+    if (/вино(?!град)|віно(?!град)|шампан|ігрист|брют|просек|prosecco|frizzante/.test(text)) return "Вино";
     if (/віскі/.test(text)) return "Віскі";
     if (/(^|[^а-яіїєґ])джин(у|ом|а)?(?=[^а-яіїєґ]|$)/.test(text)) return "Джин";
     if (/горіл/.test(text)) return "Горілка";
