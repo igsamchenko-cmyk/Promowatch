@@ -23,8 +23,11 @@ jobs:
       - name: Import latest promos
         run: node tools/import-promos.mjs
 
+      - name: Audit product classification
+        run: node tools/audit-classification.mjs --fix
+
       - name: Commit updated data
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Update promo data"
-          file_pattern: data/deals.json data/source-report.json
+          file_pattern: data/deals.json data/source-report.json data/classification-report.json
