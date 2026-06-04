@@ -50,9 +50,36 @@ function decodeHtml(text = "") {
 }
 
 function numberFrom(text = "") {
-  const normalized = String(text).replace(/\s/g, "").replace(",", ".");
-  const match = normalized.match(/[0-9]+(?:\.[0-9]+)?/);
-  return match ? Number(match[0]) : null;
+  const cleaned = decodeHtml(String(text).replace(/<[^>]*>/g, " "))
+    .replace(/\u00a0/g, " ");
+  const match = cleaned.match(/\d[\d\s.,]*/);
+  if (!match) return null;
+
+  let number = match[0].replace(/\s/g, "");
+  const lastComma = number.lastIndexOf(",");
+  const lastDot = number.lastIndexOf(".");
+
+  if (lastComma >= 0 && lastDot >= 0) {
+    const decimalSeparator = lastComma > lastDot ? "," : ".";
+    const thousandsSeparator = decimalSeparator === "," ? "." : ",";
+    number = number
+      .replace(new RegExp(`\\${thousandsSeparator}`, "g"), "")
+      .replace(decimalSeparator, ".");
+  } else if (lastComma >= 0) {
+    const decimals = number.length - lastComma - 1;
+    number = decimals > 0 && decimals <= 2
+      ? number.replace(",", ".")
+      : number.replace(/,/g, "");
+  } else if (lastDot >= 0) {
+    const decimals = number.length - lastDot - 1;
+    const groups = number.split(".");
+    number = decimals > 0 && decimals <= 2 && groups.length === 2
+      ? number
+      : number.replace(/\./g, "");
+  }
+
+  const parsed = Number(number);
+  return Number.isFinite(parsed) ? parsed : null;
 }
 
 function round2(value) {
