@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-06-04T13:21:38.277Z",
+  "generatedAt": "2026-06-04T13:31:03.252Z",
   "fixed": true,
-  "changedDeals": 1,
+  "changedDeals": 0,
   "before": {
     "ok": true,
-    "totalDeals": 9991,
+    "totalDeals": 10283,
     "issueCount": 0,
     "issues": [
       {
@@ -101,7 +101,7 @@
   },
   "after": {
     "ok": true,
-    "totalDeals": 9991,
+    "totalDeals": 10283,
     "issueCount": 0,
     "issues": [
       {
@@ -196,21 +196,5 @@
       }
     ]
   },
-  "changedExamples": [
-    {
-      "id": 1001,
-      "name": "Сир плавлений 50% Оріджинал Squeeze cheese Комо туб 150г",
-      "store": "Ашан",
-      "from": {
-        "category": "Алкоголь",
-        "subcategory": "Джин",
-        "color": "#8a3d74"
-      },
-      "to": {
-        "category": "Твердий сир",
-        "subcategory": "Плавлений сир",
-        "color": "#d7a018"
-      }
-    }
-  ]
+  "changedExamples": []
 }
