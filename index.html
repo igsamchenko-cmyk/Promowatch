@@ -260,7 +260,7 @@
     .filters {
       padding: 14px;
       display: grid;
-      grid-template-columns: minmax(220px, 1.5fr) repeat(6, minmax(130px, 1fr));
+      grid-template-columns: minmax(220px, 1.5fr) repeat(5, minmax(130px, 1fr));
       gap: 10px;
       align-items: end;
       margin-bottom: 16px;
@@ -349,7 +349,7 @@
 
     table {
       width: 100%;
-      min-width: 920px;
+      min-width: 760px;
       border-collapse: collapse;
     }
 
@@ -431,11 +431,6 @@
 
     .store-name {
       font-weight: 800;
-    }
-
-    .old {
-      color: var(--muted);
-      font-size: 13px;
     }
 
     .price {
@@ -841,10 +836,6 @@
           <input id="search" type="search" placeholder="Товар, магазин або категорія">
         </div>
         <div class="field">
-          <label for="cityFilter">Місто</label>
-          <select id="cityFilter"></select>
-        </div>
-        <div class="field">
           <label for="storeFilter">Мережа</label>
           <select id="storeFilter"></select>
         </div>
@@ -889,9 +880,7 @@
                   <th class="select-row">✓</th>
                   <th>Товар</th>
                   <th>Мережа</th>
-                  <th>Місто</th>
                   <th>Акційна</th>
-                  <th>Було</th>
                   <th>За одиницю</th>
                   <th>Знижка</th>
                   <th>Діє до</th>
@@ -947,7 +936,6 @@
     let visibleLimit = pageSize;
     const controls = {
       search: document.querySelector("#search"),
-      city: document.querySelector("#cityFilter"),
       store: document.querySelector("#storeFilter"),
       category: document.querySelector("#categoryFilter"),
       subcategory: document.querySelector("#subcategoryFilter"),
@@ -1283,17 +1271,15 @@
 
     function getFilteredDeals() {
       const query = controls.search.value.trim().toLowerCase();
-      const city = controls.city.value;
       const store = controls.store.value;
       const category = controls.category.value;
       const subcategory = controls.subcategory.value;
       const minDiscount = Number(controls.minDiscount.value);
 
       const filtered = deals.filter(item => {
-        const text = `${item.name} ${item.size} ${item.category} ${item.subcategory} ${item.store} ${item.city}`.toLowerCase();
+        const text = `${item.name} ${item.size} ${item.category} ${item.subcategory} ${item.store}`.toLowerCase();
         return isActivePromo(item)
           && (!query || text.includes(query))
-          && (city === all || item.city === city)
           && (store === all || item.store === store)
           && (category === all || item.category === category)
           && (subcategory === all || item.subcategory === subcategory)
@@ -1342,14 +1328,12 @@
             </div>
           </td>
           <td class="store-name" data-label="Мережа">${item.store}</td>
-          <td data-label="Місто">${item.city}</td>
           <td class="price" data-label="Акційна ціна">${money(item.price)}</td>
-          <td class="old" data-label="Було">${money(item.old)}</td>
           <td data-label="За одиницю">${unitPriceLabel(item)}</td>
           <td data-label="Знижка"><span class="discount">-${discount(item)}%</span></td>
           <td data-label="Діє до">${termLabel(item)}</td>
         </tr>
-      `).join("") || `<tr><td colspan="9" class="cell-product">${emptyMessage}</td></tr>`;
+      `).join("") || `<tr><td colspan="7" class="cell-product">${emptyMessage}</td></tr>`;
     }
 
     function renderBestDeals(list) {
@@ -1403,7 +1387,6 @@
 
     function renderActiveFilters() {
       const parts = [];
-      if (controls.city.value !== all) parts.push(`місто: ${controls.city.value}`);
       if (controls.store.value !== all) parts.push(`мережа: ${controls.store.value}`);
       if (controls.category.value !== all) parts.push(`категорія: ${controls.category.value}`);
       if (controls.subcategory.value !== all) parts.push(`підкатегорія: ${controls.subcategory.value}`);
@@ -1451,7 +1434,6 @@
 
     function initializeFilters() {
       enrichDeals();
-      fillSelect(controls.city, unique(deals.map(item => item.city)));
       fillSelect(controls.store, unique(deals.map(item => item.store)));
       fillSelect(controls.category, unique(deals.map(item => item.category)));
       updateSubcategoryOptions();
@@ -1506,7 +1488,6 @@
 
     document.querySelector("#resetButton").addEventListener("click", () => {
       controls.search.value = "";
-      controls.city.value = all;
       controls.store.value = all;
       controls.category.value = all;
       controls.subcategory.value = all;
@@ -1527,7 +1508,7 @@
       visibleLimit = pageSize;
       render();
     });
-    [controls.city, controls.store, controls.sort, controls.minDiscount, controls.subcategory].forEach(control => {
+    [controls.store, controls.sort, controls.minDiscount, controls.subcategory].forEach(control => {
       control.addEventListener("change", () => {
         visibleLimit = pageSize;
         render();
