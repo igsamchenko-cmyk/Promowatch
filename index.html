@@ -84,8 +84,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 64px;
-      padding: 0 24px;
+      height: 48px;
+      padding: 0 16px;
       background: var(--card-bg);
       border-bottom: 1px solid var(--line);
       box-shadow: var(--shadow);
@@ -98,17 +98,17 @@
     .nav-brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .logo {
-      width: 26px;
-      height: 26px;
+      width: 20px;
+      height: 20px;
       color: var(--green);
     }
 
     .brand-name {
-      font-size: 18px;
+      font-size: 15px;
       font-weight: 800;
       letter-spacing: -0.025em;
       color: var(--ink);
@@ -123,16 +123,16 @@
     .nav-actions {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
     }
 
     .nav-badge {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 800;
       background: var(--green-soft);
       color: var(--green);
-      padding: 4px 8px;
-      border-radius: 6px;
+      padding: 3px 6px;
+      border-radius: 4px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
@@ -140,9 +140,9 @@
     .theme-toggle-btn {
       background: none;
       border: 1px solid var(--line);
-      border-radius: 8px;
-      width: 38px;
-      height: 38px;
+      border-radius: 6px;
+      width: 32px;
+      height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -157,8 +157,8 @@
       background: var(--soft);
     }
 
-    .sun-icon { display: block; width: 18px; height: 18px; }
-    .moon-icon { display: none; width: 18px; height: 18px; }
+    .sun-icon { display: block; width: 16px; height: 16px; }
+    .moon-icon { display: none; width: 16px; height: 16px; }
 
     [data-theme="dark"] .sun-icon { display: none; }
     [data-theme="dark"] .moon-icon { display: block; }
@@ -340,14 +340,14 @@
 
     .filters {
       position: sticky;
-      top: 64px;
+      top: 48px;
       z-index: 90;
       max-width: 1540px;
-      margin: 0 auto 24px;
-      padding: 16px;
+      margin: 0 auto 16px;
+      padding: 8px 12px;
       background: var(--filter-bg);
       backdrop-filter: blur(20px);
-      border-radius: 12px;
+      border-radius: 8px;
       border: 1px solid var(--line);
       display: flex;
       flex-direction: column;
@@ -356,7 +356,7 @@
 
     .filters-main-row {
       display: flex;
-      gap: 12px;
+      gap: 8px;
       align-items: center;
       width: 100%;
     }
@@ -364,14 +364,14 @@
     .filters-main-row .search-field {
       flex: 1;
       display: grid;
-      gap: 6px;
+      gap: 4px;
     }
 
     .filters-main-row .category-field {
-      width: 240px;
-      flex: 0 0 240px;
+      width: 220px;
+      flex: 0 0 220px;
       display: grid;
-      gap: 6px;
+      gap: 4px;
     }
 
     .filters-main-row label {
@@ -382,12 +382,12 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       background: var(--card-bg);
       border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 0 16px;
-      min-height: 40px;
+      border-radius: 6px;
+      padding: 0 12px;
+      min-height: 34px;
       color: var(--ink);
       font-weight: 700;
       font-size: 13px;
@@ -408,8 +408,8 @@
     }
 
     .filters-icon {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
     }
 
     .filters-advanced {
@@ -418,9 +418,9 @@
       max-height: 500px;
       transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, padding 0.3s ease-in-out, margin 0.3s ease-in-out;
       opacity: 1;
-      padding-top: 16px;
+      padding-top: 10px;
       border-top: 1px solid var(--line);
-      margin-top: 12px;
+      margin-top: 8px;
       width: 100%;
     }
 
@@ -436,18 +436,18 @@
     .filters-advanced-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-bottom: 12px;
+      gap: 8px;
+      margin-bottom: 8px;
     }
 
     .field {
       display: grid;
-      gap: 6px;
+      gap: 4px;
     }
 
     label {
       color: var(--muted);
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -456,14 +456,15 @@
     input,
     select {
       width: 100%;
-      min-height: 40px;
+      min-height: 34px;
       border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 8px 12px;
+      border-radius: 6px;
+      padding: 6px 10px;
       outline: none;
       color: var(--ink);
       background: var(--input-bg);
       transition: all 0.2s ease;
+      font-size: 13px;
     }
 
     .category-rail {
@@ -480,14 +481,14 @@
     }
 
     .category-chip {
-      min-height: 34px;
+      min-height: 28px;
       flex: 0 0 auto;
       border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 6px 14px;
+      padding: 4px 10px;
       color: var(--muted);
       background: var(--card-bg);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       transition: all 0.2s ease;
     }
@@ -502,7 +503,7 @@
       color: #fff;
       border-color: var(--green);
       background: linear-gradient(135deg, var(--green), var(--blue));
-      box-shadow: 0 6px 15px rgba(16, 185, 129, 0.25);
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
     }
 
     input:focus,
@@ -1025,37 +1026,46 @@
 
     @media (max-width: 540px) {
       main {
-        padding: 16px;
+        padding: 12px;
       }
       .hero {
-        padding: 24px;
-        min-height: 180px;
+        padding: 16px;
+        min-height: 120px;
       }
       .topline {
         align-items: flex-start;
         flex-direction: column;
-        gap: 12px;
+        gap: 8px;
       }
       .filters-advanced-grid {
         grid-template-columns: 1fr;
       }
       .filters-main-row {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+      }
+      .filters-main-row .search-field {
+        grid-column: 1 / -1;
       }
       .filters-main-row .category-field {
         width: 100%;
         flex: auto;
       }
+      .filters-main-row .btn-toggle-filters {
+        width: 100%;
+        min-height: 34px;
+        padding: 0 8px;
+        gap: 4px;
+      }
       .metrics {
         grid-template-columns: 1fr;
-        gap: 12px;
+        gap: 8px;
       }
       .panel-head {
         align-items: flex-start;
         flex-direction: column;
-        gap: 8px;
+        gap: 6px;
       }
     }
 
@@ -1123,11 +1133,11 @@
       }
       .filters {
         position: sticky;
-        top: 64px !important;
+        top: 48px !important;
         z-index: 90;
-        margin-bottom: 16px;
+        margin-bottom: 12px;
         max-width: 1540px;
-        padding: 12px 16px;
+        padding: 8px 12px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       }
       .main-grid {
@@ -1148,7 +1158,7 @@
       }
       thead th {
         position: sticky;
-        top: calc(64px + var(--filters-height, 120px));
+        top: calc(48px + var(--filters-height, 90px));
         z-index: 85;
         background: var(--card-bg) !important;
         box-shadow: inset 0 -1px 0 var(--line);
@@ -1279,8 +1289,8 @@
             <div class="field">
               <label for="sortFilter">Сортування</label>
               <select id="sortFilter">
+                <option value="price" selected>Найнижча акційна ціна</option>
                 <option value="discount">Найбільша знижка</option>
-                <option value="price">Найнижча акційна ціна</option>
                 <option value="ending">Скоро завершується</option>
               </select>
             </div>
@@ -2025,7 +2035,7 @@
       controls.store.value = all;
       controls.category.value = all;
       controls.subcategory.value = all;
-      controls.sort.value = "discount";
+      controls.sort.value = "price";
       controls.minDiscount.value = "0";
       visibleLimit = pageSize;
       selected.clear();
