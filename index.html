@@ -36,118 +36,25 @@
 
     .app {
       min-height: 100vh;
-      display: grid;
-      grid-template-columns: 260px minmax(0, 1fr);
-    }
-
-    .sidebar {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow-y: auto;
-      padding: 22px 18px;
-      background: var(--surface);
-      border-right: 1px solid var(--line);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 22px;
-      font-weight: 850;
-    }
-
-    .brand-mark {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      display: grid;
-      place-items: center;
-      color: #fff;
-      background: linear-gradient(135deg, var(--green), var(--blue));
-      font-weight: 900;
-    }
-
-    .side-title {
-      margin: 22px 0 10px;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .category-list,
-    .store-list {
-      display: grid;
-      gap: 7px;
-    }
-
-    .category-button {
-      width: 100%;
-      min-height: 40px;
-      border: 0;
-      border-radius: 8px;
-      padding: 9px 11px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      color: #35424e;
-      background: transparent;
-      text-align: left;
-    }
-
-    .category-button.active {
-      background: var(--green-soft);
-      color: var(--green);
-      font-weight: 800;
-    }
-
-    .store-pill {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      min-height: 36px;
-      padding: 6px 8px;
-      border-radius: 8px;
-      color: #4a5661;
-      font-size: 13px;
-      cursor: pointer;
-      transition: background 0.12s ease;
-    }
-
-    .store-pill:hover {
-      background: var(--soft);
-    }
-
-    .store-pill.active {
-      background: var(--green-soft);
-      color: var(--green);
-      font-weight: 800;
-    }
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      flex: 0 0 10px;
+      display: block;
     }
 
     main {
+      width: 100%;
+      max-width: 1540px;
+      margin: 0 auto;
       min-width: 0;
-      padding: 22px;
+      padding: 18px 22px 28px;
     }
 
     .hero {
-      min-height: 250px;
+      min-height: 150px;
       border-radius: 8px;
       overflow: hidden;
       position: relative;
       display: flex;
       align-items: flex-end;
-      padding: 28px;
+      padding: 22px;
       color: #fff;
       background-image:
         linear-gradient(90deg, rgba(8, 15, 20, 0.86), rgba(8, 15, 20, 0.5), rgba(8, 15, 20, 0.06)),
@@ -160,8 +67,8 @@
     .hero h1 {
       margin: 0;
       max-width: 830px;
-      font-size: clamp(31px, 5vw, 58px);
-      line-height: 1.02;
+      font-size: clamp(28px, 3vw, 42px);
+      line-height: 1.05;
       letter-spacing: 0;
     }
 
@@ -258,12 +165,16 @@
     }
 
     .filters {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      max-width: 1220px;
+      margin: 0 auto 16px;
       padding: 14px;
       display: grid;
-      grid-template-columns: minmax(220px, 1.5fr) repeat(5, minmax(130px, 1fr));
+      grid-template-columns: minmax(260px, 1.35fr) repeat(5, minmax(145px, 1fr));
       gap: 10px;
       align-items: end;
-      margin-bottom: 16px;
     }
 
     .field {
@@ -297,7 +208,7 @@
 
     .main-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.55fr) minmax(330px, 0.86fr);
+      grid-template-columns: minmax(0, 1fr);
       gap: 16px;
       align-items: start;
     }
@@ -507,6 +418,7 @@
 
     .side-stack {
       display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 16px;
     }
 
@@ -647,56 +559,15 @@
       .filters {
         grid-template-columns: 1fr 1fr 1fr;
       }
+      .side-stack {
+        grid-template-columns: 1fr;
+      }
       .filters .ghost-button {
         min-height: 44px;
       }
     }
 
-    @media (max-width: 1160px) {
-      .main-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* ----- Tablet / mobile: sidebar becomes a compact horizontal strip ----- */
     @media (max-width: 980px) {
-      .app {
-        grid-template-columns: 1fr;
-      }
-      .sidebar {
-        position: static;
-        height: auto;
-        padding: 14px 16px;
-        border-right: 0;
-        border-bottom: 1px solid var(--line);
-      }
-      .side-title {
-        margin: 14px 0 8px;
-      }
-      .category-list,
-      .store-list {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 8px;
-        overflow-x: auto;
-        padding-bottom: 6px;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
-      }
-      .category-button {
-        width: auto;
-        flex: 0 0 auto;
-        white-space: nowrap;
-        border: 1px solid var(--line);
-      }
-      .store-pill {
-        flex: 0 0 auto;
-        white-space: nowrap;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        padding: 7px 12px;
-        min-height: 38px;
-      }
       .metrics {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -812,19 +683,6 @@
 </head>
 <body>
   <div class="app">
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="brand-mark">₴</div>
-        <span>PromoWatch UA</span>
-      </div>
-
-      <div class="side-title">Категорії</div>
-      <nav class="category-list" id="categoryNav"></nav>
-
-      <div class="side-title">Мережі</div>
-      <div class="store-list" id="storeList"></div>
-    </aside>
-
     <main>
       <section class="hero">
         <div>
@@ -1301,18 +1159,6 @@
       select.innerHTML = values.map(value => `<option value="${value}">${value}</option>`).join("");
     }
 
-    function renderSidebar(categories, stores) {
-      document.querySelector("#categoryNav").innerHTML = categories.map(category => {
-        const count = category === all ? deals.length : deals.filter(item => item.category === category).length;
-        return `<button class="category-button ${controls.category.value === category ? "active" : ""}" data-category="${category}"><span>${category}</span><b>${count}</b></button>`;
-      }).join("");
-
-      const colors = ["#e31e24", "#16845c", "#245fbd", "#b97811", "#8a3d74", "#384551"];
-      document.querySelector("#storeList").innerHTML = stores.filter(store => store !== all).map((store, index) => (
-        `<div class="store-pill ${controls.store.value === store ? "active" : ""}" data-store="${store}" role="button" tabindex="0"><span class="dot" style="background:${colors[index % colors.length]}"></span>${store}</div>`
-      )).join("");
-    }
-
     function getFilteredDeals() {
       const query = controls.search.value.trim().toLowerCase();
       const store = controls.store.value;
@@ -1454,7 +1300,6 @@
 
     function render() {
       const list = getFilteredDeals();
-      renderSidebar(unique(deals.map(item => item.category)), unique(deals.map(item => item.store)));
       renderActiveFilters();
       renderMetrics(list);
       renderTable(list);
@@ -1500,35 +1345,6 @@
       fillSelect(controls.subcategory, options);
       controls.subcategory.value = options.includes(current) ? current : all;
     }
-
-    document.querySelector("#categoryNav").addEventListener("click", event => {
-      const button = event.target.closest("button[data-category]");
-      if (!button) return;
-      controls.category.value = button.dataset.category;
-      controls.subcategory.value = all;
-      updateSubcategoryOptions();
-      visibleLimit = pageSize;
-      render();
-      scrollToResults();
-    });
-
-    function selectStore(store) {
-      controls.store.value = controls.store.value === store ? all : store;
-      visibleLimit = pageSize;
-      render();
-      scrollToResults();
-    }
-
-    document.querySelector("#storeList").addEventListener("click", event => {
-      const pill = event.target.closest(".store-pill[data-store]");
-      if (pill) selectStore(pill.dataset.store);
-    });
-
-    document.querySelector("#storeList").addEventListener("keydown", event => {
-      if (event.key !== "Enter" && event.key !== " ") return;
-      const pill = event.target.closest(".store-pill[data-store]");
-      if (pill) { event.preventDefault(); selectStore(pill.dataset.store); }
-    });
 
     document.querySelector("#dealsTable").addEventListener("change", event => {
       const checkbox = event.target.closest(".compare-check");
