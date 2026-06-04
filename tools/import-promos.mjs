@@ -124,30 +124,46 @@ function splitCards(html) {
   return cards;
 }
 
+function normalizeMeasureUnit(unit) {
+  const value = String(unit || "").toLowerCase();
+  if (value === "г") return { unitLabel: "кг", factor: 1000, displayUnit: "г" };
+  if (value === "мл") return { unitLabel: "л", factor: 1000, displayUnit: "мл" };
+  if (value === "кг") return { unitLabel: "кг", factor: 1, displayUnit: "кг" };
+  if (value === "л") return { unitLabel: "л", factor: 1, displayUnit: "л" };
+  return null;
+}
+
+function parseDecimal(value) {
+  const parsed = Number(String(value || "").replace(",", "."));
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 function inferSize(name) {
   const cleaned = name.replace(/\s+/g, " ").trim();
-  const complex = cleaned.match(/(\d+)\*(\d+(?:[.,]\d+)?)\s*(г|мл|л|кг|шт)/i);
-  if (complex) {
-    const count = Number(complex[1]);
-    const amount = Number(complex[2].replace(",", "."));
-    const unit = complex[3].toLowerCase();
-    const total = count * amount;
-    if (unit === "г") return { size: `${complex[1]}*${complex[2]} г`, unitAmount: total / 1000, unitLabel: "кг" };
-    if (unit === "мл") return { size: `${complex[1]}*${complex[2]} мл`, unitAmount: total / 1000, unitLabel: "л" };
-    return { size: `${complex[1]}*${complex[2]} ${unit}`, unitAmount: total, unitLabel: unit };
+  const pack = cleaned.match(/(?:^|\s)(\d+)\s*(?:шт|штук|пак|табл|капс|ф\/?п|пакетик(?:и|ів)?|піпет(?:ки|ок))\s*(?:[xх×]|по)\s*(\d+(?:[.,]\d+)?)\s*(кг|г|л|мл)(?:\b|$)/i);
+  if (pack) {
+    const count = Number(pack[1]);
+    const amount = parseDecimal(pack[2]);
+    const unit = normalizeMeasureUnit(pack[3]);
+    if (unit && count > 0 && amount > 0) {
+      return {
+        size: `${count} x ${pack[2]} ${unit.displayUnit}`,
+        unitAmount: count * amount / unit.factor,
+        unitLabel: unit.unitLabel
+      };
+    }
   }
 
   const matches = [...cleaned.matchAll(/(?:^|\s)(\d+(?:[.,]\d+)?)\s*(кг|г|л|мл|шт|пак|табл|капс)(?:\b|$)/gi)];
   if (!matches.length) return { size: "1 шт", unitAmount: 1, unitLabel: "шт" };
 
   const match = matches[matches.length - 1];
-  const amount = Number(match[1].replace(",", "."));
-  const unit = match[2].toLowerCase();
-  if (unit === "г") return { size: `${match[1]} г`, unitAmount: amount / 1000, unitLabel: "кг" };
-  if (unit === "мл") return { size: `${match[1]} мл`, unitAmount: amount / 1000, unitLabel: "л" };
-  if (unit === "кг") return { size: `${match[1]} кг`, unitAmount: amount, unitLabel: "кг" };
-  if (unit === "л") return { size: `${match[1]} л`, unitAmount: amount, unitLabel: "л" };
-  return { size: `${match[1]} ${unit}`, unitAmount: amount || 1, unitLabel: "шт" };
+  const amount = parseDecimal(match[1]);
+  const unit = normalizeMeasureUnit(match[2]);
+  if (unit && amount > 0) return { size: `${match[1]} ${unit.displayUnit}`, unitAmount: amount / unit.factor, unitLabel: unit.unitLabel };
+  const unitText = match[2].toLowerCase();
+  if (amount > 0) return { size: `${match[1]} ${unitText}`, unitAmount: amount, unitLabel: "шт" };
+  return { size: `${match[1]} ${unitText}`, unitAmount: 1, unitLabel: "шт" };
 }
 
 function normalizeCategory(name) {

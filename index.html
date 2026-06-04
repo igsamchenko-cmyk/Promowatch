@@ -697,9 +697,12 @@
         align-items: center;
         justify-content: space-between;
         gap: 14px;
+        min-width: 0;
         padding: 5px 0;
         border: 0;
         font-size: 14px;
+        text-align: right;
+        overflow-wrap: anywhere;
       }
       tbody td::before {
         content: attr(data-label);
@@ -717,6 +720,13 @@
       td.cell-product .product {
         min-width: 0;
       }
+      td.cell-product {
+        text-align: left;
+      }
+      .product-title,
+      .sub {
+        overflow-wrap: anywhere;
+      }
       td.select-row {
         position: absolute;
         top: 12px;
@@ -729,6 +739,10 @@
       }
       .price {
         font-size: 16px;
+      }
+      .table-footer {
+        flex-direction: column;
+        align-items: flex-start;
       }
     }
 
@@ -1126,8 +1140,56 @@
       return "Інше";
     }
 
+    function normalizeMeasureUnit(unit) {
+      const value = String(unit || "").toLowerCase();
+      if (value === "г") return { unitLabel: "кг", factor: 1000, displayUnit: "г" };
+      if (value === "мл") return { unitLabel: "л", factor: 1000, displayUnit: "мл" };
+      if (value === "кг") return { unitLabel: "кг", factor: 1, displayUnit: "кг" };
+      if (value === "л") return { unitLabel: "л", factor: 1, displayUnit: "л" };
+      return null;
+    }
+
+    function parseDecimal(value) {
+      const parsed = Number(String(value || "").replace(",", "."));
+      return Number.isFinite(parsed) ? parsed : null;
+    }
+
+    function inferMeasuredSize(name = "") {
+      const cleaned = String(name).replace(/\s+/g, " ").trim();
+      const pack = cleaned.match(/(?:^|\s)(\d+)\s*(?:шт|штук|пак|табл|капс|ф\/?п|пакетик(?:и|ів)?|піпет(?:ки|ок))\s*(?:[xх×]|по)\s*(\d+(?:[.,]\d+)?)\s*(кг|г|л|мл)(?:\b|$)/i);
+      if (pack) {
+        const count = Number(pack[1]);
+        const amount = parseDecimal(pack[2]);
+        const unit = normalizeMeasureUnit(pack[3]);
+        if (unit && count > 0 && amount > 0) {
+          return {
+            size: `${count} x ${pack[2]} ${unit.displayUnit}`,
+            unitAmount: count * amount / unit.factor,
+            unitLabel: unit.unitLabel
+          };
+        }
+      }
+
+      const matches = [...cleaned.matchAll(/(?:^|\s)(\d+(?:[.,]\d+)?)\s*(кг|г|л|мл|шт|пак|табл|капс)(?:\b|$)/gi)];
+      if (!matches.length) return null;
+      const match = matches[matches.length - 1];
+      const amount = parseDecimal(match[1]);
+      const unit = normalizeMeasureUnit(match[2]);
+      if (unit && amount > 0) {
+        return {
+          size: `${match[1]} ${unit.displayUnit}`,
+          unitAmount: amount / unit.factor,
+          unitLabel: unit.unitLabel
+        };
+      }
+      if (amount > 0) return { size: `${match[1]} ${match[2].toLowerCase()}`, unitAmount: amount, unitLabel: "шт" };
+      return null;
+    }
+
     function enrichDeals() {
       deals.forEach(item => {
+        const measured = inferMeasuredSize(item.name);
+        if (measured) Object.assign(item, measured);
         if (!item.subcategory) item.subcategory = inferSubcategory(item);
       });
     }
@@ -1148,7 +1210,7 @@
     function unitPricePlausible(item) {
       const value = unitPrice(item);
       if (value === null || !isFinite(value) || value <= 0) return false;
-      if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 2 && value <= 6000;
+      if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 && value <= 250000;
       if (item.unitLabel === "шт") return value >= 0.01 && value <= 100000;
       return value > 0;
     }
@@ -1298,12 +1360,12 @@
 
     function renderMetrics(list) {
       const averageDiscount = list.length ? Math.round(list.reduce((sum, item) => sum + discount(item), 0) / list.length) : 0;
-      const best = list.filter(unitPricePlausible).sort((a, b) => unitPrice(a) - unitPrice(b))[0] || null;
+      const best = [...list].sort((a, b) => a.price - b.price)[0] || null;
       const ending = list.filter(item => daysLeft(item) !== null).sort((a, b) => endingSortValue(a) - endingSortValue(b))[0] || null;
       document.querySelector("#metricProducts").textContent = list.length;
       document.querySelector("#metricDiscount").textContent = `${averageDiscount}%`;
-      document.querySelector("#metricBest").textContent = best ? money(unitPrice(best)) : "0 грн";
-      document.querySelector("#metricBestLabel").textContent = best ? `${best.name}, за ${best.unitLabel}` : "оберіть категорію або місто";
+      document.querySelector("#metricBest").textContent = best ? money(best.price) : "0 грн";
+      document.querySelector("#metricBestLabel").textContent = best ? `${best.name}, ${best.store}` : "оберіть категорію або місто";
       document.querySelector("#metricEnding").textContent = ending ? termLabel(ending, true) : "немає дати";
       document.querySelector("#metricEndingLabel").textContent = ending ? `${ending.name}, ${ending.store} · ${dateLabel(ending.end)}` : "джерело не вказало термін";
     }
