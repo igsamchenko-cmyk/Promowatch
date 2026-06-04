@@ -919,9 +919,11 @@
 
     const all = "Усі";
     const selected = new Set();
-    const pageSize = 250;
+    const pageSize = 90;
     let visibleLimit = pageSize;
-    const dataVersion = "2026-06-04-dairy-ui-refresh";
+    let searchTimer = null;
+    let categoryRailItems = [];
+    const dataVersion = "2026-06-04-fast-search";
     const controls = {
       search: document.querySelector("#search"),
       store: document.querySelector("#storeFilter"),
@@ -1115,14 +1117,23 @@
         const measured = inferMeasuredSize(item.name);
         if (measured) Object.assign(item, measured);
         if (!item.subcategory) item.subcategory = inferSubcategory(item);
+        item._discount = Math.round((1 - item.price / item.old) * 100);
+        item._unitPrice = unitPrice(item);
+        item._unitPricePlausible = unitPricePlausible(item);
+        item._unitSort = item._unitPricePlausible ? item._unitPrice : Number.POSITIVE_INFINITY;
+        item._daysLeft = daysLeft(item);
+        item._endingSort = item._daysLeft === null ? Number.POSITIVE_INFINITY : item._daysLeft;
+        item._searchText = searchTokens(`${item.name} ${item.size} ${item.category} ${item.subcategory} ${item.store}`).join(" ");
       });
     }
 
     function discount(item) {
+      if (Number.isFinite(item._discount)) return item._discount;
       return Math.round((1 - item.price / item.old) * 100);
     }
 
     function unitPrice(item) {
+      if (Number.isFinite(item._unitPrice)) return item._unitPrice;
       const amount = Number(item.unitAmount);
       if (!amount || !isFinite(amount)) return null;
       return item.price / amount;
@@ -1132,6 +1143,7 @@
     // single-piece goods labelled in grams). That produces absurd per-unit prices
     // like 549 787 грн/л. We only trust per-unit prices inside a sane band.
     function unitPricePlausible(item) {
+      if (typeof item._unitPricePlausible === "boolean") return item._unitPricePlausible;
       const value = unitPrice(item);
       if (value === null || !isFinite(value) || value <= 0) return false;
       if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 && value <= 250000;
@@ -1141,6 +1153,7 @@
 
     // Ascending sort key: implausible / missing values sink to the bottom.
     function unitSortValue(item) {
+      if (Number.isFinite(item._unitSort)) return item._unitSort;
       return unitPricePlausible(item) ? unitPrice(item) : Number.POSITIVE_INFINITY;
     }
 
@@ -1217,7 +1230,7 @@
     }
 
     function termLabel(item, compact = false) {
-      const days = daysLeft(item);
+      const days = "_daysLeft" in item ? item._daysLeft : daysLeft(item);
       if (days === null) return "термін не вказано";
       if (days < 0) return "завершено";
       if (days === 0) return compact ? "сьогодні" : `до ${dateLabel(item.end)} · сьогодні`;
@@ -1226,6 +1239,7 @@
     }
 
     function endingSortValue(item) {
+      if (Number.isFinite(item._endingSort)) return item._endingSort;
       const days = daysLeft(item);
       return days === null ? Number.POSITIVE_INFINITY : days;
     }
@@ -1266,9 +1280,7 @@
       const minDiscount = Number(controls.minDiscount.value);
 
       const filtered = deals.filter(item => {
-        const searchableText = searchTokens(`${item.name} ${item.size} ${item.category} ${item.subcategory} ${item.store}`).join(" ");
-        return isActivePromo(item)
-          && (!queryTokens.length || queryTokens.every(token => searchableText.includes(token)))
+        return (!queryTokens.length || queryTokens.every(token => item._searchText.includes(token)))
           && (store === all || item.store === store)
           && (category === all || item.category === category)
           && (subcategory === all || item.subcategory === subcategory)
@@ -1282,9 +1294,15 @@
     }
 
     function renderMetrics(list) {
-      const averageDiscount = list.length ? Math.round(list.reduce((sum, item) => sum + discount(item), 0) / list.length) : 0;
-      const best = [...list].sort((a, b) => a.price - b.price)[0] || null;
-      const ending = list.filter(item => daysLeft(item) !== null).sort((a, b) => endingSortValue(a) - endingSortValue(b))[0] || null;
+      let discountSum = 0;
+      let best = null;
+      let ending = null;
+      list.forEach(item => {
+        discountSum += item._discount;
+        if (!best || item.price < best.price) best = item;
+        if (item._daysLeft !== null && (!ending || item._endingSort < ending._endingSort)) ending = item;
+      });
+      const averageDiscount = list.length ? Math.round(discountSum / list.length) : 0;
       document.querySelector("#metricProducts").textContent = list.length;
       document.querySelector("#metricDiscount").textContent = `${averageDiscount}%`;
       document.querySelector("#metricBest").textContent = best ? money(best.price) : "0 грн";
@@ -1338,7 +1356,16 @@
     }
 
     function renderBestDeals(list) {
-      const best = [...list].sort((a, b) => discount(b) - discount(a)).slice(0, 4);
+      const best = [];
+      list.forEach(item => {
+        const index = best.findIndex(current => item._discount > current._discount);
+        if (index === -1) {
+          if (best.length < 4) best.push(item);
+        } else {
+          best.splice(index, 0, item);
+          if (best.length > 4) best.pop();
+        }
+      });
       document.querySelector("#bestDeals").innerHTML = best.map(item => `
         <article class="deal-card deal-card-media">
           ${productThumb(item, "deal-image")}
@@ -1401,13 +1428,19 @@
         acc.set(item.category, (acc.get(item.category) || 0) + 1);
         return acc;
       }, new Map());
-      const categories = [all, ...Array.from(counts.entries())
+      categoryRailItems = [
+        { category: all, count: deals.length },
+        ...Array.from(counts.entries())
         .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "uk"))
         .slice(0, 11)
-        .map(([category]) => category)];
-      controls.categoryRail.innerHTML = categories.map(category => {
+        .map(([category, count]) => ({ category, count }))
+      ];
+      updateCategoryRailState();
+    }
+
+    function updateCategoryRailState() {
+      controls.categoryRail.innerHTML = categoryRailItems.map(({ category, count }) => {
         const active = controls.category.value === category ? " active" : "";
-        const count = category === all ? deals.length : counts.get(category);
         return `<button class="category-chip${active}" type="button" data-category="${escapeAttribute(category)}">${category} · ${count}</button>`;
       }).join("");
     }
@@ -1422,9 +1455,15 @@
       renderMetrics(list);
       renderTable(list);
       renderBestDeals(list);
-      renderComparison();
-      renderSources();
-      renderCategoryRail();
+      updateCategoryRailState();
+    }
+
+    function renderAfterSearchInput() {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        visibleLimit = pageSize;
+        render();
+      }, 140);
     }
 
     async function loadImportedData() {
@@ -1485,6 +1524,7 @@
       updateSubcategoryOptions();
       visibleLimit = pageSize;
       selected.clear();
+      renderComparison();
       render();
     });
 
@@ -1504,10 +1544,7 @@
       scrollToResults();
     });
 
-    controls.search.addEventListener("input", () => {
-      visibleLimit = pageSize;
-      render();
-    });
+    controls.search.addEventListener("input", renderAfterSearchInput);
     [controls.store, controls.sort, controls.minDiscount, controls.subcategory].forEach(control => {
       control.addEventListener("change", () => {
         visibleLimit = pageSize;
@@ -1524,6 +1561,8 @@
     });
     loadImportedData().finally(() => {
       initializeFilters();
+      renderSources();
+      renderComparison();
       render();
     });
   </script>
