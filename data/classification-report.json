@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-06-04T11:49:49.641Z",
+  "generatedAt": "2026-06-04T13:03:41.159Z",
   "fixed": true,
-  "changedDeals": 0,
+  "changedDeals": 65,
   "before": {
-    "ok": true,
-    "totalDeals": 4031,
-    "issueCount": 0,
+    "ok": false,
+    "totalDeals": 8889,
+    "issueCount": 14,
     "issues": [
       {
         "name": "ice_cream_has_only_ice_cream",
@@ -70,8 +70,37 @@
       {
         "name": "grocery_not_obvious_dairy_or_drink",
         "description": "Напої, сиркова паста й молочні продукти не повинні бути у бакалії; каші та пластівці є винятком.",
-        "count": 0,
-        "examples": []
+        "count": 4,
+        "examples": [
+          {
+            "id": 4745,
+            "name": "Напій слабоалкогольний 0.5л 5% зброджений газований Яблуко-смородина з прянощами Zolotonosha Zbiten з/б",
+            "store": "Сільпо",
+            "category": "Бакалія",
+            "subcategory": "Приправи"
+          },
+          {
+            "id": 4796,
+            "name": "Напій слабоалкогольний 0.5л 5% зброджений газований Яблуко-журавлина з прянощами Zolotonosha Zbiten з/б",
+            "store": "Сільпо",
+            "category": "Бакалія",
+            "subcategory": "Приправи"
+          },
+          {
+            "id": 7617,
+            "name": "Напій гречаний 2.5% ультрапастеризований збагачений кальцієм Buckwheat Green Smile т/п 1л",
+            "store": "Сільпо",
+            "category": "Бакалія",
+            "subcategory": "Крупи"
+          },
+          {
+            "id": 7846,
+            "name": "Сік Премія березовий з настоєм суш фруктів з цукор 1л",
+            "store": "Сільпо",
+            "category": "Бакалія",
+            "subcategory": "Борошно, цукор, сіль"
+          }
+        ]
       },
       {
         "name": "grocery_not_fish",
@@ -82,26 +111,99 @@
       {
         "name": "meat_not_pasta_snack_or_flavor",
         "description": "Паста, вермішель, чипси й картопляне пюре зі смаком курки не повинні бути у м'ясі.",
-        "count": 0,
-        "examples": []
+        "count": 1,
+        "examples": [
+          {
+            "id": 8833,
+            "name": "Закуска бутербродна «Премія» зі смаком курки, 180г",
+            "store": "Сільпо",
+            "category": "М'ясо",
+            "subcategory": "Курятина"
+          }
+        ]
       },
       {
         "name": "produce_not_flavored_goods",
         "description": "Смакові назви соусів, напоїв, чипсів, цукерок і йогуртів не повинні бути овочами чи фруктами.",
-        "count": 0,
-        "examples": []
+        "count": 1,
+        "examples": [
+          {
+            "id": 5273,
+            "name": "Соломка картопляна «Премія»® зі смаком лайма і чилі, 75г",
+            "store": "Сільпо",
+            "category": "Овочі та фрукти",
+            "subcategory": "Овочі"
+          }
+        ]
       },
       {
         "name": "dairy_not_cereal_or_pasta",
         "description": "Каші, пластівці, макарони й вермішель не повинні бути у молочці.",
-        "count": 0,
-        "examples": []
+        "count": 8,
+        "examples": [
+          {
+            "id": 5419,
+            "name": "Пластівці кукурудзяні глазуровані Start! к/у 280г",
+            "store": "Сільпо",
+            "category": "Молочні",
+            "subcategory": "Сирки та десерти"
+          },
+          {
+            "id": 7840,
+            "name": "Пластівці кукурудзяні глазуровані Start! 90г",
+            "store": "Сільпо",
+            "category": "Молочні",
+            "subcategory": "Сирки та десерти"
+          },
+          {
+            "id": 8637,
+            "name": "Пластівці кукурудзяні глазуровані цукровою глазур'ю зі зменшеним вмістом цукру Zlakovo м/у 650г",
+            "store": "Сільпо",
+            "category": "Молочні",
+            "subcategory": "Сирки та десерти"
+          },
+          {
+            "id": 8681,
+            "name": "Пластівці кукурудзяні глазуровані Start! м/у 700г",
+            "store": "Сільпо",
+            "category": "Молочні",
+            "subcategory": "Сирки та десерти"
+          },
+          {
+            "id": 8772,
+            "name": "Пластівці кукурудзяні «Золоте Зерно» глазуровані 80г",
+            "store": "Сільпо",
+            "category": "Молочні",
+            "subcategory": "Сирки та десерти"
+          },
+          {
+            "id": 8774,
+            "name": "Пластівці кукурудзяні Золоте Зерно молочні глазуровані 80г",
+            "store": "Сільпо",
+            "category": "Молочні",
+            "subcategory": "Сирки та десерти"
+          },
+          {
+            "id": 8781,
+            "name": "Пластівці кукурудзяні глазуровані цукровою глазур'ю Медові Zlakovo м/у 300г",
+            "store": "Сільпо",
+            "category": "Молочні",
+            "subcategory": "Сирки та десерти"
+          },
+          {
+            "id": 8841,
+            "name": "Пластівці кукурудзяні глазуровані цукровою глазур'ю Zlakovo м/у 300г",
+            "store": "Сільпо",
+            "category": "Молочні",
+            "subcategory": "Сирки та десерти"
+          }
+        ]
       }
     ]
   },
   "after": {
     "ok": true,
-    "totalDeals": 4031,
+    "totalDeals": 8889,
     "issueCount": 0,
     "issues": [
       {
@@ -196,5 +298,906 @@
       }
     ]
   },
-  "changedExamples": []
+  "changedExamples": [
+    {
+      "id": 93,
+      "name": "Напій кисломолочний Яготинський Айран з кропом 1,8% 450г х12",
+      "store": "АТБ",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Кисломолочні напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 231,
+      "name": "Напій кисломолочний 1% слабогазований з кропом Тан Ekfood 1л",
+      "store": "АТБ",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Кисломолочні напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 234,
+      "name": "Напій кисломолочний Ферма Айран по-Турецьки п/пл 1.8% 320г",
+      "store": "АТБ",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Кисломолочні напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 321,
+      "name": "Фігурні вироби 500г Своя лінія Кульки з какао глазуровані цукровою глазур'ю м/уп",
+      "store": "АТБ",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Сирки та десерти",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Інше",
+        "subcategory": "Інше",
+        "color": "#384551"
+      }
+    },
+    {
+      "id": 404,
+      "name": "Напій кисломолочний «Лактонія Імун+йод» з малиною та ехінацеєю 1,5%, 100г",
+      "store": "АТБ",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Кисломолочні напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 405,
+      "name": "Напій кисломолочний йогурт «Лактонія» Imun+ полуниця 1,5%, 100г",
+      "store": "АТБ",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Кисломолочні напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 665,
+      "name": "Напій слабоалкогольний 330мл 7% сильногазований Sexx on the Beach Shake",
+      "store": "АТБ",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 945,
+      "name": "Напій Винний Білий Напівсолодкий Слабоалкогольний Газований, в/ґ, з/б, 0.33л, 6-6.9%",
+      "store": "Ашан",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 1430,
+      "name": "Соломка картопляна Сметана-цибуля Party sticks Chio м/у 70г",
+      "store": "Ашан",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Сметана",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Снеки",
+        "subcategory": "Інші снеки",
+        "color": "#5f493f"
+      }
+    },
+    {
+      "id": 1936,
+      "name": "Напій газований Грузинський Букет Вершки 1л",
+      "store": "Ашан",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Вершки",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 2448,
+      "name": "Вода міцелярна Біокон Я люблю рис 0,4л",
+      "store": "Ашан",
+      "from": {
+        "category": "Бакалія",
+        "subcategory": "Крупи",
+        "color": "#d49a21"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Вода",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 2485,
+      "name": "Коктейль морський сиро-морожений глазурований Vici вищого ґатунку 200г",
+      "store": "Ашан",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Сирки та десерти",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Інше",
+        "subcategory": "Інше",
+        "color": "#384551"
+      }
+    },
+    {
+      "id": 2573,
+      "name": "Палички кукурудзяні Auchan солодкі неглазуровані 450г",
+      "store": "Ашан",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Сирки та десерти",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Інше",
+        "subcategory": "Інше",
+        "color": "#384551"
+      }
+    },
+    {
+      "id": 3035,
+      "name": "Палички кукурудзяні солодкі неглазуровані Легіон м/у 150г",
+      "store": "Ашан",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Сирки та десерти",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Інше",
+        "subcategory": "Інше",
+        "color": "#384551"
+      }
+    },
+    {
+      "id": 3332,
+      "name": "Напій слабоалкогольний 0.5л 5% зброджений газований Яблуко-бузина-мед Zolotonosha Zbiten",
+      "store": "Близенько",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 3493,
+      "name": "Напій кисломолочний Lactel Айран 1,6% 290г",
+      "store": "Близенько",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Кисломолочні напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 3517,
+      "name": "Напій кисломолочний Яготинський Айран з кропом 1,8% 450г х12",
+      "store": "Близенько",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Кисломолочні напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 3518,
+      "name": "Напій слабоалкогольний 0.5л 8-8.5% енергетичний Revo з/б",
+      "store": "Близенько",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 4014,
+      "name": "Напій слабоалкогольний 0.33л 7% LongMIXer Апельсин пл",
+      "store": "Рукавичка",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 4125,
+      "name": "Напій слабоалкогольний Bloom Tonic 0,275л",
+      "store": "Сільпо",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 4156,
+      "name": "Напій слабоалкогольний Bloom Rose Lemonade, 0,275л",
+      "store": "Сільпо",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 4168,
+      "name": "Напій слабоалкогольний Opihr Gin & Tonic, 0,275л",
+      "store": "Сільпо",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 4569,
+      "name": "Напій слабоалкогольний 0.5л 5% зброджений газований Яблуко-бузина-мед Zolotonosha Zbiten",
+      "store": "Сільпо",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 4745,
+      "name": "Напій слабоалкогольний 0.5л 5% зброджений газований Яблуко-смородина з прянощами Zolotonosha Zbiten з/б",
+      "store": "Сільпо",
+      "from": {
+        "category": "Бакалія",
+        "subcategory": "Приправи",
+        "color": "#d49a21"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 4782,
+      "name": "Напій слабоалкогольний Long Drink Gin Light, 0,33л",
+      "store": "Сільпо",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 4796,
+      "name": "Напій слабоалкогольний 0.5л 5% зброджений газований Яблуко-журавлина з прянощами Zolotonosha Zbiten з/б",
+      "store": "Сільпо",
+      "from": {
+        "category": "Бакалія",
+        "subcategory": "Приправи",
+        "color": "#d49a21"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 4885,
+      "name": "Соломка картопляна Премія сметана-зелень 75г",
+      "store": "Сільпо",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Сметана",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Снеки",
+        "subcategory": "Інші снеки",
+        "color": "#5f493f"
+      }
+    },
+    {
+      "id": 4950,
+      "name": "Напій слабоалкогольний Long Drink Gin Original, 0,33л",
+      "store": "Сільпо",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 5024,
+      "name": "Напій слабоалкогольний King's Bridge Gin & Cherry 7% 0,5л",
+      "store": "Сільпо",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 5067,
+      "name": "Напій слабоалкогольний Bronx Black Orange енергетичний сильногазований 8% 0,5л",
+      "store": "Сільпо",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 5135,
+      "name": "Напій слабоалкогольний Dzen Бора Бора з залізної банки, 0,5л",
+      "store": "Сільпо",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 5136,
+      "name": "Слабоалкогольний Напій Pornstar Cocktails Shake, 7% газований, з/б 500мл",
+      "store": "Сільпо",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 5170,
+      "name": "Напій слабоалкогольний 0.5л 5% зброджений газований Диня-яблуко Pinkel з/б",
+      "store": "Сільпо",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 5171,
+      "name": "Напій слабоалкогольний 0.5л 5% зброджений газований Яблуко-персик-манго Pinkel з/б",
+      "store": "Сільпо",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 5213,
+      "name": "Напій слабоалкогольний Original Long Drink Vodka Lime з/б 0,33л",
+      "store": "Сільпо",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 5273,
+      "name": "Соломка картопляна «Премія»® зі смаком лайма і чилі, 75г",
+      "store": "Сільпо",
+      "from": {
+        "category": "Овочі та фрукти",
+        "subcategory": "Овочі",
+        "color": "#16845c"
+      },
+      "to": {
+        "category": "Снеки",
+        "subcategory": "Інші снеки",
+        "color": "#5f493f"
+      }
+    },
+    {
+      "id": 5374,
+      "name": "Напій слабоалкогольний Long Drink Gin Cranberry, 0,33л",
+      "store": "Сільпо",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 5419,
+      "name": "Пластівці кукурудзяні глазуровані Start! к/у 280г",
+      "store": "Сільпо",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Сирки та десерти",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Бакалія",
+        "subcategory": "Пластівці та сніданки",
+        "color": "#d49a21"
+      }
+    },
+    {
+      "id": 5665,
+      "name": "Напій слабоалкогольний Katlenburger Alc.Ice tea гранат, 1л",
+      "store": "Сільпо",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 5666,
+      "name": "Напій слабоалкогольний Katlenburger Alc.Ice tea персик, 1л",
+      "store": "Сільпо",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 6156,
+      "name": "Напій йогуртовий «Feels good Probio Active» малина 1,5%, 100г",
+      "store": "Сільпо",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Йогурти",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 6157,
+      "name": "Напій йогуртовий Feels Good Probio Activ персик-маракуйя 1,5%, 100г",
+      "store": "Сільпо",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Йогурти",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 6558,
+      "name": "Напій кисломолочний 1% слабогазований Тан Ekfood 1л",
+      "store": "Сільпо",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Кисломолочні напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 6773,
+      "name": "Сніданки сухі Кільця 4-х видів зернових глазуровані Start! 75г",
+      "store": "Сільпо",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Сирки та десерти",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Бакалія",
+        "subcategory": "Пластівці та сніданки",
+        "color": "#d49a21"
+      }
+    },
+    {
+      "id": 6786,
+      "name": "Напій кисломолочний Lactel Айран 1,6% 290г",
+      "store": "Сільпо",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Кисломолочні напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 6858,
+      "name": "Напій молочний Ферма ваніль 1,5% 500г",
+      "store": "Сільпо",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Інша молочка",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 6859,
+      "name": "Напій молочний Ферма какао 1,9% 500г",
+      "store": "Сільпо",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Інша молочка",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 7016,
+      "name": "Напій йогуртовий «Feels good Probio Active» Чорниця 1,5%, 100г",
+      "store": "Сільпо",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Йогурти",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 7309,
+      "name": "Соломка Глазурована Зі Смаком Полуниці, в/ґ, 60г",
+      "store": "Сільпо",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Сирки та десерти",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Інше",
+        "subcategory": "Інше",
+        "color": "#384551"
+      }
+    },
+    {
+      "id": 7579,
+      "name": "Хлібці хрусткі рисові глазуровані Dark chocolate Жменька м/у 60г",
+      "store": "Сільпо",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Сирки та десерти",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 7617,
+      "name": "Напій гречаний 2.5% ультрапастеризований збагачений кальцієм Buckwheat Green Smile т/п 1л",
+      "store": "Сільпо",
+      "from": {
+        "category": "Бакалія",
+        "subcategory": "Крупи",
+        "color": "#d49a21"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 7840,
+      "name": "Пластівці кукурудзяні глазуровані Start! 90г",
+      "store": "Сільпо",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Сирки та десерти",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Бакалія",
+        "subcategory": "Пластівці та сніданки",
+        "color": "#d49a21"
+      }
+    },
+    {
+      "id": 7846,
+      "name": "Сік Премія березовий з настоєм суш фруктів з цукор 1л",
+      "store": "Сільпо",
+      "from": {
+        "category": "Бакалія",
+        "subcategory": "Борошно, цукор, сіль",
+        "color": "#d49a21"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Соки та нектари",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 7915,
+      "name": "Напій слабоалкогольний Katlenburger Alc.Ice tea лимон, 1л",
+      "store": "Сільпо",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 8112,
+      "name": "Напій Shake слабоалкогольний сильногазований Кайпірінья 7,0% 0,5л",
+      "store": "Сільпо",
+      "from": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Алкоголь",
+        "subcategory": "Інший алкоголь",
+        "color": "#8a3d74"
+      }
+    },
+    {
+      "id": 8626,
+      "name": "Напій молочний Mullermilch Шейк ваніль 3,5%, 400мл",
+      "store": "Сільпо",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Інша молочка",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Напої",
+        "subcategory": "Інші напої",
+        "color": "#245fbd"
+      }
+    },
+    {
+      "id": 8637,
+      "name": "Пластівці кукурудзяні глазуровані цукровою глазур'ю зі зменшеним вмістом цукру Zlakovo м/у 650г",
+      "store": "Сільпо",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Сирки та десерти",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Бакалія",
+        "subcategory": "Пластівці та сніданки",
+        "color": "#d49a21"
+      }
+    },
+    {
+      "id": 8681,
+      "name": "Пластівці кукурудзяні глазуровані Start! м/у 700г",
+      "store": "Сільпо",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Сирки та десерти",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Бакалія",
+        "subcategory": "Пластівці та сніданки",
+        "color": "#d49a21"
+      }
+    },
+    {
+      "id": 8772,
+      "name": "Пластівці кукурудзяні «Золоте Зерно» глазуровані 80г",
+      "store": "Сільпо",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Сирки та десерти",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Бакалія",
+        "subcategory": "Пластівці та сніданки",
+        "color": "#d49a21"
+      }
+    },
+    {
+      "id": 8774,
+      "name": "Пластівці кукурудзяні Золоте Зерно молочні глазуровані 80г",
+      "store": "Сільпо",
+      "from": {
+        "category": "Молочні",
+        "subcategory": "Сирки та десерти",
+        "color": "#245fbd"
+      },
+      "to": {
+        "category": "Бакалія",
+        "subcategory": "Пластівці та сніданки",
+        "color": "#d49a21"
+      }
+    }
+  ]
 }
