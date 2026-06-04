@@ -8,6 +8,7 @@ const dataDir = join(root, "data");
 
 const sources = [
   { store: "АТБ", slug: "atbmarket.com", url: "https://de-deshevshe.com.ua/city/lviv/shop/atbmarket.com/" },
+  { store: "Сільпо", slug: "silpo.ua", url: "https://de-deshevshe.com.ua/city/lviv/shop/silpo.ua/" },
   { store: "Рукавичка", slug: "rukavychka.ua", url: "https://de-deshevshe.com.ua/city/lviv/shop/rukavychka.ua/" },
   { store: "Близенько", slug: "blyzenko.ua", url: "https://de-deshevshe.com.ua/city/lviv/shop/blyzenko.ua/" },
   { store: "Ашан", slug: "auchan.zakaz.ua", url: "https://de-deshevshe.com.ua/city/lviv/shop/auchan.zakaz.ua/" }
@@ -430,12 +431,6 @@ const sourceHealth = results.map((result) => ({
     : `${result.items.length} активних позицій, ${result.expiredCount || 0} прострочених прибрано, ${result.withoutEndDate || 0} без дати`,
   url: result.source.url
 })).concat([
-  {
-    name: "Сільпо Львів",
-    state: "Потрібен окремий конектор",
-    detail: "Офіційна сторінка існує, але прямий fetch блокується Cloudflare",
-    url: "https://silpo.ua/offers/city/lviv"
-  },
   {
     name: "Сімі Львів",
     state: "Не знайдено стабільне джерело",
