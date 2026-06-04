@@ -1159,17 +1159,27 @@
       select.innerHTML = values.map(value => `<option value="${value}">${value}</option>`).join("");
     }
 
+    function searchTokens(value) {
+      return String(value || "")
+        .toLowerCase()
+        .replace(/[’ʼ`´]/g, "'")
+        .replace(/[^a-zа-яіїєґ0-9%]+/gi, " ")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+    }
+
     function getFilteredDeals() {
-      const query = controls.search.value.trim().toLowerCase();
+      const queryTokens = searchTokens(controls.search.value);
       const store = controls.store.value;
       const category = controls.category.value;
       const subcategory = controls.subcategory.value;
       const minDiscount = Number(controls.minDiscount.value);
 
       const filtered = deals.filter(item => {
-        const text = `${item.name} ${item.size} ${item.category} ${item.subcategory} ${item.store}`.toLowerCase();
+        const searchableText = searchTokens(`${item.name} ${item.size} ${item.category} ${item.subcategory} ${item.store}`).join(" ");
         return isActivePromo(item)
-          && (!query || text.includes(query))
+          && (!queryTokens.length || queryTokens.every(token => searchableText.includes(token)))
           && (store === all || item.store === store)
           && (category === all || item.category === category)
           && (subcategory === all || item.subcategory === subcategory)

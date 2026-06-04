@@ -41,7 +41,7 @@ const rules = {
   coffeeTea: /кава|чай|цикор|maccoffee|jacobs|monarch|nescafe|tea moments|lipton|lovare|ahmad/,
   plantDrink: /напій.*(вівсян|мигдал|соєв|рисов|кокос|гречан)|vega milk|oat&|oat\s*banana/,
   nonAlcoholic: /безалкогольн/,
-  alcohol: /слабоалкогольн|пиво|вино|віно|віскі|лікер|горіл|сидр|шампан|ігрист|брют|просек|prosecco|frizzante|аперитив|бренді|коньяк|ром|(^|[^а-яіїєґ])джин(у|ом|а)?(?=[^а-яіїєґ]|$)|текіл|вермут|бальзам.*\d+%/,
+  alcohol: /слабоалкогольн|пиво|вино|віно|віскі|лікер|горіл|сидр|шампан|ігрист|брют|просек|prosecco|frizzante|аперитив|бренді|коньяк|(^|[^а-яіїєґ])ром(у|ом|а)?(?=[^а-яіїєґ]|$)|(^|[^а-яіїєґ])джин(у|ом|а)?(?=[^а-яіїєґ]|$)|текіл|вермут|бальзам.*\d+%/,
   fish: /крабов|оселед|кревет|міді|кальмар|морепродукт|ікра|шпрот|сардин|скумбр|форел|сьомг|(^|[^а-яіїєґ])хек([^а-яіїєґ]|$)|минтай|лосос|тунець|масляна|анчоус|(^|[^а-яіїєґ])риб(а|н|к|н[а-яіїєґ])|(^|[^а-яіїєґ])кільк/,
   iceCream: /морозив|ескімо|пломбір|сорбет|ice\s*laska|хладик|ласка.*ескімо|лімо.*пломбір/,
   frozenDumplings: /пельмен|вареник|гіоза|gyoza/,
@@ -63,6 +63,13 @@ const rules = {
   home: /ніж|ножі|дошк|склян|келих|таріл|каструл|сковор|контейнер|пакет для сміття|фольга|пергамент|губк|серветк.*прибиран|рукавич/
 };
 
+function isHardCheeseProduct(text) {
+  if (has(text, rules.cottageDairy)) return false;
+  if (!has(text, rules.hardCheese)) return false;
+  if (/сироп|соус|смак(ом)? сиру|зі смаком сиру|сирна тарілка|попкорн|ч[іи]пс|снек|оливки|маслини/.test(text)) return false;
+  return /моцарел|сулугун|камамбер|(^|\s)брі(\s|$)|пармезан|гауд|чеддер|фета|фелата|голланд|російськ|тверд[а-яіїєґ]* сир|сир .*тверд|крем-сир|philadelphia|плавлен[а-яіїєґ]* сир|(^|\s)сир(\s|$|,)|сири(\s|$)|сиру(\s|$)/.test(text);
+}
+
 export function inferCategory(name) {
   const text = normalizeText(name);
   if (has(text, rules.pet)) return "Товари для тварин";
@@ -71,6 +78,8 @@ export function inferCategory(name) {
   if (has(text, rules.coffeeTea)) return "Кава та чай";
   if (has(text, rules.nonAlcoholic)) return "Напої";
   if (has(text, rules.plantDrink)) return "Напої";
+  if (has(text, rules.cottageDairy)) return "Молочні";
+  if (isHardCheeseProduct(text)) return "Твердий сир";
   if (has(text, rules.alcohol)) return "Алкоголь";
   if (has(text, rules.fish)) return "Риба та морепродукти";
   if (has(text, rules.iceCream) || has(text, rules.frozenDumplings) || has(text, rules.frozenOther)) return "Заморозка";
@@ -79,8 +88,6 @@ export function inferCategory(name) {
   if (has(text, rules.ready)) return "Готові страви";
   if (has(text, rules.sausage)) return "Ковбаси";
   if (has(text, rules.eggs)) return "Яйця";
-  if (has(text, rules.cottageDairy)) return "Молочні";
-  if (has(text, rules.hardCheese)) return "Твердий сир";
   if (has(text, rules.drinks)) return "Напої";
   if (has(text, rules.grocery)) return "Бакалія";
   if (has(text, rules.dairy)) return "Молочні";
