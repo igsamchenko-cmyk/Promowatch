@@ -984,21 +984,16 @@
       justify-content: center;
     }
 
-    /* App-style Dashboard Layout for Option 2 (Desktop only) */
+    /* Hybrid Sticky Scrollable Dashboard Layout */
     @media (min-width: 1025px) {
       body, .app {
-        height: 100vh;
-        overflow: hidden;
+        height: auto;
+        overflow: visible;
       }
       .app {
-        display: flex;
-        flex-direction: column;
+        display: block;
       }
       main {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
         padding: 16px 24px;
         gap: 16px;
         max-width: 100%;
@@ -1008,7 +1003,7 @@
       }
       .metrics {
         grid-template-columns: repeat(4, 1fr);
-        margin-bottom: 0;
+        margin-bottom: 16px;
         gap: 12px;
       }
       .metric {
@@ -1034,56 +1029,55 @@
         display: none;
       }
       .filters {
-        position: relative;
-        top: 0 !important;
-        margin-bottom: 0;
+        position: sticky;
+        top: 64px !important;
+        z-index: 90;
+        margin-bottom: 16px;
         max-width: 100%;
         padding: 12px 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       }
       .main-grid {
-        flex: 1;
         display: grid;
         grid-template-columns: 1fr 340px;
         gap: 16px;
-        min-height: 0;
-        align-items: stretch;
+        align-items: start;
       }
       #resultsPanel {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        min-height: 0;
+        display: block;
       }
       .table-wrap {
-        flex: 1;
-        overflow-y: auto;
-        min-height: 0;
+        overflow: visible;
+      }
+      thead th {
+        position: sticky;
+        top: calc(64px + var(--filters-height, 120px));
+        z-index: 80;
+        background: var(--card-bg);
+        box-shadow: inset 0 -1px 0 var(--line);
       }
       .side-stack {
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: 1fr;
         gap: 16px;
-        height: 100%;
-        min-height: 0;
-        overflow-y: auto;
       }
       th,
       td {
-        padding: 8px 12px;
+        padding: 12px 16px;
       }
       .thumb {
-        width: 38px;
-        height: 38px;
-        flex: 0 0 38px;
+        width: 42px;
+        height: 42px;
+        flex: 0 0 42px;
       }
       .product {
-        gap: 10px;
+        gap: 12px;
       }
       .product-title {
-        font-size: 13px;
+        font-size: 14px;
       }
       .sub {
-        font-size: 11px;
+        font-size: 12px;
       }
       
       /* Status bar styles on desktop */
@@ -1092,7 +1086,7 @@
         justify-content: space-between;
         height: 48px;
         padding: 0 24px;
-        margin-top: 0;
+        margin-top: 24px;
       }
       .statusbar .sync {
         justify-content: flex-start;
@@ -1108,26 +1102,6 @@
         padding: 4px 12px;
         font-size: 11px;
         border-radius: 6px;
-      }
-      
-      /* Scrollbars */
-      .table-wrap::-webkit-scrollbar,
-      .side-stack::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-      }
-      .table-wrap::-webkit-scrollbar-track,
-      .side-stack::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      .table-wrap::-webkit-scrollbar-thumb,
-      .side-stack::-webkit-scrollbar-thumb {
-        background: var(--line);
-        border-radius: 4px;
-      }
-      .table-wrap::-webkit-scrollbar-thumb:hover,
-      .side-stack::-webkit-scrollbar-thumb:hover {
-        background: var(--muted);
       }
     }
   </style>
@@ -1884,6 +1858,14 @@
       document.querySelector("#resultsPanel").scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
+    function updateStickyHeaderHeight() {
+      const filters = document.querySelector(".filters");
+      if (filters) {
+        const height = filters.offsetHeight;
+        document.documentElement.style.setProperty("--filters-height", `${height}px`);
+      }
+    }
+
     function render() {
       updateFiltersDynamic();
       const list = getFilteredDeals();
@@ -1892,6 +1874,7 @@
       renderTable(list);
       renderBestDeals(list);
       updateCategoryRailState();
+      updateStickyHeaderHeight();
     }
 
     function renderAfterSearchInput() {
@@ -1990,6 +1973,9 @@
       document.documentElement.setAttribute("data-theme", theme);
       localStorage.setItem("theme", theme);
     });
+
+    window.addEventListener("resize", updateStickyHeaderHeight);
+    window.addEventListener("load", updateStickyHeaderHeight);
 
     loadImportedData().finally(() => {
       initializeFilters();
