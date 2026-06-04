@@ -1142,11 +1142,15 @@
       .table-wrap {
         overflow: visible;
       }
+      thead {
+        position: relative;
+        z-index: 85;
+      }
       thead th {
         position: sticky;
         top: calc(64px + var(--filters-height, 120px));
-        z-index: 80;
-        background: var(--card-bg);
+        z-index: 85;
+        background: var(--card-bg) !important;
         box-shadow: inset 0 -1px 0 var(--line);
       }
       .side-stack {
@@ -1952,12 +1956,15 @@
       document.querySelector("#resultsPanel").scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    function updateStickyHeaderHeight() {
-      const filters = document.querySelector(".filters");
-      if (filters) {
-        const height = filters.offsetHeight;
-        document.documentElement.style.setProperty("--filters-height", `${height}px`);
-      }
+    // Automatically observe and update sticky header height offset
+    const filtersEl = document.querySelector(".filters");
+    if (filtersEl) {
+      const resizeObserver = new ResizeObserver(entries => {
+        for (let entry of entries) {
+          document.documentElement.style.setProperty("--filters-height", `${entry.target.offsetHeight}px`);
+        }
+      });
+      resizeObserver.observe(filtersEl);
     }
 
     function render() {
@@ -1968,7 +1975,6 @@
       renderTable(list);
       renderBestDeals(list);
       updateCategoryRailState();
-      updateStickyHeaderHeight();
     }
 
     function renderAfterSearchInput() {
@@ -2068,16 +2074,12 @@
       localStorage.setItem("theme", theme);
     });
 
-    window.addEventListener("resize", updateStickyHeaderHeight);
-    window.addEventListener("load", updateStickyHeaderHeight);
-
     const toggleFiltersBtn = document.getElementById("toggleFiltersBtn");
     const advancedFilters = document.getElementById("advancedFilters");
 
     toggleFiltersBtn.addEventListener("click", () => {
       const isCollapsed = advancedFilters.classList.toggle("collapsed");
       toggleFiltersBtn.classList.toggle("active", !isCollapsed);
-      setTimeout(updateStickyHeaderHeight, 310);
     });
 
     loadImportedData().finally(() => {
