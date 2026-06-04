@@ -327,7 +327,7 @@
     }
 
     .table-wrap {
-      overflow-x: auto;
+      overflow-x: hidden;
     }
 
     .table-footer {
@@ -349,13 +349,14 @@
 
     table {
       width: 100%;
-      min-width: 760px;
+      min-width: 0;
+      table-layout: fixed;
       border-collapse: collapse;
     }
 
     th,
     td {
-      padding: 12px 16px;
+      padding: 11px 12px;
       border-top: 1px solid var(--line);
       text-align: left;
       vertical-align: middle;
@@ -373,19 +374,19 @@
     }
 
     .product {
-      min-width: 265px;
+      min-width: 0;
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
     .thumb {
-      width: 52px;
-      height: 52px;
+      width: 46px;
+      height: 46px;
       border-radius: 8px;
       display: grid;
       place-items: center;
-      flex: 0 0 52px;
+      flex: 0 0 46px;
       color: #fff;
       font-weight: 900;
       overflow: hidden;
@@ -421,6 +422,10 @@
     .product-title {
       font-weight: 850;
       line-height: 1.25;
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
     }
 
     .sub {
@@ -433,9 +438,41 @@
       font-weight: 800;
     }
 
+    .price-cell,
+    .unit-cell,
+    .promo-cell {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
     .price {
       font-size: 16px;
       font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .old-price {
+      width: fit-content;
+      max-width: 100%;
+      border-radius: 7px;
+      padding: 2px 6px;
+      color: var(--muted);
+      background: #f0f4f6;
+      font-size: 11px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .unit-cell {
+      color: #2d3843;
+      line-height: 1.25;
+    }
+
+    .promo-term {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.25;
     }
 
     .discount {
@@ -459,7 +496,7 @@
     }
 
     .select-row {
-      width: 34px;
+      width: 42px;
     }
 
     .compare-check {
@@ -875,6 +912,14 @@
           </div>
           <div class="table-wrap">
             <table>
+              <colgroup>
+                <col style="width:42px">
+                <col style="width:43%">
+                <col style="width:13%">
+                <col style="width:16%">
+                <col style="width:13%">
+                <col style="width:13%">
+              </colgroup>
               <thead>
                 <tr>
                   <th class="select-row">✓</th>
@@ -882,8 +927,7 @@
                   <th>Мережа</th>
                   <th>Акційна</th>
                   <th>За одиницю</th>
-                  <th>Знижка</th>
-                  <th>Діє до</th>
+                  <th>Акція</th>
                 </tr>
               </thead>
               <tbody id="dealsTable"></tbody>
@@ -1328,12 +1372,21 @@
             </div>
           </td>
           <td class="store-name" data-label="Мережа">${item.store}</td>
-          <td class="price" data-label="Акційна ціна">${money(item.price)}</td>
-          <td data-label="За одиницю">${unitPriceLabel(item)}</td>
-          <td data-label="Знижка"><span class="discount">-${discount(item)}%</span></td>
-          <td data-label="Діє до">${termLabel(item)}</td>
+          <td data-label="Ціна">
+            <div class="price-cell">
+              <strong class="price">${money(item.price)}</strong>
+              <span class="old-price">було ${money(item.old)}</span>
+            </div>
+          </td>
+          <td data-label="За одиницю"><span class="unit-cell">${unitPriceLabel(item)}</span></td>
+          <td data-label="Акція">
+            <div class="promo-cell">
+              <span class="discount">-${discount(item)}%</span>
+              <span class="promo-term">${termLabel(item, true)}</span>
+            </div>
+          </td>
         </tr>
-      `).join("") || `<tr><td colspan="7" class="cell-product">${emptyMessage}</td></tr>`;
+      `).join("") || `<tr><td colspan="6" class="cell-product">${emptyMessage}</td></tr>`;
     }
 
     function renderBestDeals(list) {
