@@ -1,0 +1,42 @@
+[
+  {
+    "source": {
+      "store": "АТБ",
+      "slug": "atbmarket.com",
+      "url": "https://de-deshevshe.com.ua/city/lviv/shop/atbmarket.com/"
+    },
+    "count": 709,
+    "pages": 16,
+    "error": null
+  },
+  {
+    "source": {
+      "store": "Рукавичка",
+      "slug": "rukavychka.ua",
+      "url": "https://de-deshevshe.com.ua/city/lviv/shop/rukavychka.ua/"
+    },
+    "count": 391,
+    "pages": 9,
+    "error": null
+  },
+  {
+    "source": {
+      "store": "Близенько",
+      "slug": "blyzenko.ua",
+      "url": "https://de-deshevshe.com.ua/city/lviv/shop/blyzenko.ua/"
+    },
+    "count": 344,
+    "pages": 8,
+    "error": null
+  },
+  {
+    "source": {
+      "store": "Ашан",
+      "slug": "auchan.zakaz.ua",
+      "url": "https://de-deshevshe.com.ua/city/lviv/shop/auchan.zakaz.ua/"
+    },
+    "count": 2587,
+    "pages": 56,
+    "error": null
+  }
+]
