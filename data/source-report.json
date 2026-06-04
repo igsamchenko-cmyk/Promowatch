@@ -11,12 +11,12 @@
   },
   {
     "source": {
-      "store": "Рукавичка",
-      "slug": "rukavychka.ua",
-      "url": "https://de-deshevshe.com.ua/city/lviv/shop/rukavychka.ua/"
+      "store": "Ашан",
+      "slug": "auchan.zakaz.ua",
+      "url": "https://de-deshevshe.com.ua/city/lviv/shop/auchan.zakaz.ua/"
     },
-    "count": 391,
-    "pages": 9,
+    "count": 2587,
+    "pages": 56,
     "error": null
   },
   {
@@ -31,12 +31,22 @@
   },
   {
     "source": {
-      "store": "Ашан",
-      "slug": "auchan.zakaz.ua",
-      "url": "https://de-deshevshe.com.ua/city/lviv/shop/auchan.zakaz.ua/"
+      "store": "Метро",
+      "slug": "metro.zakaz.ua",
+      "url": "https://de-deshevshe.com.ua/city/lviv/shop/metro.zakaz.ua/"
     },
-    "count": 2587,
-    "pages": 56,
+    "count": 1102,
+    "pages": 27,
+    "error": null
+  },
+  {
+    "source": {
+      "store": "Рукавичка",
+      "slug": "rukavychka.ua",
+      "url": "https://de-deshevshe.com.ua/city/lviv/shop/rukavychka.ua/"
+    },
+    "count": 391,
+    "pages": 9,
     "error": null
   },
   {
