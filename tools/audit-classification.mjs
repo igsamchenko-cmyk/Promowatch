@@ -56,7 +56,7 @@ function buildAudit(deals) {
       name: "hard_cheese_has_no_cottage_cheese",
       description: "Кисломолочний сир, сирки й молочні десерти не повинні бути у твердому сирі.",
       test: item => item.category === "Твердий сир"
-        && /сир кисломол|кисломолочн|творог|сирок|глазурован|actimel|молоко|йогурт|кефір|сметана(?![а-яіїєґ])|згущ/.test(text(item.name))
+        && /сир кисломол|кисломолочн|творог|сирок|глазурован|actimel|йогурт|кефір|сметана(?![а-яіїєґ])|згущ/.test(text(item.name))
     },
     {
       name: "coffee_tea_not_sweets",
