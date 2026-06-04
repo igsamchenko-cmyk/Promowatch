@@ -435,7 +435,7 @@
 
     .old {
       color: var(--muted);
-      text-decoration: line-through;
+      font-size: 13px;
     }
 
     .price {
@@ -805,7 +805,7 @@
         <div class="sync">
           <span class="chip good" id="syncStatus"><span class="status-dot"></span> Відкриті дані завантажено</span>
           <span class="chip" id="syncCity">Місто: Львів</span>
-          <span class="chip" id="syncSource">Імпорт: локальний seed</span>
+          <span class="chip" id="syncSource">Імпорт: очікування data/deals.json</span>
           <span class="chip" id="syncFreshness">Актуальність: сьогодні</span>
           <span class="chip" id="activeFilters">Фільтр: усі категорії</span>
         </div>
@@ -890,8 +890,8 @@
                   <th>Товар</th>
                   <th>Мережа</th>
                   <th>Місто</th>
-                  <th>Стара</th>
                   <th>Акційна</th>
+                  <th>Було</th>
                   <th>За одиницю</th>
                   <th>Знижка</th>
                   <th>Діє до</th>
@@ -937,60 +937,9 @@
   </div>
 
   <script>
-    const deals = [
-      { id: 1, name: "Куряче стегно", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "М'ясо", store: "Сільпо", city: "Львів", old: 12.87, price: 11.58, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#d7352a" },
-      { id: 2, name: "Мандарин Єгипет", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Овочі та фрукти", store: "Сільпо", city: "Львів", old: 6.99, price: 6, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#16845c" },
-      { id: 3, name: "Масло солодковершкове «Молокія» екстра 82%", size: "180 г", unitAmount: 0.18, unitLabel: "кг", category: "Молочні", store: "Сільпо", city: "Львів", old: 134, price: 79.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#245fbd" },
-      { id: 4, name: "Сир кисломолочний Біло 5%", size: "1000 г", unitAmount: 1, unitLabel: "кг", category: "Молочні", store: "Сільпо", city: "Львів", old: 249, price: 154, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#245fbd" },
-      { id: 5, name: "Тунець «Премія» подрібнений у розсолі", size: "185 г", unitAmount: 0.185, unitLabel: "кг", category: "Консерви", store: "Сільпо", city: "Львів", old: 90.49, price: 44.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
-      { id: 6, name: "Сирок глазурований Ферма зі смаком ванілі 23%", size: "36 г", unitAmount: 0.036, unitLabel: "кг", category: "Молочні", store: "Сільпо", city: "Львів", old: 19.49, price: 11.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#245fbd" },
-      { id: 7, name: "Сир «Премія» Моцарела 45%", size: "180 г", unitAmount: 0.18, unitLabel: "кг", category: "Твердий сир", store: "Сільпо", city: "Львів", old: 99, price: 49.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#d7a018" },
-      { id: 8, name: "Сир «Премія» Сулугуні 45%", size: "180 г", unitAmount: 0.18, unitLabel: "кг", category: "Твердий сир", store: "Сільпо", city: "Львів", old: 99, price: 49.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#d7a018" },
-      { id: 9, name: "Салат листовий Зелена Країна мікс з машем", size: "120 г", unitAmount: 0.12, unitLabel: "кг", category: "Овочі та фрукти", store: "Сільпо", city: "Львів", old: 71.99, price: 56.87, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#16845c" },
-      { id: 10, name: "Пиво Kronenbourg «Бланк» з/б", size: "0,33 л", unitAmount: 0.33, unitLabel: "л", category: "Алкоголь", store: "Сільпо", city: "Львів", old: 33.49, price: 22.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#8a3d74" },
-      { id: 11, name: "Молоко згущене «Первомайський МКК» 8,5%", size: "440 г", unitAmount: 0.44, unitLabel: "кг", category: "Молочні", store: "Сільпо", city: "Львів", old: 96.99, price: 59.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#245fbd" },
-      { id: 12, name: "Салат листовий Зелена Країна мікс зі шпинатом", size: "120 г", unitAmount: 0.12, unitLabel: "кг", category: "Овочі та фрукти", store: "Сільпо", city: "Львів", old: 71.99, price: 56.87, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#16845c" },
-      { id: 13, name: "Молоко пастеризоване «Ферма» 2,5%", size: "840 г", unitAmount: 0.84, unitLabel: "кг", category: "Молочні", store: "Сільпо", city: "Львів", old: 67.49, price: 46.9, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#245fbd" },
-      { id: 14, name: "Ананас шматочками «Премія» в легкому сиропі", size: "565 г", unitAmount: 0.565, unitLabel: "кг", category: "Консерви", store: "Сільпо", city: "Львів", old: 91.49, price: 76.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
-      { id: 15, name: "Ковбаса по-домашньому охолоджена", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Ковбаси", store: "Сільпо", city: "Львів", old: 24.62, price: 17.97, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#b12f3b" },
-      { id: 16, name: "Сир Premialle Фелата 45%", size: "160 г", unitAmount: 0.16, unitLabel: "кг", category: "Твердий сир", store: "Сільпо", city: "Львів", old: 75.49, price: 49.9, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#d7a018" },
-      { id: 17, name: "Ковбаски Mr.Grill «Дюссельдорфські» н/к", size: "330 г", unitAmount: 0.33, unitLabel: "кг", category: "Ковбаси", store: "Сільпо", city: "Львів", old: 169, price: 109, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#b12f3b" },
-      { id: 18, name: "Насіння соняшника Сільпо смугасте смажене солоне", size: "70 г", unitAmount: 0.07, unitLabel: "кг", category: "Снеки", store: "Сільпо", city: "Львів", old: 34.99, price: 22.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#5f493f" },
-      { id: 19, name: "Корм для котів PreVital з куркою у желе", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Товари для тварин", store: "Сільпо", city: "Львів", old: 20.99, price: 12.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
-      { id: 20, name: "Олія оливкова «Премія» Extra Virgin", size: "250 мл", unitAmount: 0.25, unitLabel: "л", category: "Бакалія", store: "Сільпо", city: "Львів", old: 239, price: 145, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#d49a21" },
-      { id: 21, name: "Віскі Jack Daniels", size: "1 л", unitAmount: 1, unitLabel: "л", category: "Алкоголь", store: "Сільпо", city: "Львів", old: 1199, price: 899, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#8a3d74" },
-      { id: 22, name: "Корм для котів PreVital з яловичиною у желе", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Товари для тварин", store: "Сільпо", city: "Львів", old: 20.99, price: 12.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
-      { id: 23, name: "Корм для котів E-Zoo з індичкою", size: "85 г", unitAmount: 0.085, unitLabel: "кг", category: "Товари для тварин", store: "Сільпо", city: "Львів", old: 28.99, price: 21.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
-      { id: 24, name: "Корм для котів PreVital з лососем у соусі", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Товари для тварин", store: "Сільпо", city: "Львів", old: 20.99, price: 12.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
-      { id: 25, name: "Корм для котів E-Zoo з куркою", size: "85 г", unitAmount: 0.085, unitLabel: "кг", category: "Товари для тварин", store: "Сільпо", city: "Львів", old: 28.99, price: 21.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
-      { id: 26, name: "Крем-сир «Премія» 20%", size: "135 г", unitAmount: 0.135, unitLabel: "кг", category: "Молочні", store: "Сільпо", city: "Львів", old: 79.99, price: 49.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#245fbd" },
-      { id: 27, name: "Корм для котів PreVital з кроликом та індичкою", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Товари для тварин", store: "Сільпо", city: "Львів", old: 20.99, price: 12.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
-      { id: 28, name: "Набір Home&Care ножі 3 шт. + дошка", size: "1 шт", unitAmount: 1, unitLabel: "шт", category: "Товари для дому", store: "Сільпо", city: "Львів", old: 999, price: 499, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#384551" },
-      { id: 29, name: "Тунець Сільпо смугастий в олії", size: "160 г", unitAmount: 0.16, unitLabel: "кг", category: "Консерви", store: "Сільпо", city: "Львів", old: 249, price: 149, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
-      { id: 30, name: "Крем-гель для душу Dalas Ягідний мікс + Бергамот", size: "2*500 г", unitAmount: 1, unitLabel: "кг", category: "Гігієна", store: "Сільпо", city: "Львів", old: 299, price: 119, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#245fbd" },
-      { id: 31, name: "Тунець Сільпо смугастий у власному соку", size: "160 г", unitAmount: 0.16, unitLabel: "кг", category: "Консерви", store: "Сільпо", city: "Львів", old: 249, price: 149, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#2d7f8f" },
-      { id: 32, name: "Томат Azura Чері сливка", size: "250 г", unitAmount: 0.25, unitLabel: "кг", category: "Овочі та фрукти", store: "Сільпо", city: "Львів", old: 154, price: 123.2, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#16845c" },
-      { id: 33, name: "Огірок екстра", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Овочі та фрукти", store: "Сільпо", city: "Львів", old: 13.4, price: 11.39, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#16845c" },
-      { id: 34, name: "Смажена картопля з часником", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Готові страви", store: "Сільпо", city: "Львів", old: 10.89, price: 8.71, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#d49a21" },
-      { id: 35, name: "Плов з куркою", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Готові страви", store: "Сільпо", city: "Львів", old: 33.9, price: 19.9, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#d49a21" },
-      { id: 36, name: "Яблуко Гренні Сміт відбірне", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Овочі та фрукти", store: "Сільпо", city: "Львів", old: 14.4, price: 12.82, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#16845c" },
-      { id: 37, name: "Багет Французький ВВ", size: "250 г", unitAmount: 0.25, unitLabel: "кг", category: "Хліб", store: "Сільпо", city: "Львів", old: 45.49, price: 29.99, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#b97811" },
-      { id: 38, name: "Індиче філе", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "М'ясо", store: "Сільпо", city: "Львів", old: 40.07, price: 32.05, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#d7352a" },
-      { id: 39, name: "Арахіс смажений солоний", size: "500 г", unitAmount: 0.5, unitLabel: "кг", category: "Снеки", store: "Сільпо", city: "Львів", old: 129, price: 104.49, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#5f493f" },
-      { id: 40, name: "Куряча четвертина гриль", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Готові страви", store: "Сільпо", city: "Львів", old: 30.9, price: 24.72, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#d49a21" },
-      { id: 41, name: "Картопля Baby LOU свіжа мита size M", size: "900 г", unitAmount: 0.9, unitLabel: "кг", category: "Овочі та фрукти", store: "Сільпо", city: "Львів", old: 67.99, price: 50.31, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#16845c" },
-      { id: 42, name: "Тістечко Медово-горіхове", size: "100 г", unitAmount: 0.1, unitLabel: "кг", category: "Солодощі", store: "Сільпо", city: "Львів", old: 42.9, price: 30.03, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#7c4a88" },
-      { id: 43, name: "Вода мінеральна «Набеглаві»", size: "1 л", unitAmount: 1, unitLabel: "л", category: "Напої", store: "Сільпо", city: "Львів", old: 60.99, price: 44.9, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#245fbd" },
-      { id: 44, name: "Ананас преміум", size: "1 шт", unitAmount: 1, unitLabel: "шт", category: "Овочі та фрукти", store: "Сільпо", city: "Львів", old: 317.9, price: 282.93, end: "2026-06-12", source: "silpo.ua/offers/city/lviv", color: "#16845c" }
-    ];
+    const deals = [];
 
-    const sourceHealth = [
-      { name: "Сільпо Львів", state: "Офіційно", detail: "44 позиції з першого відкритого списку silpo.ua/offers/city/lviv" },
-      { name: "АТБ Львів", state: "Є 727 позицій", detail: "Де Дешевше показує 727 акцій; потрібен імпорт пагінації" },
-      { name: "Рукавичка Львів", state: "PDF", detail: "є листівки PDF, потрібен парсер каталогу" },
-      { name: "Близенько Львів", state: "Каталог", detail: "є каталоги, потрібен імпорт сторінок/зображень" },
-      { name: "Ашан Львів", state: "Потрібен конектор", detail: "ціни залежать від магазину/доставки" }
-    ];
+    const sourceHealth = [];
 
     const all = "Усі";
     const selected = new Set();
@@ -1375,6 +1324,9 @@
       const visibleRows = list.slice(0, visibleLimit);
       document.querySelector("#tableShown").textContent = `Показано ${visibleRows.length} з ${list.length}`;
       document.querySelector("#loadMoreRows").style.display = visibleRows.length < list.length ? "inline-flex" : "none";
+      const emptyMessage = deals.length
+        ? "Нічого не знайдено. Спробуйте змінити фільтри."
+        : "Дані не завантажено. Перевірте файл data/deals.json.";
       document.querySelector("#dealsTable").innerHTML = visibleRows.map(item => `
         <tr>
           <td class="select-row">
@@ -1391,13 +1343,13 @@
           </td>
           <td class="store-name" data-label="Мережа">${item.store}</td>
           <td data-label="Місто">${item.city}</td>
-          <td class="old" data-label="Стара ціна">${money(item.old)}</td>
           <td class="price" data-label="Акційна ціна">${money(item.price)}</td>
+          <td class="old" data-label="Було">${money(item.old)}</td>
           <td data-label="За одиницю">${unitPriceLabel(item)}</td>
           <td data-label="Знижка"><span class="discount">-${discount(item)}%</span></td>
           <td data-label="Діє до">${termLabel(item)}</td>
         </tr>
-      `).join("") || `<tr><td colspan="9" class="cell-product">Нічого не знайдено. Спробуйте змінити фільтри.</td></tr>`;
+      `).join("") || `<tr><td colspan="9" class="cell-product">${emptyMessage}</td></tr>`;
     }
 
     function renderBestDeals(list) {
@@ -1478,9 +1430,9 @@
     async function loadImportedData() {
       try {
         const response = await fetch("data/deals.json", { cache: "no-store" });
-        if (!response.ok) return;
+        if (!response.ok) throw new Error(`data/deals.json: ${response.status}`);
         const payload = await response.json();
-        if (!Array.isArray(payload.deals) || !payload.deals.length) return;
+        if (!Array.isArray(payload.deals) || !payload.deals.length) throw new Error("data/deals.json порожній");
         deals.splice(0, deals.length, ...payload.deals.filter(isActivePromo));
         if (Array.isArray(payload.sourceHealth)) {
           sourceHealth.splice(0, sourceHealth.length, ...payload.sourceHealth);
@@ -1490,8 +1442,10 @@
         document.querySelector("#syncSource").textContent = `${payload.meta?.total || payload.deals.length} активних позицій · ${payload.meta?.knownEndDate ?? 0} з датою, ${payload.meta?.withoutEndDate ?? 0} без дати`;
         document.querySelector("#syncFreshness").textContent = `Оновлено: ${formatDateTime(payload.meta?.generatedAt)}`;
       } catch (error) {
-        document.querySelector("#syncSource").textContent = "Fallback: локальний seed";
-        document.querySelector("#syncFreshness").textContent = "Актуальність: локальні дані";
+        document.querySelector("#syncStatus").classList.remove("good");
+        document.querySelector("#syncStatus").innerHTML = '<span class="status-dot warn"></span> Дані не завантажено';
+        document.querySelector("#syncSource").textContent = "Потрібен data/deals.json з імпортованими цінами";
+        document.querySelector("#syncFreshness").textContent = "Fallback-ціни вимкнено";
       }
     }
 
