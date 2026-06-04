@@ -365,14 +365,42 @@
     }
 
     .thumb {
-      width: 38px;
-      height: 38px;
+      width: 52px;
+      height: 52px;
       border-radius: 8px;
       display: grid;
       place-items: center;
-      flex: 0 0 38px;
+      flex: 0 0 52px;
       color: #fff;
       font-weight: 900;
+      overflow: hidden;
+      position: relative;
+      background: var(--thumb-bg, #384551);
+      border: 1px solid rgba(20, 32, 42, 0.08);
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+      background: #fff;
+      padding: 3px;
+    }
+
+    .thumb span {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    .thumb.has-image span {
+      display: none;
+    }
+
+    .thumb.has-image.image-missing span {
+      display: grid;
     }
 
     .product-title {
@@ -455,6 +483,23 @@
       gap: 9px;
     }
 
+    .deal-card-media {
+      grid-template-columns: 64px 1fr;
+      align-items: start;
+    }
+
+    .deal-image {
+      width: 64px;
+      height: 64px;
+      flex-basis: 64px;
+    }
+
+    .deal-body {
+      display: grid;
+      gap: 9px;
+      min-width: 0;
+    }
+
     .deal-top {
       display: flex;
       justify-content: space-between;
@@ -487,11 +532,24 @@
 
     .compare-card {
       display: grid;
-      gap: 5px;
+      gap: 7px;
     }
 
     .compare-card strong {
       line-height: 1.25;
+    }
+
+    .compare-top {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .compare-top .thumb {
+      width: 48px;
+      height: 48px;
+      flex-basis: 48px;
     }
 
     .empty {
@@ -960,6 +1018,28 @@
       return `${value.toLocaleString("uk-UA", { minimumFractionDigits: value % 1 ? 2 : 0, maximumFractionDigits: 2 })} грн`;
     }
 
+    function escapeAttribute(value = "") {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;");
+    }
+
+    function productThumb(item, extraClass = "") {
+      const image = /^https:\/\//.test(item.image || "") ? item.image : "";
+      const color = item.color || "#384551";
+      const fallback = (item.category || "?")[0];
+      const imageMarkup = image
+        ? `<img src="${escapeAttribute(image)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('image-missing');this.remove();">`
+        : "";
+      return `
+        <div class="thumb ${extraClass} ${image ? "has-image" : ""}" style="--thumb-bg:${color};background:${color}">
+          ${imageMarkup}
+          <span>${fallback}</span>
+        </div>
+      `;
+    }
+
     function todayIso() {
       const parts = new Intl.DateTimeFormat("uk-UA", {
         timeZone: "Europe/Kyiv",
@@ -1092,7 +1172,7 @@
           </td>
           <td>
             <div class="product">
-              <div class="thumb" style="background:${item.color}">${item.category[0]}</div>
+              ${productThumb(item)}
               <div>
                 <div class="product-title">${item.name}</div>
                 <div class="sub">${item.size} · ${item.category} · ${item.subcategory}</div>
@@ -1113,7 +1193,9 @@
     function renderBestDeals(list) {
       const best = [...list].sort((a, b) => discount(b) - discount(a)).slice(0, 4);
       document.querySelector("#bestDeals").innerHTML = best.map(item => `
-        <article class="deal-card">
+        <article class="deal-card deal-card-media">
+          ${productThumb(item, "deal-image")}
+          <div class="deal-body">
           <div class="deal-top">
             <strong>${item.name} ${item.size}</strong>
             <span class="discount">-${discount(item)}%</span>
@@ -1121,6 +1203,7 @@
           <div>${item.store}, ${item.city} · <b>${money(item.price)}</b></div>
           <div class="sub">${money(unitPrice(item))} / ${item.unitLabel} · ${termLabel(item)}</div>
           <div class="bar"><span style="width:${Math.min(100, discount(item) * 2.7)}%"></span></div>
+          </div>
         </article>
       `).join("") || `<p class="empty">Немає пропозицій за поточними фільтрами.</p>`;
     }
@@ -1130,7 +1213,10 @@
       document.querySelector("#compareCount").textContent = items.length;
       document.querySelector("#compareList").innerHTML = items.map(item => `
         <article class="compare-card">
-          <strong>${item.name} ${item.size}</strong>
+          <div class="compare-top">
+            ${productThumb(item)}
+            <strong>${item.name} ${item.size}</strong>
+          </div>
           <span>${item.store}, ${item.city} · <b>${money(item.price)}</b></span>
           <span class="sub">${money(unitPrice(item))} / ${item.unitLabel} · знижка ${discount(item)}%</span>
         </article>
