@@ -1498,9 +1498,9 @@
 
     function getFilteredDeals() {
       const queryTokens = searchTokens(controls.search.value);
-      const store = controls.store.value;
-      const category = controls.category.value;
-      const subcategory = controls.subcategory.value;
+      const store = controls.store.value || all;
+      const category = controls.category.value || all;
+      const subcategory = controls.subcategory.value || all;
       const minDiscount = Number(controls.minDiscount.value);
 
       const filtered = deals.filter(item => {
@@ -1632,9 +1632,12 @@
 
     function renderActiveFilters() {
       const parts = [];
-      if (controls.store.value !== all) parts.push(`мережа: ${controls.store.value}`);
-      if (controls.category.value !== all) parts.push(`категорія: ${controls.category.value}`);
-      if (controls.subcategory.value !== all) parts.push(`підкатегорія: ${controls.subcategory.value}`);
+      const store = controls.store.value || all;
+      const category = controls.category.value || all;
+      const subcategory = controls.subcategory.value || all;
+      if (store !== all) parts.push(`мережа: ${store}`);
+      if (category !== all) parts.push(`категорія: ${category}`);
+      if (subcategory !== all) parts.push(`підкатегорія: ${subcategory}`);
       if (Number(controls.minDiscount.value) > 0) parts.push(`знижка від ${controls.minDiscount.value}%`);
       if (controls.search.value.trim()) parts.push(`пошук: ${controls.search.value.trim()}`);
       document.querySelector("#activeFilters").textContent = parts.length ? `Фільтр: ${parts.join(" · ")}` : "Фільтр: усі категорії";
@@ -1648,9 +1651,9 @@
 
     function updateFiltersDynamic() {
       const queryTokens = searchTokens(controls.search.value);
-      const store = controls.store.value;
-      const category = controls.category.value;
-      const subcategory = controls.subcategory.value;
+      const store = controls.store.value || all;
+      const category = controls.category.value || all;
+      const subcategory = controls.subcategory.value || all;
       const minDiscount = Number(controls.minDiscount.value);
 
       // 1. Available stores
@@ -1707,7 +1710,7 @@
 
     function updateCategoryRailState() {
       controls.categoryRail.innerHTML = categoryRailItems.map(({ category, count }) => {
-        const active = controls.category.value === category ? " active" : "";
+        const active = (controls.category.value || all) === category ? " active" : "";
         return `<button class="category-chip${active}" type="button" data-category="${escapeAttribute(category)}">${category} · ${count}</button>`;
       }).join("");
     }
