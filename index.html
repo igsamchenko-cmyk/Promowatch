@@ -1230,28 +1230,7 @@
       </section>
 
 
-      <section class="metrics">
-        <div class="metric">
-          <span>Позицій у вибірці</span>
-          <strong id="metricProducts">0</strong>
-          <small>за активними фільтрами</small>
-        </div>
-        <div class="metric">
-          <span>Середня знижка</span>
-          <strong id="metricDiscount">0%</strong>
-          <small>порівняно зі старою ціною</small>
-        </div>
-        <div class="metric">
-          <span>Найкраща ціна</span>
-          <strong id="metricBest">0 грн</strong>
-          <small id="metricBestLabel">оберіть категорію або місто</small>
-        </div>
-        <div class="metric">
-          <span>До завершення</span>
-          <strong id="metricEnding">немає дати</strong>
-          <small id="metricEndingLabel">найближча активна акція</small>
-        </div>
-      </section>
+
 
       <section class="filters panel">
         <div class="filters-main-row">
@@ -1771,6 +1750,8 @@
     }
 
     function renderMetrics(list) {
+      const elProducts = document.querySelector("#metricProducts");
+      if (!elProducts) return;
       let discountSum = 0;
       let best = null;
       let ending = null;
@@ -1780,7 +1761,7 @@
         if (item._daysLeft !== null && (!ending || item._endingSort < ending._endingSort)) ending = item;
       });
       const averageDiscount = list.length ? Math.round(discountSum / list.length) : 0;
-      document.querySelector("#metricProducts").textContent = list.length;
+      elProducts.textContent = list.length;
       document.querySelector("#metricDiscount").textContent = `${averageDiscount}%`;
       document.querySelector("#metricBest").textContent = best ? money(best.price) : "0 грн";
       document.querySelector("#metricBestLabel").textContent = best ? `${best.name}, ${best.store}` : "оберіть категорію або мережу";
