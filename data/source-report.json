@@ -5,28 +5,18 @@
       "slug": "atbmarket.com",
       "url": "https://de-deshevshe.com.ua/city/lviv/shop/atbmarket.com/"
     },
-    "count": 709,
+    "count": 711,
     "pages": 16,
     "error": null
   },
   {
     "source": {
-      "store": "Ашан",
-      "slug": "auchan.zakaz.ua",
-      "url": "https://de-deshevshe.com.ua/city/lviv/shop/auchan.zakaz.ua/"
+      "store": "Сільпо",
+      "slug": "silpo.ua",
+      "url": "https://de-deshevshe.com.ua/city/lviv/shop/silpo.ua/"
     },
-    "count": 2587,
-    "pages": 56,
-    "error": null
-  },
-  {
-    "source": {
-      "store": "Близенько",
-      "slug": "blyzenko.ua",
-      "url": "https://de-deshevshe.com.ua/city/lviv/shop/blyzenko.ua/"
-    },
-    "count": 344,
-    "pages": 8,
+    "count": 5001,
+    "pages": 109,
     "error": null
   },
   {
@@ -35,7 +25,7 @@
       "slug": "metro.zakaz.ua",
       "url": "https://de-deshevshe.com.ua/city/lviv/shop/metro.zakaz.ua/"
     },
-    "count": 1102,
+    "count": 1199,
     "pages": 27,
     "error": null
   },
@@ -51,12 +41,22 @@
   },
   {
     "source": {
-      "store": "Сільпо",
-      "slug": "silpo.ua",
-      "url": "https://de-deshevshe.com.ua/city/lviv/shop/silpo.ua/"
+      "store": "Близенько",
+      "slug": "blyzenko.ua",
+      "url": "https://de-deshevshe.com.ua/city/lviv/shop/blyzenko.ua/"
     },
-    "count": 4858,
-    "pages": 109,
+    "count": 344,
+    "pages": 8,
+    "error": null
+  },
+  {
+    "source": {
+      "store": "Ашан",
+      "slug": "auchan.zakaz.ua",
+      "url": "https://de-deshevshe.com.ua/city/lviv/shop/auchan.zakaz.ua/"
+    },
+    "count": 2637,
+    "pages": 56,
     "error": null
   }
 ]
