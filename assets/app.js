@@ -239,7 +239,7 @@
       if (typeof item._unitPricePlausible === "boolean") return item._unitPricePlausible;
       const value = unitPrice(item);
       if (value === null || !isFinite(value) || value <= 0) return false;
-      if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 && value <= 250000;
+if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 && value <= 250000;
       if (item.unitLabel === "шт") return value >= 0.01 && value <= 100000;
       return value > 0;
     }
@@ -249,8 +249,27 @@
       return unitPricePlausible(item) ? unitPrice(item) : Number.POSITIVE_INFINITY;
     }
 
+    function isLikely100gPrice(item) {
+      if (item.unitLabel !== "кг") return false;
+      const u = unitPrice(item);
+      if (u === null) return false;
+      if (/вода/i.test(item.category) || /вода/i.test(item.name)) return false;
+      if (u < 12) return true;
+      const cat = item.category || "";
+      if ((cat.includes("М'ясо") || cat.includes("Риба") || cat.includes("Ковбас") || cat.includes("Сир") || cat.includes("Молоч")) && u < 50) return true;
+      if (cat.includes("Заморозка") && u < 30) return true;
+      if (cat.includes("Солодощі") && u < 30) return true;
+      return false;
+    }
+
     function unitPriceLabel(item) {
-      return unitPricePlausible(item) ? `${money(unitPrice(item))} / ${item.unitLabel}` : "—";
+      if (!unitPricePlausible(item)) return "—";
+      let label = `${money(unitPrice(item))} / ${item.unitLabel}`;
+      if (isLikely100gPrice(item)) {
+        const trueKgPrice = item.price * 10;
+        label = `<span style="color:var(--danger); font-weight:500;" title="Увага: Магазин ймовірно вказав ціну за 100г. Реальна ціна всієї упаковки буде більшою.">⚠️ ціна за 100г? (~${money(trueKgPrice)}/кг)</span>`;
+      }
+      return label;
     }
 
     function unitPriceMarkup(item) {
