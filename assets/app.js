@@ -523,7 +523,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
           <span class="sub">${source.detail || ""}</span>
         `;
         if (source.url) {
-          return `<a href="${escapeAttribute(source.url)}" target="_blank" rel="noreferrer" class="source-card" style="text-decoration:none; color:inherit; display:flex; flex-direction:column; gap:6px;">${inner}</a>`;
+          return `<a href="${escapeAttribute(source.url)}" target="_blank" rel="noopener" class="source-card" style="text-decoration:none; color:inherit; display:flex; flex-direction:column; gap:6px;">${inner}</a>`;
         } else {
           return `<article class="source-card">${inner}</article>`;
         }
