@@ -1,4 +1,4 @@
-﻿    let deals = [];
+    let deals = [];
 
     let sourceHealth = [];
 
@@ -219,7 +219,7 @@
         item._unitSort = item._unitPricePlausible ? item._unitPrice : Number.POSITIVE_INFINITY;
         item._daysLeft = daysLeft(item);
         item._endingSort = item._daysLeft === null ? Number.POSITIVE_INFINITY : item._daysLeft;
-        item._searchText = searchTokens(`${escapeHTML(item.name)} ${escapeHTML(item.size)} ${escapeHTML(item.category)} ${escapeHTML(item.subcategory)} ${escapeHTML(item.store)}`).join(" ");
+        item._searchText = searchTokens(`${item.name} ${item.size || ""} ${item.store || ""}`).join(" ");
       });
     }
 
