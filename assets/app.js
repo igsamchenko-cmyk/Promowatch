@@ -1,4 +1,4 @@
-    let deals = [];
+﻿    let deals = [];
 
     let sourceHealth = [];
 
@@ -797,11 +797,11 @@
       render();
     });
     
+    
     menuRubrics.addEventListener("click", () => {
       currentTab = "home";
       setTabActive(menuRubrics);
       
-      // Відкрити фільтри та фокусуватись на категорії
       expandFilters();
       toggleFiltersPanelBtn.classList.add("active");
       
@@ -815,13 +815,13 @@
       setTabActive(menuFavs);
       
       if (selected.size === 0) {
-        showAlert("У вашому списку порівняння немає товарів. Позначте товари галочками в таблиці, щоб вони з'явилися тут!");
+        showAlert("РЈ РІР°С€РѕРјСѓ СЃРїРёСЃРєСѓ РїРѕСЂС–РІРЅСЏРЅРЅСЏ РЅРµРјР°С” С‚РѕРІР°СЂС–РІ. РџРѕР·РЅР°С‡С‚Рµ С‚РѕРІР°СЂРё РіР°Р»РѕС‡РєР°РјРё РІ С‚Р°Р±Р»РёС†С–, С‰РѕР± РІРѕРЅРё Р·'СЏРІРёР»РёСЃСЏ С‚СѓС‚!");
       }
       
       render();
     });
     
-    // Модальне вікно налаштувань
+    // РњРѕРґР°Р»СЊРЅРµ РІС–РєРЅРѕ РЅР°Р»Р°С€С‚СѓРІР°РЅСЊ
     const settingsModal = document.querySelector("#settingsModal");
     const closeSettingsModal = document.querySelector("#closeSettingsModal");
     const sourcesTableContainer = document.querySelector("#sourcesTableContainer");
@@ -833,24 +833,24 @@
         let html = `<table>
           <thead>
             <tr>
-              <th>Джерело</th>
-              <th>Статус</th>
-              <th>Деталі</th>
+              <th>Р”Р¶РµСЂРµР»Рѕ</th>
+              <th>РЎС‚Р°С‚СѓСЃ</th>
+              <th>Р”РµС‚Р°Р»С–</th>
             </tr>
           </thead>
           <tbody>`;
         sourceHealth.forEach(sh => {
-          const statusClass = sh.state === "Імпорт" || sh.state === "Імпортовано" ? "good" : "warn";
+          const statusClass = sh.state === "Р†РјРїРѕСЂС‚" || sh.state === "Р†РјРїРѕСЂС‚РѕРІР°РЅРѕ" ? "good" : "warn";
           html += `<tr>
             <td><strong>${sh.name}</strong></td>
             <td><span class="status-dot ${statusClass === "warn" ? "warn" : ""}"></span> ${sh.state}</td>
-            <td>${sh.detail || "Немає деталей"}</td>
+            <td>${sh.detail || "РќРµРјР°С” РґРµС‚Р°Р»РµР№"}</td>
           </tr>`;
         });
         html += `</tbody></table>`;
         sourcesTableContainer.innerHTML = html;
       } else {
-        sourcesTableContainer.innerHTML = "<p style='font-size:12px; color:var(--muted);'>Дані про джерела відсутні.</p>";
+        sourcesTableContainer.innerHTML = "<p style='font-size:12px; color:var(--muted);'>Р”Р°РЅС– РїСЂРѕ РґР¶РµСЂРµР»Р° РІС–РґСЃСѓС‚РЅС–.</p>";
       }
     });
     
@@ -864,9 +864,9 @@
       }
     });
     
-    // Керування кешем/даними в модальному вікні
+    // РљРµСЂСѓРІР°РЅРЅСЏ РєРµС€РµРј/РґР°РЅРёРјРё РІ РјРѕРґР°Р»СЊРЅРѕРјСѓ РІС–РєРЅС–
     document.querySelector("#clearCompareCache").addEventListener("click", () => {
-      if (confirm("Ви дійсно хочете очистити весь список порівняння?")) {
+      if (confirm("Р’Рё РґС–Р№СЃРЅРѕ С…РѕС‡РµС‚Рµ РѕС‡РёСЃС‚РёС‚Рё РІРµСЃСЊ СЃРїРёСЃРѕРє РїРѕСЂС–РІРЅСЏРЅРЅСЏ?")) {
         selected.clear();
         renderComparison();
         render();
@@ -876,7 +876,7 @@
     
     document.querySelector("#reloadDealsData").addEventListener("click", () => {
       settingsModal.classList.remove("active");
-      document.querySelector("#syncStatus").innerHTML = '<span class="status-dot"></span> Оновлення даних...';
+      document.querySelector("#syncStatus").innerHTML = '<span class="status-dot"></span> РћРЅРѕРІР»РµРЅРЅСЏ РґР°РЅРёС…...';
       loadImportedData().finally(() => {
         initializeFilters();
         renderSources();
@@ -885,26 +885,40 @@
       });
     });
     
-    // Обробники Дій та Функцій
+    // РћР±СЂРѕР±РЅРёРєРё Р”С–Р№ С‚Р° Р¤СѓРЅРєС†С–Р№
     document.querySelector("#actionSave").addEventListener("click", () => {
       if (selected.size === 0) {
-        showAlert("Немає вибраних товарів для збереження!");
+        showAlert("РќРµРјР°С” РІРёР±СЂР°РЅРёС… С‚РѕРІР°СЂС–РІ РґР»СЏ Р·Р±РµСЂРµР¶РµРЅРЅСЏ!");
         return;
       }
       const itemsToSave = deals.filter(d => selected.has(d.id));
-      const textToCopy = itemsToSave.map(item => `${escapeHTML(item.name)} (${escapeHTML(item.store)}) — ${item.price} грн`).join("\n");
+      const textToCopy = itemsToSave.map(item => `${escapeHTML(item.name)} (${escapeHTML(item.store)}) вЂ” ${item.price} РіСЂРЅ`).join("\n");
       navigator.clipboard.writeText(textToCopy).then(() => {
-        showAlert("Список відібраних товарів збережено в буфер обміну!");
+        showAlert("РЎРїРёСЃРѕРє РІС–РґС–Р±СЂР°РЅРёС… С‚РѕРІР°СЂС–РІ Р·Р±РµСЂРµР¶РµРЅРѕ РІ Р±СѓС„РµСЂ РѕР±РјС–РЅСѓ!");
       }).catch(err => {
-        showAlert("Помилка при копіюванні: " + err);
+        showAlert("РџРѕРјРёР»РєР° РїСЂРё РєРѕРїС–СЋРІР°РЅРЅС–: " + err);
       });
     });
     
+    const addCustomModal = document.getElementById("addCustomModal");
+    document.getElementById("closeAddModal").addEventListener("click", () => addCustomModal.classList.remove("active"));
+    
     document.querySelector("#actionAdd").addEventListener("click", () => {
-      const name = prompt("Введіть назву вашого товару:");
-      if (!name) return;
-      const store = prompt("Введіть назву магазину:", "Власний список");
-      const priceStr = prompt("Введіть ціну (грн):", "0.00");
+      document.getElementById("customItemName").value = "";
+      document.getElementById("customItemStore").value = "Р’Р»Р°СЃРЅРёР№ СЃРїРёСЃРѕРє";
+      document.getElementById("customItemPrice").value = "0.00";
+      addCustomModal.classList.add("active");
+      document.getElementById("customItemName").focus();
+    });
+    
+    document.getElementById("btnConfirmAdd").addEventListener("click", () => {
+      const name = document.getElementById("customItemName").value.trim();
+      if (!name) {
+        showAlert("Р’РІРµРґС–С‚СЊ РЅР°Р·РІСѓ С‚РѕРІР°СЂСѓ!");
+        return;
+      }
+      const store = document.getElementById("customItemStore").value.trim() || "Р’Р»Р°СЃРЅРёР№ СЃРїРёСЃРѕРє";
+      const priceStr = document.getElementById("customItemPrice").value;
       const price = parseFloat(priceStr.replace(",", ".")) || 0;
       
       const customDeal = {
@@ -914,14 +928,14 @@
         price,
         old: price,
         discountPct: 0,
-        category: "Інше",
-        subcategory: "Інше",
+        category: "Р†РЅС€Рµ",
+        subcategory: "Р†РЅС€Рµ",
         _searchText: name.toLowerCase(),
         storeUrl: "",
         productUrl: "",
         image: "",
         endStatus: "known",
-        city: "Львів"
+        city: "Р›СЊРІС–РІ"
       };
       
       deals.push(customDeal);
@@ -934,13 +948,14 @@
         render();
       }
       
-      showAlert(`Товар "${name}" додано та позначено для порівняння!`);
+      addCustomModal.classList.remove("active");
+      showAlert(`РўРѕРІР°СЂ "${name}" РґРѕРґР°РЅРѕ С‚Р° РїРѕР·РЅР°С‡РµРЅРѕ РґР»СЏ РїРѕСЂС–РІРЅСЏРЅРЅСЏ!`);
     });
     
     document.querySelector("#actionAdd2").addEventListener("click", () => {
       const list = getFilteredDeals();
       if (!list.length) {
-        showAlert("Немає видимих товарів для додавання у порівняння!");
+        showAlert("РќРµРјР°С” РІРёРґРёРјРёС… С‚РѕРІР°СЂС–РІ РґР»СЏ РґРѕРґР°РІР°РЅРЅСЏ Сѓ РїРѕСЂС–РІРЅСЏРЅРЅСЏ!");
         return;
       }
       
@@ -954,9 +969,8 @@
       
       render();
       renderComparison();
-      showAlert(`Усі видимі товари (${addedCount} шт) додано до порівняння!`);
+      showAlert(`РЈСЃС– РІРёРґРёРјС– С‚РѕРІР°СЂРё (${addedCount} С€С‚) РґРѕРґР°РЅРѕ РґРѕ РїРѕСЂС–РІРЅСЏРЅРЅСЏ!`);
     });
-    
     
     const checkoutModal = document.getElementById("checkoutModal");
     document.getElementById("closeCheckoutModal").addEventListener("click", () => checkoutModal.classList.remove("active"));
@@ -981,22 +995,22 @@
       text += "========================================\n\n";
       
       for (const [store, list] of Object.entries(grouped)) {
-        text += рџ›’ РњРђР“РђР—РРќ: \n;
+        text += `рџ›’ РњРђР“РђР—РРќ: ${store.toUpperCase()}\n`;
         list.forEach((item, idx) => {
-          text +=   [ ] .  вЂ”  РіСЂРЅ (Р·РЅРёР¶РєР° %)\n;
+          text += `  [ ] ${idx + 1}. ${item.name} вЂ” ${item.price} РіСЂРЅ (Р·РЅРёР¶РєР° ${discount(item)}%)\n`;
         });
         text += "\n";
       }
       
       text += "========================================\n";
-      text += рџ’° Р—РђР“РђР›Р¬РќРђ Р’РђР РўР†РЎРўР¬:  РіСЂРЅ\n;
-      text += рџ“… Р—РіРµРЅРµСЂРѕРІР°РЅРѕ: \n;
+      text += `рџ’° Р—РђР“РђР›Р¬РќРђ Р’РђР РўР†РЎРўР¬: ${total.toFixed(2)} РіСЂРЅ\n`;
+      text += `рџ“… Р—РіРµРЅРµСЂРѕРІР°РЅРѕ: ${new Date().toLocaleDateString("uk-UA")}\n`;
       
       document.getElementById("checkoutTextarea").value = text;
       
       const encodedText = encodeURIComponent(text);
-      document.getElementById("btnShareTelegram").href = https://t.me/share/url?url=&text=;
-      document.getElementById("btnShareViber").href = iber://forward?text=;
+      document.getElementById("btnShareTelegram").href = `https://t.me/share/url?url=&text=${encodedText}`;
+      document.getElementById("btnShareViber").href = `viber://forward?text=${encodedText}`;
       
       checkoutModal.classList.add("active");
     });
