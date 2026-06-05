@@ -1,4 +1,4 @@
-﻿    const deals = [];
+    const deals = [];
 
     const sourceHealth = [];
 
@@ -264,7 +264,7 @@
 
     function escapeHTML(value = '') { return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;'); }
 
-    function showAlert(message, title = 'РџРѕРІС–РґРѕРјР»РµРЅРЅСЏ') { document.getElementById('alertTitle').textContent = title; document.getElementById('alertMessage').textContent = message; document.getElementById('alertModal').classList.add('active'); }
+    function showAlert(message, title = 'Повідомлення') { document.getElementById('alertTitle').textContent = title; document.getElementById('alertMessage').textContent = message; document.getElementById('alertModal').classList.add('active'); }
     document.getElementById('closeAlertModal').addEventListener('click', () => document.getElementById('alertModal').classList.remove('active'));
     document.getElementById('btnAlertOk').addEventListener('click', () => document.getElementById('alertModal').classList.remove('active'));
 
@@ -957,6 +957,7 @@
       showAlert(`Усі видимі товари (${addedCount} шт) додано до порівняння!`);
     });
     
+    
     const checkoutModal = document.getElementById("checkoutModal");
     document.getElementById("closeCheckoutModal").addEventListener("click", () => checkoutModal.classList.remove("active"));
     
@@ -980,22 +981,22 @@
       text += "========================================\n\n";
       
       for (const [store, list] of Object.entries(grouped)) {
-        text += рџ›’ РњРђР“РђР—РРќ: \\n;
+        text += рџ›’ РњРђР“РђР—РРќ: \n;
         list.forEach((item, idx) => {
-          text +=   [ ] \. \ вЂ” \ РіСЂРЅ (Р·РЅРёР¶РєР° \%)\n;
+          text +=   [ ] .  вЂ”  РіСЂРЅ (Р·РЅРёР¶РєР° %)\n;
         });
         text += "\n";
       }
       
       text += "========================================\n";
-      text += рџ’° Р—РђР“РђР›Р¬РќРђ Р’РђР РўР†РЎРўР¬: \ РіСЂРЅ\n;
-      text += рџ“… Р—РіРµРЅРµСЂРѕРІР°РЅРѕ: \\n;
+      text += рџ’° Р—РђР“РђР›Р¬РќРђ Р’РђР РўР†РЎРўР¬:  РіСЂРЅ\n;
+      text += рџ“… Р—РіРµРЅРµСЂРѕРІР°РЅРѕ: \n;
       
       document.getElementById("checkoutTextarea").value = text;
       
       const encodedText = encodeURIComponent(text);
-      document.getElementById("btnShareTelegram").href = https://t.me/share/url?url=&text=\;
-      document.getElementById("btnShareViber").href = iber://forward?text=\;
+      document.getElementById("btnShareTelegram").href = https://t.me/share/url?url=&text=;
+      document.getElementById("btnShareViber").href = iber://forward?text=;
       
       checkoutModal.classList.add("active");
     });
@@ -1006,29 +1007,6 @@
         showAlert("РЎРїРёСЃРѕРє РїРѕРєСѓРїРѕРє СЃРєРѕРїС–Р№РѕРІР°РЅРѕ Сѓ Р±СѓС„РµСЂ РѕР±РјС–РЅСѓ!");
       }).catch(err => {
         showAlert("РќРµ РІРґР°Р»РѕСЃСЏ СЃРєРѕРїС–СЋРІР°С‚Рё. Р‘СѓРґСЊ Р»Р°СЃРєР°, РІРёРґС–Р»С–С‚СЊ С‚РµРєСЃС‚ С– СЃРєРѕРїС–СЋР№С‚Рµ РІСЂСѓС‡РЅСѓ.");
-      });
-    });
-      
-      let text = "📋 МІЙ СПИСОК ПОКУПОК (PROMO-WATCH UA)\n";
-      text += "========================================\n\n";
-      
-      for (const [store, list] of Object.entries(grouped)) {
-        text += `🛒 МАГАЗИН: ${store.toUpperCase()}\n`;
-        list.forEach((item, idx) => {
-          text += `  [ ] ${idx + 1}. ${escapeHTML(item.name)} — ${item.price} грн (знижка ${item.discountPct}%)\n`;
-        });
-        text += "\n";
-      }
-      
-      text += "========================================\n";
-      text += `💰 ЗАГАЛЬНА ВАРТІСТЬ: ${total.toFixed(2)} грн\n`;
-      text += `📅 Згенеровано: ${new Date().toLocaleDateString("uk-UA")}\n`;
-      
-      navigator.clipboard.writeText(text).then(() => {
-        showAlert("Список покупок сформовано та скопійовано у буфер обміну! Ви можете вставити його в месенджер.");
-      }).catch(err => {
-        showAlert("Не вдалося скопіювати автоматично, скопіюйте текст вручну з консолі.");
-        console.log(text);
       });
     });
     
