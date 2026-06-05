@@ -1,6 +1,6 @@
-    const deals = [];
+    let deals = [];
 
-    const sourceHealth = [];
+    let sourceHealth = [];
 
     const all = "Усі";
     const selected = new Set();
@@ -609,9 +609,9 @@
         if (!response.ok) throw new Error(`data/deals.json: ${response.status}`);
         const payload = await response.json();
         if (!Array.isArray(payload.deals) || !payload.deals.length) throw new Error("data/deals.json порожній");
-        deals.splice(0, deals.length, ...payload.deals.filter(isActivePromo));
+        deals = payload.deals.filter(isActivePromo);
         if (Array.isArray(payload.sourceHealth)) {
-          sourceHealth.splice(0, sourceHealth.length, ...payload.sourceHealth);
+          sourceHealth = payload.sourceHealth;
         }
         document.querySelector("#syncStatus").innerHTML = '<span class="status-dot"></span> Імпортовано повний асортимент';
         document.querySelector("#syncCity").textContent = `Місто: ${payload.meta?.city || "Львів"}`;
