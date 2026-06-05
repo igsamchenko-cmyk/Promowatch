@@ -518,14 +518,15 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       document.querySelector("#sourceCount").textContent = `${ok}/${sourceHealth.length}`;
       document.querySelector("#sourceList").innerHTML = sourceHealth.map(source => {
         const imported = /імпорт/i.test(source.state || "");
-        const title = source.url
-          ? `<a href="${escapeAttribute(source.url)}" target="_blank" rel="noreferrer">${source.name}</a>`
-          : source.name;
-        return `
-        <article class="source-card">
-          <b>${title}<span class="source-state ${imported ? "" : "warn"}"><span class="status-dot ${imported ? "" : "warn"}"></span>${source.state}</span></b>
+        const inner = `
+          <b>${source.name}<span class="source-state ${imported ? "" : "warn"}"><span class="status-dot ${imported ? "" : "warn"}"></span>${source.state}</span></b>
           <span class="sub">${source.detail || ""}</span>
-        </article>`;
+        `;
+        if (source.url) {
+          return `<a href="${escapeAttribute(source.url)}" target="_blank" rel="noreferrer" class="source-card" style="text-decoration:none; color:inherit; display:flex; flex-direction:column; gap:6px;">${inner}</a>`;
+        } else {
+          return `<article class="source-card">${inner}</article>`;
+        }
       }).join("");
     }
 
