@@ -607,7 +607,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     if (filtersEl) {
       const resizeObserver = new ResizeObserver(entries => {
         for (let entry of entries) {
-          if (!entry.target.classList.contains("collapsed-panel")) {
+          if (!entry.target.classList.contains("hidden-scroll")) {
             document.documentElement.style.setProperty("--filters-height", `${entry.target.offsetHeight}px`);
           }
         }
@@ -1349,6 +1349,43 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
         });
       });
     }
+
+    // Smart Sticky: auto-hide filters on scroll down, show on scroll up
+    let lastScrollY = window.scrollY;
+    
+    window.addEventListener("scroll", () => {
+      const currentScrollY = window.scrollY;
+      
+      // If we are close to the top, always show the filters panel
+      if (currentScrollY < 50) {
+        if (filtersEl.classList.contains("hidden-scroll")) {
+          filtersEl.classList.remove("hidden-scroll");
+          const filtersHeight = filtersEl.offsetHeight;
+          document.documentElement.style.setProperty("--filters-height", `${filtersHeight}px`);
+        }
+        lastScrollY = currentScrollY;
+        return;
+      }
+      
+      const isScrollingDown = currentScrollY > lastScrollY;
+      
+      if (isScrollingDown) {
+        // Scroll down: hide filters
+        if (!filtersEl.classList.contains("hidden-scroll") && currentScrollY > 150) {
+          filtersEl.classList.add("hidden-scroll");
+          document.documentElement.style.setProperty("--filters-height", "0px");
+        }
+      } else {
+        // Scroll up: show filters
+        if (filtersEl.classList.contains("hidden-scroll")) {
+          filtersEl.classList.remove("hidden-scroll");
+          const filtersHeight = filtersEl.offsetHeight;
+          document.documentElement.style.setProperty("--filters-height", `${filtersHeight}px`);
+        }
+      }
+      
+      lastScrollY = currentScrollY;
+    });
 
     loadImportedData().finally(() => {
       initializeFilters();

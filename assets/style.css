@@ -369,8 +369,8 @@
                   box-shadow 0.3s ease;
     }
 
-    .filters.collapsed-panel {
-      transform: translateY(-100%);
+    .filters.hidden-scroll {
+      transform: translateY(-120%);
       opacity: 0;
       pointer-events: none;
       box-shadow: none !important;
