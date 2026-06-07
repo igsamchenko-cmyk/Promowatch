@@ -429,28 +429,15 @@
 
     .filters-advanced {
       display: block;
-      overflow: hidden;
-      max-height: 500px;
-      transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, padding 0.3s ease-in-out, margin 0.3s ease-in-out;
-      opacity: 1;
       padding-top: 10px;
       border-top: 1px solid var(--line);
       margin-top: 8px;
       width: 100%;
     }
 
-    .filters-advanced.collapsed {
-      max-height: 0;
-      opacity: 0;
-      padding-top: 0;
-      border-top-color: transparent;
-      margin-top: 0;
-      pointer-events: none;
-    }
-
     .filters-advanced-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(6, 1fr);
       gap: 8px;
       margin-bottom: 8px;
     }

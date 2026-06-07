@@ -15,7 +15,8 @@
       category: document.querySelector("#categoryFilter"),
       subcategory: document.querySelector("#subcategoryFilter"),
       sort: document.querySelector("#sortFilter"),
-      minDiscount: document.querySelector("#minDiscount")
+      minDiscount: document.querySelector("#minDiscount"),
+      onlySelected: document.querySelector("#onlySelectedFilter")
     };
 
     function unique(values) {
@@ -386,19 +387,16 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
         .filter(Boolean);
     }
 
-    let currentTab = "home"; // Додано для відстеження активної вкладки
-
     function getFilteredDeals() {
       const queryTokens = searchTokens(controls.search.value);
       const store = controls.store.value || all;
       const category = controls.category.value || all;
       const subcategory = controls.subcategory.value || all;
       const minDiscount = Number(controls.minDiscount.value);
+      const onlySelected = controls.onlySelected.value === "true";
 
       const filtered = deals.filter(item => {
-        if (currentTab === "favorites") {
-          if (!selected.has(item.id)) return false;
-        }
+        if (onlySelected && !selected.has(item.id)) return false;
         return (!queryTokens.length || queryTokens.every(token => item._searchText.includes(token)))
           && (store === all || item.store === store)
           && (category === all || item.category === category)
@@ -501,14 +499,17 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     function renderComparison() {
       const items = deals.filter(item => selected.has(item.id)).sort((a, b) => unitSortValue(a) - unitSortValue(b));
       document.querySelector("#compareCount").textContent = items.length;
-      const clearBtn = document.querySelector("#clearCompareBtn");
-      if (clearBtn) {
-        clearBtn.style.display = items.length > 0 ? "inline-flex" : "none";
+      
+      const compareSelectedActions = document.getElementById("compareSelectedActions");
+      if (compareSelectedActions) {
+        compareSelectedActions.style.display = items.length > 0 ? "flex" : "none";
       }
+      
       const openMatrixBtn = document.querySelector("#openMatrixBtn");
       if (openMatrixBtn) {
-        openMatrixBtn.style.display = items.length >= 2 ? "inline-flex" : "none";
+        openMatrixBtn.style.setProperty("display", items.length >= 2 ? "inline-flex" : "none", "important");
       }
+      
       document.querySelector("#compareList").innerHTML = items.map(item => `
         <article class="compare-card">
           <div class="compare-top">
@@ -852,6 +853,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       controls.subcategory.value = all;
       controls.sort.value = "price";
       controls.minDiscount.value = "0";
+      controls.onlySelected.value = "false";
       visibleLimit = pageSize;
       selected.clear();
       renderComparison();
@@ -873,7 +875,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
 
 
     controls.search.addEventListener("input", renderAfterSearchInput);
-    [controls.store, controls.sort, controls.minDiscount, controls.subcategory].forEach(control => {
+    [controls.store, controls.sort, controls.minDiscount, controls.subcategory, controls.onlySelected].forEach(control => {
       control.addEventListener("change", () => {
         visibleLimit = pageSize;
         render();
@@ -898,168 +900,47 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       localStorage.setItem("theme", theme);
     });
 
-    const toggleFiltersBtn = document.getElementById("toggleFiltersBtn");
-    const advancedFilters = document.getElementById("advancedFilters");
-
-    toggleFiltersBtn.addEventListener("click", () => {
-      const isCollapsed = advancedFilters.classList.toggle("collapsed");
-      toggleFiltersBtn.classList.toggle("active", !isCollapsed);
-    });
-
-    // Toggle Search/Filters panel visibility logic
-    const toggleFiltersPanelBtn = document.getElementById("toggleFiltersPanelBtn");
-    const filtersPanel = document.querySelector(".filters");
-    let isExplicitlyHidden = localStorage.getItem("filtersHidden") === "true";
-
-    function collapseFilters() {
-      filtersPanel.classList.add("collapsed-panel");
-      document.documentElement.style.setProperty("--filters-height", "0px");
-    }
-
-    function expandFilters() {
-      filtersPanel.classList.remove("collapsed-panel");
-      document.documentElement.style.setProperty("--filters-height", `${filtersPanel.offsetHeight}px`);
-    }
-
-    if (isExplicitlyHidden) {
-      collapseFilters();
-      toggleFiltersPanelBtn.classList.remove("active");
-    } else {
-      expandFilters();
-      toggleFiltersPanelBtn.classList.add("active");
-    }
-
-    toggleFiltersPanelBtn.addEventListener("click", () => {
-      isExplicitlyHidden = !isExplicitlyHidden;
-      localStorage.setItem("filtersHidden", isExplicitlyHidden);
-      
-      if (isExplicitlyHidden) {
-        collapseFilters();
-        toggleFiltersPanelBtn.classList.remove("active");
-      } else {
-        expandFilters();
-        toggleFiltersPanelBtn.classList.add("active");
-        // Scroll to top smoothly so filters are fully visible and layout is stable
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-    });
-
-    // Auto-collapse filters on scroll down, restore ONLY when scrolling back near the top (< 30px)
-    window.addEventListener("scroll", () => {
-      if (isExplicitlyHidden) return;
-      
-      const currentScrollY = window.scrollY;
-      
-      if (currentScrollY > 120) {
-        collapseFilters();
-      } else if (currentScrollY < 30) {
-        expandFilters();
-      }
-    });
+    // Filters panel height and positioning is observed and updated dynamically via ResizeObserver below
 
     // ==========================================================================
-    // ЛОГІКА ДЛЯ НОВИХ КНОПОК ТА МЕНЮ (ВАРІАНТ Г)
+    // ЛОГІКА ДЛЯ НАЛАШТУВАНЬ ТА ДІЙ ПОКУПОК
     // ==========================================================================
-    
-    // Елементи меню
-    const menuHome = document.querySelector("#menuHome");
-    const menuPromo = document.querySelector("#menuPromo");
-    const menuRubrics = document.querySelector("#menuRubrics");
-    const menuFavs = document.querySelector("#menuFavs");
-    const menuSettings = document.querySelector("#menuSettings");
-    
-    const menuButtons = [menuHome, menuPromo, menuRubrics, menuFavs, menuSettings];
-    
-    function setTabActive(activeBtn) {
-      menuButtons.forEach(btn => btn.classList.remove("active"));
-      activeBtn.classList.add("active");
-    }
-    
-    // Обробники Основного Меню
-    menuHome.addEventListener("click", () => {
-      currentTab = "home";
-      setTabActive(menuHome);
-      
-      // Скидання пошуку та фільтрів
-      controls.search.value = "";
-      controls.store.value = all;
-      controls.category.value = all;
-      controls.subcategory.value = all;
-      controls.minDiscount.value = "0";
-      controls.sort.value = "price";
-      
-      render();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-    
-    menuPromo.addEventListener("click", () => {
-      currentTab = "home";
-      setTabActive(menuPromo);
-      
-      // Сортування за знижкою та відкриття фільтрів
-      controls.sort.value = "discount";
-      expandFilters();
-      toggleFiltersPanelBtn.classList.add("active");
-      
-      render();
-    });
-    
-    
-    menuRubrics.addEventListener("click", () => {
-      currentTab = "home";
-      setTabActive(menuRubrics);
-      
-      expandFilters();
-      toggleFiltersPanelBtn.classList.add("active");
-      
-      setTimeout(() => {
-        controls.category.focus();
-      }, 150);
-    });
-    
-    menuFavs.addEventListener("click", () => {
-      currentTab = "favorites";
-      setTabActive(menuFavs);
-      
-      if (selected.size === 0) {
-        showAlert("У вашому списку порівняння немає товарів. Позначте товари галочками в таблиці, щоб вони з'явилися тут!");
-      }
-      
-      render();
-    });
     
     // Модальне вікно налаштувань
     const settingsModal = document.querySelector("#settingsModal");
     const closeSettingsModal = document.querySelector("#closeSettingsModal");
     const sourcesTableContainer = document.querySelector("#sourcesTableContainer");
+    const menuSettings = document.querySelector("#menuSettings");
     
-    menuSettings.addEventListener("click", () => {
-      settingsModal.classList.add("active");
-      
-      if (sourceHealth.length > 0) {
-        let html = `<table>
-          <thead>
-            <tr>
-              <th>Джерело</th>
-              <th>Статус</th>
-              <th>Деталі</th>
-            </tr>
-          </thead>
-          <tbody>`;
-        sourceHealth.forEach(sh => {
-          const statusClass = sh.state === "Імпорт" || sh.state === "Імпортовано" ? "good" : "warn";
-          html += `<tr>
-            <td><strong>${sh.name}</strong></td>
-            <td><span class="status-dot ${statusClass === "warn" ? "warn" : ""}"></span> ${sh.state}</td>
-            <td>${sh.detail || "Немає деталей"}</td>
-          </tr>`;
-        });
-        html += `</tbody></table>`;
-        sourcesTableContainer.innerHTML = html;
-      } else {
-        sourcesTableContainer.innerHTML = "<p style='font-size:12px; color:var(--muted);'>Дані про джерела відсутні.</p>";
-      }
-    });
+    if (menuSettings) {
+      menuSettings.addEventListener("click", () => {
+        settingsModal.classList.add("active");
+        
+        if (sourceHealth.length > 0) {
+          let html = `<table>
+            <thead>
+              <tr>
+                <th>Джерело</th>
+                <th>Статус</th>
+                <th>Деталі</th>
+              </tr>
+            </thead>
+            <tbody>`;
+          sourceHealth.forEach(sh => {
+            const statusClass = sh.state === "Імпорт" || sh.state === "Імпортовано" ? "good" : "warn";
+            html += `<tr>
+              <td><strong>${sh.name}</strong></td>
+              <td><span class="status-dot ${statusClass === "warn" ? "warn" : ""}"></span> ${sh.state}</td>
+              <td>${sh.detail || "Немає деталей"}</td>
+            </tr>`;
+          });
+          html += `</tbody></table>`;
+          sourcesTableContainer.innerHTML = html;
+        } else {
+          sourcesTableContainer.innerHTML = "<p style='font-size:12px; color:var(--muted);'>Дані про джерела відсутні.</p>";
+        }
+      });
+    }
     
     closeSettingsModal.addEventListener("click", () => {
       settingsModal.classList.remove("active");
@@ -1152,32 +1033,8 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       render();
       renderComparison();
       
-      if (currentTab === "favorites") {
-        render();
-      }
-      
       addCustomModal.classList.remove("active");
       showAlert(`Товар "${name}" додано та позначено для порівняння!`);
-    });
-    
-    document.querySelector("#actionAdd2").addEventListener("click", () => {
-      const list = getFilteredDeals();
-      if (!list.length) {
-        showAlert("Немає видимих товарів для додавання у порівняння!");
-        return;
-      }
-      
-      let addedCount = 0;
-      list.forEach(item => {
-        if (!selected.has(item.id)) {
-          selected.add(item.id);
-          addedCount++;
-        }
-      });
-      
-      render();
-      renderComparison();
-      showAlert(`Усі видимі товари (${addedCount} шт) додано до порівняння!`);
     });
     
     const checkoutModal = document.getElementById("checkoutModal");
@@ -1230,11 +1087,6 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       }).catch(err => {
         showAlert("Не вдалося скопіювати. Будь ласка, виділіть текст і скопіюйте вручну.");
       });
-    });
-    
-    document.querySelector("#actionSearch").addEventListener("click", () => {
-      controls.search.focus();
-      controls.search.scrollIntoView({ behavior: "smooth", block: "center" });
     });
 
     // ==========================================================================

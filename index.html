@@ -18,9 +18,10 @@
       </div>
       <div class="nav-actions">
         <span class="nav-badge">Львів</span>
-        <button id="toggleFiltersPanelBtn" class="theme-toggle-btn" aria-label="Показати/приховати пошукову панель" title="Показати/приховати пошукову панель">
-          <svg class="filter-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 15px; height: 15px;">
-            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+        <button id="menuSettings" class="theme-toggle-btn" aria-label="Налаштування" title="Налаштування">
+          <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 15px; height: 15px;">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
           </svg>
         </button>
         <button id="themeToggle" class="theme-toggle-btn" aria-label="Перемикач теми">
@@ -42,62 +43,7 @@
         </div>
       </section>
 
-      <!-- Нова панель меню та кнопок за взірцем -->
-      <section class="dashboard-menu panel">
-        <div class="menu-group">
-          <div class="menu-label">ОСНОВНЕ МЕНЮ</div>
-          <div class="menu-grid main-menu">
-            <button class="menu-btn active" id="menuHome">
-              <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-              </svg>
-              <span>Головна</span>
-            </button>
-            <button class="menu-btn" id="menuPromo">
-              <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-                <line x1="7" y1="7" x2="7.01" y2="7"></line>
-              </svg>
-              <span>Акції</span>
-            </button>
-            <button class="menu-btn" id="menuRubrics">
-              <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-              </svg>
-              <span>Рубрики</span>
-            </button>
-            <button class="menu-btn" id="menuFavs">
-              <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
-              </svg>
-              <span>Обране</span>
-            </button>
-            <button class="menu-btn" id="menuSettings">
-              <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="3"></circle>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-              </svg>
-              <span>Налаштування</span>
-            </button>
-          </div>
-        </div>
-        <div class="menu-group">
-          <div class="menu-label">ДІЇ ТА ФУНКЦІЇ</div>
-          <div class="menu-grid actions-menu">
-            <button class="action-btn" id="actionSave">ЗБЕРЕГТИ</button>
-            <button class="action-btn" id="actionAdd">ДОДАТИ</button>
-            <button class="action-btn" id="actionAdd2">ДОДАТИ</button>
-            <button class="action-btn" id="actionCheckout">ОФОРМИТИ</button>
-            <button class="action-btn" id="actionSearch">
-              <span>ШУКАТИ</span>
-              <svg class="sparkle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px; margin-left: 6px; display: inline-block; vertical-align: middle;">
-                <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-      </section>
+
 
       <!-- Карусель мереж -->
       <section class="store-carousel-container panel">
@@ -105,28 +51,12 @@
       </section>
 
       <section class="filters panel">
-        <div class="filters-main-row">
-          <div class="field search-field">
-            <label for="search">Пошук</label>
-            <input id="search" type="search" placeholder="Пошук акцій за назвою товару...">
-          </div>
-          <button type="button" class="btn-toggle-filters" id="toggleFiltersBtn">
-            <svg class="filters-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="4" y1="21" x2="4" y2="14"></line>
-              <line x1="4" y1="10" x2="4" y2="3"></line>
-              <line x1="12" y1="21" x2="12" y2="12"></line>
-              <line x1="12" y1="8" x2="12" y2="3"></line>
-              <line x1="20" y1="21" x2="20" y2="16"></line>
-              <line x1="20" y1="12" x2="20" y2="3"></line>
-              <line x1="1" y1="14" x2="7" y2="14"></line>
-              <line x1="9" y1="8" x2="15" y2="8"></line>
-              <line x1="17" y1="16" x2="23" y2="16"></line>
-            </svg>
-            <span>Фільтри</span>
-          </button>
+        <div class="field search-field" style="margin-bottom: 12px; width: 100%;">
+          <label for="search">Пошук</label>
+          <input id="search" type="search" placeholder="Пошук акцій за назвою товару...">
         </div>
 
-        <div class="filters-advanced collapsed" id="advancedFilters">
+        <div class="filters-advanced" id="advancedFilters">
           <div class="filters-advanced-grid">
             <div class="field">
               <label for="storeFilter">Мережа</label>
@@ -155,6 +85,13 @@
                 <option value="15">від 15%</option>
                 <option value="25">від 25%</option>
                 <option value="30">від 30%</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="onlySelectedFilter">Обрані</label>
+              <select id="onlySelectedFilter">
+                <option value="false" selected>Усі товари</option>
+                <option value="true">Тільки обрані (★)</option>
               </select>
             </div>
           </div>
@@ -201,13 +138,23 @@
           <div class="panel">
             <div class="panel-head" style="display: flex; justify-content: space-between; align-items: center;">
               <h2>Моє порівняння</h2>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span class="badge" id="compareCount">0</span>
-                <button class="ghost-button" id="openMatrixBtn" style="font-size: 10px; min-height: 24px; padding: 2px 8px; text-transform: uppercase; letter-spacing: 0.05em; display: none;">Матриця</button>
-                <button class="ghost-button" id="clearCompareBtn" style="font-size: 10px; min-height: 24px; padding: 2px 8px; text-transform: uppercase; letter-spacing: 0.05em; display: none;">Очистити</button>
-              </div>
+              <span class="badge" id="compareCount">0</span>
             </div>
             <div class="compare-list" id="compareList"></div>
+            
+            <div class="compare-actions" id="compareActions" style="margin-top: 12px; display: flex; flex-direction: column; gap: 6px;">
+              <div id="compareSelectedActions" style="display: none; flex-direction: column; gap: 6px;">
+                <div style="display: flex; gap: 6px;">
+                  <button class="ghost-button" id="openMatrixBtn" style="flex: 1; font-size: 11px; min-height: 28px; padding: 4px; text-transform: uppercase;">Матриця</button>
+                  <button class="ghost-button" id="actionCheckout" style="flex: 1; font-size: 11px; min-height: 28px; padding: 4px; text-transform: uppercase;">Оформити</button>
+                </div>
+                <div style="display: flex; gap: 6px;">
+                  <button class="ghost-button" id="actionSave" style="flex: 1; font-size: 11px; min-height: 28px; padding: 4px; text-transform: uppercase;">Копіювати</button>
+                  <button class="ghost-button" id="clearCompareBtn" style="flex: 1; font-size: 11px; min-height: 28px; padding: 4px; text-transform: uppercase;">Очистити</button>
+                </div>
+              </div>
+              <button class="ghost-button" id="actionAdd" style="width: 100%; font-size: 11px; min-height: 28px; padding: 4px; text-transform: uppercase;">+ Власний товар</button>
+            </div>
           </div>
 
           <div class="panel">
