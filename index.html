@@ -99,6 +99,11 @@
         </div>
       </section>
 
+      <!-- Карусель мереж -->
+      <section class="store-carousel-container panel">
+        <div class="store-carousel-scroll" id="storeCarousel"></div>
+      </section>
+
       <section class="filters panel">
         <div class="filters-main-row">
           <div class="field search-field">
@@ -162,6 +167,7 @@
             <h2>Порівняння акцій</h2>
             <span class="badge" id="resultCount">0 позицій</span>
           </div>
+          <div class="active-tags-row" id="activeFilterTags"></div>
           <div class="table-wrap">
             <table>
               <colgroup>
@@ -197,6 +203,7 @@
               <h2>Моє порівняння</h2>
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span class="badge" id="compareCount">0</span>
+                <button class="ghost-button" id="openMatrixBtn" style="font-size: 10px; min-height: 24px; padding: 2px 8px; text-transform: uppercase; letter-spacing: 0.05em; display: none;">Матриця</button>
                 <button class="ghost-button" id="clearCompareBtn" style="font-size: 10px; min-height: 24px; padding: 2px 8px; text-transform: uppercase; letter-spacing: 0.05em; display: none;">Очистити</button>
               </div>
             </div>
@@ -302,6 +309,64 @@
           <button class="ghost-button" id="btnCopyList" style="flex: 1; min-height: 38px;">Скопіювати</button>
           <a id="btnShareTelegram" class="ghost-button" href="#" target="_blank" style="flex: 1; min-height: 38px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; background: rgba(0, 136, 204, 0.1); color: #0088cc; border-color: rgba(0, 136, 204, 0.2);">Telegram</a>
           <a id="btnShareViber" class="ghost-button" href="#" target="_blank" style="flex: 1; min-height: 38px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; background: rgba(115, 96, 242, 0.1); color: #7360f2; border-color: rgba(115, 96, 242, 0.2);">Viber</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Product Details -->
+  <div class="modal-overlay" id="productDetailsModal">
+    <div class="modal-card detail-card-modal">
+      <div class="modal-header">
+        <h3 id="detailProductTitle">Деталі товару</h3>
+        <button class="modal-close" id="closeProductDetailsModal">&times;</button>
+      </div>
+      <div class="modal-body detail-modal-body">
+        <div class="detail-product-info">
+          <div id="detailProductImgContainer" class="detail-img-container"></div>
+          <div class="detail-product-specs">
+            <h4 id="detailProductName">Назва товару</h4>
+            <div class="specs-grid">
+              <div><span>Мережа:</span> <strong id="detailProductStore">-</strong></div>
+              <div><span>Категорія:</span> <strong id="detailProductCat">-</strong></div>
+              <div><span>Підкатегорія:</span> <strong id="detailProductSubcat">-</strong></div>
+              <div><span>Розмір/Вага:</span> <strong id="detailProductSize">-</strong></div>
+              <div><span>Акційна ціна:</span> <strong id="detailProductPrice" style="color: var(--green); font-size: 16px;">-</strong></div>
+              <div><span>Стара ціна:</span> <strong id="detailProductOld" style="text-decoration: line-through; color: var(--muted);">-</strong></div>
+              <div><span>Питома ціна:</span> <strong id="detailProductUnitPrice">-</strong></div>
+              <div><span>Термін акції:</span> <strong id="detailProductTerm">-</strong></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="price-history-section" style="margin-top: 20px; border-top: 1px solid var(--line); padding-top: 16px;">
+          <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 700; color: var(--ink); text-transform: uppercase; letter-spacing: 0.05em;">Історія ціни (динаміка акцій)</h4>
+          <div class="chart-wrapper">
+            <svg id="priceHistoryChart" viewBox="0 0 400 150" style="width: 100%; height: 130px; display: block; overflow: visible;">
+              <!-- Grid lines, area gradient, line, and active dot will be injected via JS -->
+            </svg>
+            <div class="chart-labels" style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 10px; color: var(--muted); font-weight: 600;">
+              <span>3 тижні тому</span>
+              <span>2 тижні тому</span>
+              <span>1 тиждень тому</span>
+              <span>Сьогодні</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Comparison Matrix -->
+  <div class="modal-overlay" id="comparisonMatrixModal">
+    <div class="modal-card matrix-card-modal">
+      <div class="modal-header">
+        <h3>Порівняльна матриця товарів</h3>
+        <button class="modal-close" id="closeComparisonMatrixModal">&times;</button>
+      </div>
+      <div class="modal-body matrix-modal-body">
+        <div id="matrixTableWrapper" class="matrix-table-wrap">
+          <!-- The side-by-side comparison table will be injected here -->
         </div>
       </div>
     </div>

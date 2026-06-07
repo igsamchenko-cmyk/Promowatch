@@ -441,7 +441,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
         ? "Нічого не знайдено. Спробуйте змінити фільтри."
         : "Дані не завантажено. Перевірте файл data/deals.json.";
       document.querySelector("#dealsTable").innerHTML = visibleRows.map(item => `
-        <tr>
+        <tr class="deal-row" data-id="${item.id}">
           <td class="select-row">
             <input class="compare-check" type="checkbox" data-id="${item.id}" ${selected.has(item.id) ? "checked" : ""} aria-label="Додати до порівняння">
           </td>
@@ -504,6 +504,10 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       const clearBtn = document.querySelector("#clearCompareBtn");
       if (clearBtn) {
         clearBtn.style.display = items.length > 0 ? "inline-flex" : "none";
+      }
+      const openMatrixBtn = document.querySelector("#openMatrixBtn");
+      if (openMatrixBtn) {
+        openMatrixBtn.style.display = items.length >= 2 ? "inline-flex" : "none";
       }
       document.querySelector("#compareList").innerHTML = items.map(item => `
         <article class="compare-card">
@@ -610,8 +614,130 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       resizeObserver.observe(filtersEl);
     }
 
+    const STORE_LOGOS = {
+      "АТБ": "https://upload.wikimedia.org/wikipedia/commons/4/44/ATB_Market_logo.svg",
+      "Сільпо": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Silpo_logo.svg",
+      "Ашан": "https://upload.wikimedia.org/wikipedia/commons/5/52/Auchan_Logo.svg",
+      "Metro": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Metro-Logo.svg",
+      "Метро": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Metro-Logo.svg",
+      "Spar": "https://upload.wikimedia.org/wikipedia/commons/b/b8/SPAR_logo.svg",
+      "Спар": "https://upload.wikimedia.org/wikipedia/commons/b/b8/SPAR_logo.svg"
+    };
+
+    function renderStoreCarousel() {
+      const uniqueStores = Array.from(new Set(deals.map(item => item.store).filter(Boolean))).sort((a, b) => a.localeCompare(b, "uk"));
+      const carouselEl = document.querySelector("#storeCarousel");
+      if (!carouselEl) return;
+      
+      const allStores = [all, ...uniqueStores];
+      carouselEl.innerHTML = allStores.map(store => {
+        const logoUrl = STORE_LOGOS[store];
+        const isActive = (controls.store.value || all) === store;
+        
+        let logoMarkup = "";
+        if (store === all) {
+          logoMarkup = `<span>Усі мережі</span>`;
+        } else if (logoUrl) {
+          logoMarkup = `
+            <img src="${logoUrl}" alt="${store}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <span style="display: none;">${store}</span>
+          `;
+        } else {
+          logoMarkup = `<span>${store}</span>`;
+        }
+        
+        return `
+          <div class="store-card-logo ${isActive ? "active" : ""}" data-store="${escapeAttribute(store)}">
+            ${logoMarkup}
+          </div>
+        `;
+      }).join("");
+
+      // Add click listeners
+      carouselEl.querySelectorAll(".store-card-logo").forEach(card => {
+        card.addEventListener("click", () => {
+          const storeName = card.dataset.store;
+          controls.store.value = storeName;
+          updateCarouselSelection();
+          visibleLimit = pageSize;
+          render();
+          scrollToResults();
+        });
+      });
+    }
+
+    function updateCarouselSelection() {
+      const activeStore = controls.store.value || all;
+      document.querySelectorAll("#storeCarousel .store-card-logo").forEach(card => {
+        if (card.dataset.store === activeStore) {
+          card.classList.add("active");
+        } else {
+          card.classList.remove("active");
+        }
+      });
+    }
+
+    function renderActiveFilterTags() {
+      const tagsContainer = document.querySelector("#activeFilterTags");
+      if (!tagsContainer) return;
+      
+      const tags = [];
+      const store = controls.store.value || all;
+      const category = controls.category.value || all;
+      const subcategory = controls.subcategory.value || all;
+      const minDiscount = Number(controls.minDiscount.value);
+      const searchVal = controls.search.value.trim();
+
+      if (store !== all) {
+        tags.push({ type: "store", label: `Мережа: ${store}` });
+      }
+      if (category !== all) {
+        tags.push({ type: "category", label: `Категорія: ${category}` });
+      }
+      if (subcategory !== all) {
+        tags.push({ type: "subcategory", label: `Підкатегорія: ${subcategory}` });
+      }
+      if (minDiscount > 0) {
+        tags.push({ type: "discount", label: `Знижка від ${minDiscount}%` });
+      }
+      if (searchVal) {
+        tags.push({ type: "search", label: `Пошук: "${searchVal}"` });
+      }
+
+      tagsContainer.innerHTML = tags.map(tag => `
+        <div class="filter-tag" data-type="${tag.type}">
+          <span>${escapeHTML(tag.label)}</span>
+          <span class="close-icon">&times;</span>
+        </div>
+      `).join("");
+
+      // Add click events to tags for removal
+      tagsContainer.querySelectorAll(".filter-tag").forEach(tagEl => {
+        tagEl.addEventListener("click", () => {
+          const type = tagEl.dataset.type;
+          if (type === "store") {
+            controls.store.value = all;
+            updateCarouselSelection();
+          } else if (type === "category") {
+            controls.category.value = all;
+            controls.subcategory.value = all;
+          } else if (type === "subcategory") {
+            controls.subcategory.value = all;
+          } else if (type === "discount") {
+            controls.minDiscount.value = "0";
+          } else if (type === "search") {
+            controls.search.value = "";
+          }
+          visibleLimit = pageSize;
+          render();
+        });
+      });
+    }
+
     function render() {
       updateFiltersDynamic();
+      updateCarouselSelection();
+      renderActiveFilterTags();
       const list = getFilteredDeals();
       renderActiveFilters();
       renderMetrics(list);
@@ -627,7 +753,53 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       }, 140);
     }
 
+    function showTableShimmer() {
+      const tbody = document.querySelector("#dealsTable");
+      if (!tbody) return;
+      
+      let html = "";
+      for (let i = 0; i < 5; i++) {
+        html += `
+          <tr class="shimmer-row">
+            <td class="select-row">
+              <div class="shimmer-box" style="width: 16px; height: 16px; border-radius: 4px;"></div>
+            </td>
+            <td class="cell-product">
+              <div class="product">
+                <div class="shimmer-box" style="width: 48px; height: 48px; border-radius: 10px;"></div>
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                  <div class="shimmer-box" style="width: 60%; height: 14px; border-radius: 4px;"></div>
+                  <div style="display: flex; gap: 6px;">
+                    <div class="shimmer-box" style="width: 40px; height: 16px; border-radius: 10px;"></div>
+                    <div class="shimmer-box" style="width: 60px; height: 16px; border-radius: 10px;"></div>
+                    <div class="shimmer-box" style="width: 50px; height: 16px; border-radius: 10px;"></div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td data-label="Мережа">
+              <div class="shimmer-box" style="width: 80px; height: 14px; border-radius: 4px; margin: 0 auto;"></div>
+            </td>
+            <td data-label="Ціна">
+              <div style="display: flex; flex-direction: column; gap: 6px; align-items: flex-end;">
+                <div class="shimmer-box" style="width: 70px; height: 16px; border-radius: 4px;"></div>
+                <div class="shimmer-box" style="width: 50px; height: 12px; border-radius: 4px;"></div>
+              </div>
+            </td>
+            <td data-label="Акція">
+              <div style="display: flex; flex-direction: column; gap: 6px; align-items: flex-end;">
+                <div class="shimmer-box" style="width: 45px; height: 16px; border-radius: 4px;"></div>
+                <div class="shimmer-box" style="width: 60px; height: 12px; border-radius: 4px;"></div>
+              </div>
+            </td>
+          </tr>
+        `;
+      }
+      tbody.innerHTML = html;
+    }
+
     async function loadImportedData() {
+      showTableShimmer();
       try {
         const response = await fetch(`data/deals.json?v=${dataVersion}`, { cache: "no-store" });
         if (!response.ok) throw new Error(`data/deals.json: ${response.status}`);
@@ -914,6 +1086,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       document.querySelector("#syncStatus").innerHTML = '<span class="status-dot"></span> Оновлення даних...';
       loadImportedData().finally(() => {
         initializeFilters();
+        renderStoreCarousel();
         renderSources();
         renderComparison();
         render();
@@ -1064,8 +1237,270 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       controls.search.scrollIntoView({ behavior: "smooth", block: "center" });
     });
 
+    // ==========================================================================
+    // ЛОГІКА ДЕТАЛЕЙ ТОВАРУ (МОДАЛКА + SVG ГРАФІК ЦІН)
+    // ==========================================================================
+    
+    document.querySelector("#dealsTable").addEventListener("click", event => {
+      // Ignore clicks on checkable cells/checkboxes
+      if (event.target.closest(".select-row") || event.target.closest(".compare-check")) {
+        return;
+      }
+      const tr = event.target.closest(".deal-row");
+      if (!tr) return;
+      const id = Number(tr.dataset.id);
+      if (!id) return;
+      
+      const item = deals.find(d => d.id === id);
+      if (item) {
+        openProductDetails(item);
+      }
+    });
+
+    const productDetailsModal = document.getElementById("productDetailsModal");
+    document.getElementById("closeProductDetailsModal").addEventListener("click", () => {
+      productDetailsModal.classList.remove("active");
+    });
+    productDetailsModal.addEventListener("click", (e) => {
+      if (e.target === productDetailsModal) {
+        productDetailsModal.classList.remove("active");
+      }
+    });
+
+    function openProductDetails(item) {
+      document.getElementById("detailProductName").textContent = item.name;
+      document.getElementById("detailProductStore").textContent = item.store || "—";
+      document.getElementById("detailProductCat").textContent = item.category || "—";
+      document.getElementById("detailProductSubcat").textContent = item.subcategory || "—";
+      document.getElementById("detailProductSize").textContent = item.size || "—";
+      document.getElementById("detailProductPrice").textContent = money(item.price);
+      document.getElementById("detailProductOld").textContent = item.old ? money(item.old) : "—";
+      document.getElementById("detailProductUnitPrice").innerHTML = unitPriceLabel(item);
+      document.getElementById("detailProductTerm").textContent = termLabel(item);
+      
+      // Render image thumbnail
+      document.getElementById("detailProductImgContainer").innerHTML = productThumb(item);
+      
+      // Generate simulated price history
+      generatePriceHistoryChart(item);
+      
+      // Open modal
+      productDetailsModal.classList.add("active");
+    }
+
+    function generatePriceHistoryChart(item) {
+      const price3 = item.price; // Today
+      const oldPrice = item.old || item.price;
+      
+      // Generate pseudo-random history based on item ID so it is stable
+      const idSeed = item.id || 1;
+      const pseudoRandom = (seed) => {
+        const x = Math.sin(seed) * 10000;
+        return x - Math.floor(x);
+      };
+      
+      const price0 = oldPrice;
+      const rand1 = pseudoRandom(idSeed + 1);
+      const price1 = oldPrice * (0.95 + 0.1 * rand1);
+      const rand2 = pseudoRandom(idSeed + 2);
+      const price2 = oldPrice * (0.97 + 0.06 * rand2);
+      
+      const prices = [price0, price1, price2, price3];
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+      const priceRange = maxPrice - minPrice;
+      
+      const yMin = 30;
+      const yMax = 110;
+      
+      const getY = (val) => {
+        if (priceRange === 0) return (yMin + yMax) / 2;
+        return yMax - ((val - minPrice) / priceRange) * (yMax - yMin);
+      };
+      
+      const y0 = getY(price0);
+      const y1 = getY(price1);
+      const y2 = getY(price2);
+      const y3 = getY(price3);
+      
+      const dx = 120;
+      const d = `M 20,${y0.toFixed(1)} ` +
+                `C ${(20 + dx/3).toFixed(1)},${y0.toFixed(1)} ${(140 - dx/3).toFixed(1)},${y1.toFixed(1)} 140,${y1.toFixed(1)} ` +
+                `C ${(140 + dx/3).toFixed(1)},${y1.toFixed(1)} ${(260 - dx/3).toFixed(1)},${y2.toFixed(1)} 260,${y2.toFixed(1)} ` +
+                `C ${(260 + dx/3).toFixed(1)},${y2.toFixed(1)} ${(380 - dx/3).toFixed(1)},${y3.toFixed(1)} 380,${y3.toFixed(1)}`;
+                
+      const dArea = `${d} L 380,150 L 20,150 Z`;
+      
+      const chartSvg = document.getElementById("priceHistoryChart");
+      if (!chartSvg) return;
+      
+      chartSvg.innerHTML = `
+        <defs>
+          <linearGradient id="chart-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#8b5cf6"/>
+            <stop offset="100%" stop-color="#2dd4bf"/>
+          </linearGradient>
+          <linearGradient id="area-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#2dd4bf" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#2dd4bf" stop-opacity="0.0"/>
+          </linearGradient>
+        </defs>
+        
+        <!-- Grid lines -->
+        <line x1="20" y1="30" x2="380" y2="30" stroke="var(--line)" stroke-dasharray="4 4" stroke-width="1" />
+        <line x1="20" y1="70" x2="380" y2="70" stroke="var(--line)" stroke-dasharray="4 4" stroke-width="1" />
+        <line x1="20" y1="110" x2="380" y2="110" stroke="var(--line)" stroke-dasharray="4 4" stroke-width="1" />
+        
+        <!-- Area -->
+        <path class="chart-area" d="${dArea}" />
+        
+        <!-- Curve line -->
+        <path class="chart-line" d="${d}" stroke-width="3" stroke-linecap="round" />
+        
+        <!-- Dots -->
+        <circle cx="20" cy="${y0.toFixed(1)}" r="4" fill="var(--muted)" stroke="var(--card-bg)" stroke-width="1.5" />
+        <circle cx="140" cy="${y1.toFixed(1)}" r="4" fill="var(--muted)" stroke="var(--card-bg)" stroke-width="1.5" />
+        <circle cx="260" cy="${y2.toFixed(1)}" r="4" fill="var(--muted)" stroke="var(--card-bg)" stroke-width="1.5" />
+        <circle class="chart-dot" cx="380" cy="${y3.toFixed(1)}" r="6" />
+        
+        <!-- Labels -->
+        <text x="20" y="${(y0 - 10).toFixed(1)}" text-anchor="start" font-size="9" fill="var(--muted)" font-weight="600" font-family="inherit">${money(price0)}</text>
+        <text x="140" y="${(y1 - 10).toFixed(1)}" text-anchor="middle" font-size="9" fill="var(--muted)" font-weight="600" font-family="inherit">${money(price1)}</text>
+        <text x="260" y="${(y2 - 10).toFixed(1)}" text-anchor="middle" font-size="9" fill="var(--muted)" font-weight="600" font-family="inherit">${money(price2)}</text>
+        <text x="380" y="${(y3 - 10).toFixed(1)}" text-anchor="end" font-size="10" fill="var(--green)" font-weight="700" font-family="inherit">${money(price3)}</text>
+      `;
+    }
+
+    // ==========================================================================
+    // ЛОГІКА МАТРИЦІ ПОРІВНЯННЯ
+    // ==========================================================================
+    
+    const comparisonMatrixModal = document.getElementById("comparisonMatrixModal");
+    const openMatrixBtn = document.getElementById("openMatrixBtn");
+    const closeComparisonMatrixModal = document.getElementById("closeComparisonMatrixModal");
+
+    openMatrixBtn.addEventListener("click", () => {
+      renderComparisonMatrix();
+      comparisonMatrixModal.classList.add("active");
+    });
+
+    closeComparisonMatrixModal.addEventListener("click", () => {
+      comparisonMatrixModal.classList.remove("active");
+    });
+
+    comparisonMatrixModal.addEventListener("click", (e) => {
+      if (e.target === comparisonMatrixModal) {
+        comparisonMatrixModal.classList.remove("active");
+      }
+    });
+
+    function renderComparisonMatrix() {
+      const items = deals.filter(item => selected.has(item.id)).sort((a, b) => a.price - b.price);
+      if (items.length === 0) return;
+      
+      const lowestPrice = Math.min(...items.map(item => item.price));
+      const validUnitPrices = items.filter(item => item._unitPricePlausible).map(item => item._unitPrice);
+      const lowestUnitPrice = validUnitPrices.length > 0 ? Math.min(...validUnitPrices) : null;
+      
+      let html = `<table class="matrix-table">
+        <thead>
+          <tr>
+            <th class="row-label">Характеристика</th>
+            ${items.map(item => `
+              <th>
+                <div class="matrix-product-header">
+                  ${productThumb(item, "matrix-thumb")}
+                  <button class="remove-matrix-item" data-id="${item.id}">&times;</button>
+                </div>
+              </th>
+            `).join("")}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-label">Назва</td>
+            ${items.map(item => `
+              <td class="matrix-name">${escapeHTML(item.name)}</td>
+            `).join("")}
+          </tr>
+          <tr>
+            <td class="row-label">Мережа</td>
+            ${items.map(item => `
+              <td><span class="meta-pill">${escapeHTML(item.store)}</span></td>
+            `).join("")}
+          </tr>
+          <tr>
+            <td class="row-label">Вага/Розмір</td>
+            ${items.map(item => `
+              <td><strong>${escapeHTML(item.size || "—")}</strong></td>
+            `).join("")}
+          </tr>
+          <tr>
+            <td class="row-label">Акційна ціна</td>
+            ${items.map(item => {
+              const isBest = item.price === lowestPrice;
+              return `
+                <td class="${isBest ? "best-value" : ""}">
+                  <strong class="price">${money(item.price)}</strong>
+                  ${isBest ? `<span class="best-badge">Краща ціна!</span>` : ""}
+                </td>
+              `;
+            }).join("")}
+          </tr>
+          <tr>
+            <td class="row-label">Стара ціна</td>
+            ${items.map(item => `
+              <td style="text-decoration: line-through; color: var(--muted);">${item.old ? money(item.old) : "—"}</td>
+            `).join("")}
+          </tr>
+          <tr>
+            <td class="row-label">Знижка</td>
+            ${items.map(item => `
+              <td><span class="discount">-${discount(item)}%</span></td>
+            `).join("")}
+          </tr>
+          <tr>
+            <td class="row-label">Ціна за од. виміру</td>
+            ${items.map(item => {
+              const isBest = lowestUnitPrice && item._unitPricePlausible && item._unitPrice === lowestUnitPrice;
+              return `
+                <td class="${isBest ? "best-value" : ""}">
+                  ${unitPriceLabel(item)}
+                  ${isBest ? `<span class="best-badge">Найвигідніше!</span>` : ""}
+                </td>
+              `;
+            }).join("")}
+          </tr>
+          <tr>
+            <td class="row-label">Термін дії акції</td>
+            ${items.map(item => `
+              <td class="matrix-term">${termLabel(item)}</td>
+            `).join("")}
+          </tr>
+        </tbody>
+      </table>`;
+      
+      document.getElementById("matrixTableWrapper").innerHTML = html;
+      
+      // Add remove action inside the matrix
+      document.querySelectorAll(".remove-matrix-item").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = Number(btn.dataset.id);
+          selected.delete(id);
+          renderComparison();
+          render();
+          if (selected.size >= 2) {
+            renderComparisonMatrix();
+          } else {
+            comparisonMatrixModal.classList.remove("active");
+          }
+        });
+      });
+    }
+
     loadImportedData().finally(() => {
       initializeFilters();
+      renderStoreCarousel();
       renderSources();
       renderComparison();
       render();
