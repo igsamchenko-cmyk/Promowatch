@@ -50,7 +50,7 @@
         <div class="store-carousel-scroll" id="storeCarousel"></div>
       </section>
 
-      <section class="filters panel">
+      <section class="filters panel hidden-scroll">
         <div class="field search-field" style="margin-bottom: 12px; width: 100%;">
           <label for="search">Пошук</label>
           <input id="search" type="search" placeholder="Пошук акцій за назвою товару...">
@@ -318,6 +318,19 @@
       </div>
     </div>
   </div>
+
+  <!-- Floating Action Button for Filters -->
+  <button id="floatingFilterBtn" class="floating-filter-btn visible" aria-label="Відкрити фільтри" title="Відкрити фільтри">
+    <!-- Filter Icon -->
+    <svg class="icon-filter" viewBox="0 0 24 24">
+      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+    </svg>
+    <!-- Close Icon -->
+    <svg class="icon-close" viewBox="0 0 24 24">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
 
   <script src="assets/app.js?v=1.0.1" defer></script>
 

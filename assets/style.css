@@ -1895,3 +1895,62 @@
     background-position: -200% 0;
   }
 }
+
+/* Floating Filter Button style */
+.floating-filter-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--neon-teal), #0f766e);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  box-shadow: 0 8px 24px rgba(45, 212, 191, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: opacity 0.3s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.5);
+}
+.floating-filter-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+.floating-filter-btn:hover {
+  transform: scale(1.08) !important;
+  box-shadow: 0 12px 32px rgba(45, 212, 191, 0.45);
+}
+.floating-filter-btn:active {
+  transform: scale(0.95) !important;
+}
+.floating-filter-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  position: absolute;
+  transition: transform 0.3s, opacity 0.3s;
+}
+.floating-filter-btn .icon-close {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.5);
+}
+.floating-filter-btn.active .icon-filter {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.5);
+}
+.floating-filter-btn.active .icon-close {
+  opacity: 1;
+  transform: rotate(0) scale(1);
+}

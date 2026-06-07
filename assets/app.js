@@ -605,6 +605,9 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     // Automatically observe and update sticky header height offset
     const filtersEl = document.querySelector(".filters");
     if (filtersEl) {
+      // Set initial state to 0px height since it starts hidden
+      document.documentElement.style.setProperty("--filters-height", "0px");
+
       const resizeObserver = new ResizeObserver(entries => {
         for (let entry of entries) {
           if (!entry.target.classList.contains("hidden-scroll")) {
@@ -613,6 +616,36 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
         }
       });
       resizeObserver.observe(filtersEl);
+    }
+
+    // Helper functions for filters visibility
+    function showFilters() {
+      const floatBtn = document.getElementById("floatingFilterBtn");
+      if (filtersEl && filtersEl.classList.contains("hidden-scroll")) {
+        filtersEl.classList.remove("hidden-scroll");
+        const filtersHeight = filtersEl.offsetHeight;
+        document.documentElement.style.setProperty("--filters-height", `${filtersHeight}px`);
+      }
+      if (floatBtn) floatBtn.classList.add("active");
+    }
+
+    function hideFilters() {
+      const floatBtn = document.getElementById("floatingFilterBtn");
+      if (filtersEl && !filtersEl.classList.contains("hidden-scroll")) {
+        filtersEl.classList.add("hidden-scroll");
+        document.documentElement.style.setProperty("--filters-height", "0px");
+      }
+      if (floatBtn) floatBtn.classList.remove("active");
+    }
+
+    function toggleFilters() {
+      if (filtersEl) {
+        if (filtersEl.classList.contains("hidden-scroll")) {
+          showFilters();
+        } else {
+          hideFilters();
+        }
+      }
     }
 
     const STORE_LOGOS = {
@@ -830,8 +863,12 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       const checkbox = event.target.closest(".compare-check");
       if (!checkbox) return;
       const id = Number(checkbox.dataset.id);
-      if (checkbox.checked) selected.add(id);
-      else selected.delete(id);
+      if (checkbox.checked) {
+        selected.add(id);
+        hideFilters();
+      } else {
+        selected.delete(id);
+      }
       renderComparison();
     });
 
@@ -1350,40 +1387,23 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       });
     }
 
-    // Smart Sticky: auto-hide filters on scroll down, show on scroll up
+    // Event listeners for floating button
+    const floatBtn = document.getElementById("floatingFilterBtn");
+    if (floatBtn) {
+      floatBtn.addEventListener("click", toggleFilters);
+    }
+
+    // Smart Sticky Scroll listener
     let lastScrollY = window.scrollY;
-    
     window.addEventListener("scroll", () => {
       const currentScrollY = window.scrollY;
-      
-      // If we are close to the top, always show the filters panel
-      if (currentScrollY < 50) {
-        if (filtersEl.classList.contains("hidden-scroll")) {
-          filtersEl.classList.remove("hidden-scroll");
-          const filtersHeight = filtersEl.offsetHeight;
-          document.documentElement.style.setProperty("--filters-height", `${filtersHeight}px`);
-        }
-        lastScrollY = currentScrollY;
-        return;
-      }
-      
+
+      // Auto-hide panel on scroll down
       const isScrollingDown = currentScrollY > lastScrollY;
-      
-      if (isScrollingDown) {
-        // Scroll down: hide filters
-        if (!filtersEl.classList.contains("hidden-scroll") && currentScrollY > 150) {
-          filtersEl.classList.add("hidden-scroll");
-          document.documentElement.style.setProperty("--filters-height", "0px");
-        }
-      } else {
-        // Scroll up: show filters
-        if (filtersEl.classList.contains("hidden-scroll")) {
-          filtersEl.classList.remove("hidden-scroll");
-          const filtersHeight = filtersEl.offsetHeight;
-          document.documentElement.style.setProperty("--filters-height", `${filtersHeight}px`);
-        }
+      if (isScrollingDown && currentScrollY > 150) {
+        hideFilters();
       }
-      
+
       lastScrollY = currentScrollY;
     });
 
