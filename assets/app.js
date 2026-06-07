@@ -501,6 +501,10 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     function renderComparison() {
       const items = deals.filter(item => selected.has(item.id)).sort((a, b) => unitSortValue(a) - unitSortValue(b));
       document.querySelector("#compareCount").textContent = items.length;
+      const clearBtn = document.querySelector("#clearCompareBtn");
+      if (clearBtn) {
+        clearBtn.style.display = items.length > 0 ? "inline-flex" : "none";
+      }
       document.querySelector("#compareList").innerHTML = items.map(item => `
         <article class="compare-card">
           <div class="compare-top">
@@ -657,6 +661,17 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       else selected.delete(id);
       renderComparison();
     });
+
+    const clearCompareBtn = document.querySelector("#clearCompareBtn");
+    if (clearCompareBtn) {
+      clearCompareBtn.addEventListener("click", () => {
+        if (confirm("Ви дійсно хочете очистити весь список порівняння?")) {
+          selected.clear();
+          renderComparison();
+          render();
+        }
+      });
+    }
 
     document.querySelector("#resetButton").addEventListener("click", () => {
       controls.search.value = "";

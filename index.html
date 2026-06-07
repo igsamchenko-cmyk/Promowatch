@@ -193,9 +193,12 @@
         <div class="side-stack">
 
           <div class="panel">
-            <div class="panel-head">
+            <div class="panel-head" style="display: flex; justify-content: space-between; align-items: center;">
               <h2>Моє порівняння</h2>
-              <span class="badge" id="compareCount">0</span>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="badge" id="compareCount">0</span>
+                <button class="ghost-button" id="clearCompareBtn" style="font-size: 10px; min-height: 24px; padding: 2px 8px; text-transform: uppercase; letter-spacing: 0.05em; display: none;">Очистити</button>
+              </div>
             </div>
             <div class="compare-list" id="compareList"></div>
           </div>
