@@ -850,13 +850,13 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       setTabActive(menuFavs);
       
       if (selected.size === 0) {
-        showAlert("РЈ РІР°С€РѕРјСѓ СЃРїРёСЃРєСѓ РїРѕСЂС–РІРЅСЏРЅРЅСЏ РЅРµРјР°С” С‚РѕРІР°СЂС–РІ. РџРѕР·РЅР°С‡С‚Рµ С‚РѕРІР°СЂРё РіР°Р»РѕС‡РєР°РјРё РІ С‚Р°Р±Р»РёС†С–, С‰РѕР± РІРѕРЅРё Р·'СЏРІРёР»РёСЃСЏ С‚СѓС‚!");
+        showAlert("У вашому списку порівняння немає товарів. Позначте товари галочками в таблиці, щоб вони з'явилися тут!");
       }
       
       render();
     });
     
-    // РњРѕРґР°Р»СЊРЅРµ РІС–РєРЅРѕ РЅР°Р»Р°С€С‚СѓРІР°РЅСЊ
+    // Модальне вікно налаштувань
     const settingsModal = document.querySelector("#settingsModal");
     const closeSettingsModal = document.querySelector("#closeSettingsModal");
     const sourcesTableContainer = document.querySelector("#sourcesTableContainer");
@@ -868,24 +868,24 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
         let html = `<table>
           <thead>
             <tr>
-              <th>Р”Р¶РµСЂРµР»Рѕ</th>
-              <th>РЎС‚Р°С‚СѓСЃ</th>
-              <th>Р”РµС‚Р°Р»С–</th>
+              <th>Джерело</th>
+              <th>Статус</th>
+              <th>Деталі</th>
             </tr>
           </thead>
           <tbody>`;
         sourceHealth.forEach(sh => {
-          const statusClass = sh.state === "Р†РјРїРѕСЂС‚" || sh.state === "Р†РјРїРѕСЂС‚РѕРІР°РЅРѕ" ? "good" : "warn";
+          const statusClass = sh.state === "Імпорт" || sh.state === "Імпортовано" ? "good" : "warn";
           html += `<tr>
             <td><strong>${sh.name}</strong></td>
             <td><span class="status-dot ${statusClass === "warn" ? "warn" : ""}"></span> ${sh.state}</td>
-            <td>${sh.detail || "РќРµРјР°С” РґРµС‚Р°Р»РµР№"}</td>
+            <td>${sh.detail || "Немає деталей"}</td>
           </tr>`;
         });
         html += `</tbody></table>`;
         sourcesTableContainer.innerHTML = html;
       } else {
-        sourcesTableContainer.innerHTML = "<p style='font-size:12px; color:var(--muted);'>Р”Р°РЅС– РїСЂРѕ РґР¶РµСЂРµР»Р° РІС–РґСЃСѓС‚РЅС–.</p>";
+        sourcesTableContainer.innerHTML = "<p style='font-size:12px; color:var(--muted);'>Дані про джерела відсутні.</p>";
       }
     });
     
@@ -899,9 +899,9 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       }
     });
     
-    // РљРµСЂСѓРІР°РЅРЅСЏ РєРµС€РµРј/РґР°РЅРёРјРё РІ РјРѕРґР°Р»СЊРЅРѕРјСѓ РІС–РєРЅС–
+    // Керування кешем/даними в модальному вікні
     document.querySelector("#clearCompareCache").addEventListener("click", () => {
-      if (confirm("Р’Рё РґС–Р№СЃРЅРѕ С…РѕС‡РµС‚Рµ РѕС‡РёСЃС‚РёС‚Рё РІРµСЃСЊ СЃРїРёСЃРѕРє РїРѕСЂС–РІРЅСЏРЅРЅСЏ?")) {
+      if (confirm("Ви дійсно хочете очистити весь список порівняння?")) {
         selected.clear();
         renderComparison();
         render();
@@ -911,7 +911,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     
     document.querySelector("#reloadDealsData").addEventListener("click", () => {
       settingsModal.classList.remove("active");
-      document.querySelector("#syncStatus").innerHTML = '<span class="status-dot"></span> РћРЅРѕРІР»РµРЅРЅСЏ РґР°РЅРёС…...';
+      document.querySelector("#syncStatus").innerHTML = '<span class="status-dot"></span> Оновлення даних...';
       loadImportedData().finally(() => {
         initializeFilters();
         renderSources();
@@ -920,18 +920,18 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       });
     });
     
-    // РћР±СЂРѕР±РЅРёРєРё Р”С–Р№ С‚Р° Р¤СѓРЅРєС†С–Р№
+    // Обробники Дій та Функцій
     document.querySelector("#actionSave").addEventListener("click", () => {
       if (selected.size === 0) {
-        showAlert("РќРµРјР°С” РІРёР±СЂР°РЅРёС… С‚РѕРІР°СЂС–РІ РґР»СЏ Р·Р±РµСЂРµР¶РµРЅРЅСЏ!");
+        showAlert("Немає вибраних товарів для збереження!");
         return;
       }
       const itemsToSave = deals.filter(d => selected.has(d.id));
-      const textToCopy = itemsToSave.map(item => `${escapeHTML(item.name)} (${escapeHTML(item.store)}) вЂ” ${item.price} РіСЂРЅ`).join("\n");
+      const textToCopy = itemsToSave.map(item => `${escapeHTML(item.name)} (${escapeHTML(item.store)}) — ${item.price} грн`).join("\n");
       navigator.clipboard.writeText(textToCopy).then(() => {
-        showAlert("РЎРїРёСЃРѕРє РІС–РґС–Р±СЂР°РЅРёС… С‚РѕРІР°СЂС–РІ Р·Р±РµСЂРµР¶РµРЅРѕ РІ Р±СѓС„РµСЂ РѕР±РјС–РЅСѓ!");
+        showAlert("Список відібраних товарів збережено в буфер обміну!");
       }).catch(err => {
-        showAlert("РџРѕРјРёР»РєР° РїСЂРё РєРѕРїС–СЋРІР°РЅРЅС–: " + err);
+        showAlert("Помилка при копіюванні: " + err);
       });
     });
     
@@ -940,7 +940,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     
     document.querySelector("#actionAdd").addEventListener("click", () => {
       document.getElementById("customItemName").value = "";
-      document.getElementById("customItemStore").value = "Р’Р»Р°СЃРЅРёР№ СЃРїРёСЃРѕРє";
+      document.getElementById("customItemStore").value = "Власний список";
       document.getElementById("customItemPrice").value = "0.00";
       addCustomModal.classList.add("active");
       document.getElementById("customItemName").focus();
@@ -949,10 +949,10 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     document.getElementById("btnConfirmAdd").addEventListener("click", () => {
       const name = document.getElementById("customItemName").value.trim();
       if (!name) {
-        showAlert("Р’РІРµРґС–С‚СЊ РЅР°Р·РІСѓ С‚РѕРІР°СЂСѓ!");
+        showAlert("Введіть назву товару!");
         return;
       }
-      const store = document.getElementById("customItemStore").value.trim() || "Р’Р»Р°СЃРЅРёР№ СЃРїРёСЃРѕРє";
+      const store = document.getElementById("customItemStore").value.trim() || "Власний список";
       const priceStr = document.getElementById("customItemPrice").value;
       const price = parseFloat(priceStr.replace(",", ".")) || 0;
       
@@ -963,14 +963,14 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
         price,
         old: price,
         discountPct: 0,
-        category: "Р†РЅС€Рµ",
-        subcategory: "Р†РЅС€Рµ",
+        category: "Інше",
+        subcategory: "Інше",
         _searchText: name.toLowerCase(),
         storeUrl: "",
         productUrl: "",
         image: "",
         endStatus: "known",
-        city: "Р›СЊРІС–РІ"
+        city: "Львів"
       };
       
       deals.push(customDeal);
@@ -984,13 +984,13 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       }
       
       addCustomModal.classList.remove("active");
-      showAlert(`РўРѕРІР°СЂ "${name}" РґРѕРґР°РЅРѕ С‚Р° РїРѕР·РЅР°С‡РµРЅРѕ РґР»СЏ РїРѕСЂС–РІРЅСЏРЅРЅСЏ!`);
+      showAlert(`Товар "${name}" додано та позначено для порівняння!`);
     });
     
     document.querySelector("#actionAdd2").addEventListener("click", () => {
       const list = getFilteredDeals();
       if (!list.length) {
-        showAlert("РќРµРјР°С” РІРёРґРёРјРёС… С‚РѕРІР°СЂС–РІ РґР»СЏ РґРѕРґР°РІР°РЅРЅСЏ Сѓ РїРѕСЂС–РІРЅСЏРЅРЅСЏ!");
+        showAlert("Немає видимих товарів для додавання у порівняння!");
         return;
       }
       
@@ -1004,7 +1004,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       
       render();
       renderComparison();
-      showAlert(`РЈСЃС– РІРёРґРёРјС– С‚РѕРІР°СЂРё (${addedCount} С€С‚) РґРѕРґР°РЅРѕ РґРѕ РїРѕСЂС–РІРЅСЏРЅРЅСЏ!`);
+      showAlert(`Усі видимі товари (${addedCount} шт) додано до порівняння!`);
     });
     
     const checkoutModal = document.getElementById("checkoutModal");
@@ -1012,7 +1012,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     
     document.querySelector("#actionCheckout").addEventListener("click", () => {
       if (selected.size === 0) {
-        showAlert("Р‘СѓРґСЊ Р»Р°СЃРєР°, РїРѕР·РЅР°С‡С‚Рµ СЃРїРѕС‡Р°С‚РєСѓ С‚РѕРІР°СЂРё РіР°Р»РѕС‡РєР°РјРё РґР»СЏ РѕС„РѕСЂРјР»РµРЅРЅСЏ СЃРїРёСЃРєСѓ!");
+        showAlert("Будь ласка, позначте спочатку товари галочками для оформлення списку!");
         return;
       }
       
@@ -1026,20 +1026,20 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
         total += item.price;
       });
       
-      let text = "рџ“‹ РњР†Р™ РЎРџРРЎРћРљ РџРћРљРЈРџРћРљ (PROMO-WATCH UA)\n";
+      let text = "📋 МІЙ СПИСОК ПОКУПОК (PROMO-WATCH UA)\n";
       text += "========================================\n\n";
       
       for (const [store, list] of Object.entries(grouped)) {
-        text += `рџ›’ РњРђР“РђР—РРќ: ${store.toUpperCase()}\n`;
+        text += `🛒 МАГАЗИН: ${store.toUpperCase()}\n`;
         list.forEach((item, idx) => {
-          text += `  [ ] ${idx + 1}. ${item.name} вЂ” ${item.price} РіСЂРЅ (Р·РЅРёР¶РєР° ${discount(item)}%)\n`;
+          text += `  [ ] ${idx + 1}. ${item.name} — ${item.price} грн (знижка ${discount(item)}%)\n`;
         });
         text += "\n";
       }
       
       text += "========================================\n";
-      text += `рџ’° Р—РђР“РђР›Р¬РќРђ Р’РђР РўР†РЎРўР¬: ${total.toFixed(2)} РіСЂРЅ\n`;
-      text += `рџ“… Р—РіРµРЅРµСЂРѕРІР°РЅРѕ: ${new Date().toLocaleDateString("uk-UA")}\n`;
+      text += `💰 ЗАГАЛЬНА ВАРТІСТЬ: ${total.toFixed(2)} грн\n`;
+      text += `📅 Згенеровано: ${new Date().toLocaleDateString("uk-UA")}\n`;
       
       document.getElementById("checkoutTextarea").value = text;
       
@@ -1053,9 +1053,9 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     document.getElementById("btnCopyList").addEventListener("click", () => {
       const text = document.getElementById("checkoutTextarea").value;
       navigator.clipboard.writeText(text).then(() => {
-        showAlert("РЎРїРёСЃРѕРє РїРѕРєСѓРїРѕРє СЃРєРѕРїС–Р№РѕРІР°РЅРѕ Сѓ Р±СѓС„РµСЂ РѕР±РјС–РЅСѓ!");
+        showAlert("Список покупок скопійовано у буфер обміну!");
       }).catch(err => {
-        showAlert("РќРµ РІРґР°Р»РѕСЃСЏ СЃРєРѕРїС–СЋРІР°С‚Рё. Р‘СѓРґСЊ Р»Р°СЃРєР°, РІРёРґС–Р»С–С‚СЊ С‚РµРєСЃС‚ С– СЃРєРѕРїС–СЋР№С‚Рµ РІСЂСѓС‡РЅСѓ.");
+        showAlert("Не вдалося скопіювати. Будь ласка, виділіть текст і скопіюйте вручну.");
       });
     });
     
