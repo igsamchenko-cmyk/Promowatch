@@ -364,14 +364,27 @@
       display: flex;
       flex-direction: column;
       gap: 0;
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                  opacity 0.3s ease,
+      max-height: 500px;
+      transform: translateY(0);
+      overflow: hidden;
+      transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  margin 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                   box-shadow 0.3s ease;
     }
 
     .filters.hidden-scroll {
-      transform: translateY(-120%);
-      opacity: 0;
+      max-height: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      border-top-width: 0 !important;
+      border-bottom-width: 0 !important;
+      opacity: 0 !important;
+      transform: translateY(-20px);
       pointer-events: none;
       box-shadow: none !important;
     }
