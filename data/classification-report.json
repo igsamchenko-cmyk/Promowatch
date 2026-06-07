@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-06-06T07:58:29.949Z",
+  "generatedAt": "2026-06-07T08:33:39.572Z",
   "fixed": true,
   "changedDeals": 0,
   "before": {
     "ok": true,
-    "totalDeals": 10971,
+    "totalDeals": 10970,
     "issueCount": 0,
     "issues": [
       {
@@ -107,7 +107,7 @@
   },
   "after": {
     "ok": true,
-    "totalDeals": 10971,
+    "totalDeals": 10970,
     "issueCount": 0,
     "issues": [
       {
