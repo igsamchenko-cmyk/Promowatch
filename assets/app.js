@@ -605,14 +605,9 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     // Automatically observe and update sticky header height offset
     const filtersEl = document.querySelector(".filters");
     if (filtersEl) {
-      // Set initial state to 0px height since it starts hidden
-      document.documentElement.style.setProperty("--filters-height", "0px");
-
       const resizeObserver = new ResizeObserver(entries => {
         for (let entry of entries) {
-          if (!entry.target.classList.contains("hidden-scroll")) {
-            document.documentElement.style.setProperty("--filters-height", `${entry.target.offsetHeight}px`);
-          }
+          document.documentElement.style.setProperty("--filters-height", `${entry.target.offsetHeight}px`);
         }
       });
       resizeObserver.observe(filtersEl);
@@ -621,26 +616,26 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     // Helper functions for filters visibility
     function showFilters() {
       const floatBtn = document.getElementById("floatingFilterBtn");
-      if (filtersEl && filtersEl.classList.contains("hidden-scroll")) {
-        filtersEl.classList.remove("hidden-scroll");
-        const filtersHeight = filtersEl.offsetHeight;
-        document.documentElement.style.setProperty("--filters-height", `${filtersHeight}px`);
+      const filtersAdvancedEl = document.getElementById("advancedFilters");
+      if (filtersAdvancedEl && filtersAdvancedEl.classList.contains("hidden-scroll")) {
+        filtersAdvancedEl.classList.remove("hidden-scroll");
       }
       if (floatBtn) floatBtn.classList.add("active");
     }
 
     function hideFilters() {
       const floatBtn = document.getElementById("floatingFilterBtn");
-      if (filtersEl && !filtersEl.classList.contains("hidden-scroll")) {
-        filtersEl.classList.add("hidden-scroll");
-        document.documentElement.style.setProperty("--filters-height", "0px");
+      const filtersAdvancedEl = document.getElementById("advancedFilters");
+      if (filtersAdvancedEl && !filtersAdvancedEl.classList.contains("hidden-scroll")) {
+        filtersAdvancedEl.classList.add("hidden-scroll");
       }
       if (floatBtn) floatBtn.classList.remove("active");
     }
 
     function toggleFilters() {
-      if (filtersEl) {
-        if (filtersEl.classList.contains("hidden-scroll")) {
+      const filtersAdvancedEl = document.getElementById("advancedFilters");
+      if (filtersAdvancedEl) {
+        if (filtersAdvancedEl.classList.contains("hidden-scroll")) {
           showFilters();
         } else {
           hideFilters();

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PromoWatch UA</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
-  <link rel="stylesheet" href="assets/style.css?v=1.0.3">
+  <link rel="stylesheet" href="assets/style.css?v=1.0.4">
 </head>
 <body>
   <div class="app">
@@ -50,13 +50,13 @@
         <div class="store-carousel-scroll" id="storeCarousel"></div>
       </section>
 
-      <section class="filters panel hidden-scroll">
+      <section class="filters panel">
         <div class="field search-field" style="margin-bottom: 12px; width: 100%;">
           <label for="search">Пошук</label>
           <input id="search" type="search" placeholder="Пошук акцій за назвою товару...">
         </div>
 
-        <div class="filters-advanced" id="advancedFilters">
+        <div class="filters-advanced hidden-scroll" id="advancedFilters">
           <div class="filters-advanced-grid">
             <div class="field">
               <label for="storeFilter">Мережа</label>
@@ -332,7 +332,7 @@
     </svg>
   </button>
 
-  <script src="assets/app.js?v=1.0.3" defer></script>
+  <script src="assets/app.js?v=1.0.4" defer></script>
 
 </body>
 </html>
