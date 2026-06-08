@@ -613,33 +613,39 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       resizeObserver.observe(filtersEl);
     }
 
+    // Cache DOM queries for filter elements
+    const floatBtnEl = document.getElementById("floatingFilterBtn");
+    const filtersAdvancedEl = document.getElementById("advancedFilters");
+    let filtersHidden = true; // Starts closed
+
     // Helper functions for filters visibility
     function showFilters() {
-      const floatBtn = document.getElementById("floatingFilterBtn");
-      const filtersAdvancedEl = document.getElementById("advancedFilters");
-      if (filtersAdvancedEl && filtersAdvancedEl.classList.contains("hidden-scroll")) {
+      if (!filtersHidden) return;
+      if (filtersAdvancedEl) {
         filtersAdvancedEl.classList.remove("hidden-scroll");
       }
-      if (floatBtn) floatBtn.classList.add("active");
+      if (floatBtnEl) {
+        floatBtnEl.classList.add("active");
+      }
+      filtersHidden = false;
     }
 
     function hideFilters() {
-      const floatBtn = document.getElementById("floatingFilterBtn");
-      const filtersAdvancedEl = document.getElementById("advancedFilters");
-      if (filtersAdvancedEl && !filtersAdvancedEl.classList.contains("hidden-scroll")) {
+      if (filtersHidden) return;
+      if (filtersAdvancedEl) {
         filtersAdvancedEl.classList.add("hidden-scroll");
       }
-      if (floatBtn) floatBtn.classList.remove("active");
+      if (floatBtnEl) {
+        floatBtnEl.classList.remove("active");
+      }
+      filtersHidden = true;
     }
 
     function toggleFilters() {
-      const filtersAdvancedEl = document.getElementById("advancedFilters");
-      if (filtersAdvancedEl) {
-        if (filtersAdvancedEl.classList.contains("hidden-scroll")) {
-          showFilters();
-        } else {
-          hideFilters();
-        }
+      if (filtersHidden) {
+        showFilters();
+      } else {
+        hideFilters();
       }
     }
 
@@ -1383,12 +1389,11 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     }
 
     // Event listeners for floating button
-    const floatBtn = document.getElementById("floatingFilterBtn");
-    if (floatBtn) {
-      floatBtn.addEventListener("click", toggleFilters);
+    if (floatBtnEl) {
+      floatBtnEl.addEventListener("click", toggleFilters);
     }
 
-    // Smart Sticky Scroll listener
+    // Smart Sticky Scroll listener with passive option and state check
     let lastScrollY = window.scrollY;
     window.addEventListener("scroll", () => {
       const currentScrollY = window.scrollY;
@@ -1400,7 +1405,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       }
 
       lastScrollY = currentScrollY;
-    });
+    }, { passive: true });
 
     loadImportedData().finally(() => {
       initializeFilters();
