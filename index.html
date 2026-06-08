@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PromoWatch UA</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
-  <link rel="stylesheet" href="assets/style.css?v=1.0.5">
+  <link rel="stylesheet" href="assets/style.css?v=1.0.6">
 </head>
 <body>
   <div class="app">
@@ -320,19 +320,22 @@
   </div>
 
   <!-- Floating Action Button for Filters -->
-  <button id="floatingFilterBtn" class="floating-filter-btn visible" aria-label="Відкрити фільтри" title="Відкрити фільтри">
-    <!-- Filter Icon -->
-    <svg class="icon-filter" viewBox="0 0 24 24">
-      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-    </svg>
-    <!-- Close Icon -->
-    <svg class="icon-close" viewBox="0 0 24 24">
-      <line x1="18" y1="6" x2="6" y2="18"></line>
-      <line x1="6" y1="6" x2="18" y2="18"></line>
-    </svg>
+  <button id="floatingFilterBtn" class="floating-filter-btn visible" aria-label="Параметри пошуку та фільтри" title="Параметри пошуку та фільтри">
+    <span class="icon-wrapper">
+      <!-- Filter Icon -->
+      <svg class="icon-filter" viewBox="0 0 24 24">
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+      </svg>
+      <!-- Close Icon -->
+      <svg class="icon-close" viewBox="0 0 24 24">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </span>
+    <span class="floating-btn-text">Фільтри</span>
   </button>
 
-  <script src="assets/app.js?v=1.0.5" defer></script>
+  <script src="assets/app.js?v=1.0.6" defer></script>
 
 </body>
 </html>

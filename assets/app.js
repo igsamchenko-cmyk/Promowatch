@@ -626,6 +626,8 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       }
       if (floatBtnEl) {
         floatBtnEl.classList.add("active");
+        const btnText = floatBtnEl.querySelector(".floating-btn-text");
+        if (btnText) btnText.textContent = "Закрити";
       }
       filtersHidden = false;
     }
@@ -637,6 +639,8 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       }
       if (floatBtnEl) {
         floatBtnEl.classList.remove("active");
+        const btnText = floatBtnEl.querySelector(".floating-btn-text");
+        if (btnText) btnText.textContent = "Фільтри";
       }
       filtersHidden = true;
     }
