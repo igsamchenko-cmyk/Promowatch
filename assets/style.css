@@ -1905,40 +1905,29 @@
   }
 }
 
-/* Floating Filter Button style */
+/* Filter Toggle Button style (placed inline next to carousel) */
 .floating-filter-btn {
-  position: fixed;
-  bottom: 120px; /* Positioned higher up to avoid clipping and overlap */
-  right: 32px;
+  position: relative;
   height: 48px;
-  padding: 0 18px;
-  border-radius: 24px;
+  padding: 0 16px;
+  border-radius: 8px; /* Match store logo card border-radius */
   background: linear-gradient(135deg, var(--neon-teal), #0f766e);
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  z-index: 9999;
-  box-shadow: 0 8px 24px rgba(45, 212, 191, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transition: opacity 0.3s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
-  backdrop-filter: blur(8px);
-  opacity: 0;
-  pointer-events: none;
-  transform: scale(0.5);
-}
-.floating-filter-btn.visible {
-  opacity: 1;
-  pointer-events: auto;
-  transform: scale(1);
+  box-shadow: 0 4px 12px rgba(45, 212, 191, 0.2);
+  transition: all 0.25s ease;
+  user-select: none;
 }
 .floating-filter-btn:hover {
-  transform: scale(1.06) !important;
-  box-shadow: 0 12px 32px rgba(45, 212, 191, 0.45);
+  transform: scale(1.04) !important;
+  box-shadow: 0 6px 16px rgba(45, 212, 191, 0.35);
 }
 .floating-filter-btn:active {
-  transform: scale(0.95) !important;
+  transform: scale(0.97) !important;
 }
 .floating-filter-btn .icon-wrapper {
   position: relative;
