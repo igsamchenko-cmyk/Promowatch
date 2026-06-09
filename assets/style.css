@@ -2199,22 +2199,22 @@
 }
 
 /* Store Carousel Horizon Fades */
-.store-carousel-container {
+.store-carousel-wrapper {
   position: relative;
 }
-.store-carousel-container::after {
+.store-carousel-wrapper::after {
   content: '';
   position: absolute;
-  top: 12px;
-  right: 68px; /* Offset to not cover the filter button */
-  bottom: 12px;
+  top: 0;
+  right: 0;
+  bottom: 0;
   width: 36px;
   background: linear-gradient(90deg, transparent, var(--bg));
   pointer-events: none;
   z-index: 5;
   transition: opacity 0.3s;
 }
-[data-theme="dark"] .store-carousel-container::after {
+[data-theme="dark"] .store-carousel-wrapper::after {
   background: linear-gradient(90deg, transparent, var(--bg));
 }
 
