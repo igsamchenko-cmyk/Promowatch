@@ -21,14 +21,6 @@
       }
     }
 
-    function saveCustomDeals() {
-      try {
-        const customDeals = deals.filter(d => d.id >= 100000);
-        localStorage.setItem("promowatch_custom_deals", JSON.stringify(customDeals));
-      } catch (e) {
-        console.error("Failed to save custom deals to localStorage", e);
-      }
-    }
 
     const pageSize = 90;
     let visibleLimit = pageSize;
@@ -46,6 +38,16 @@
       priceMin: document.querySelector("#priceMin"),
       priceMax: document.querySelector("#priceMax")
     };
+
+    function getStoreClass(store) {
+      if (!store) return "other";
+      const s = store.toLowerCase();
+      if (s.includes("атб")) return "atb";
+      if (s.includes("сільпо") || s.includes("silpo")) return "silpo";
+      if (s.includes("ашан") || s.includes("auchan")) return "auchan";
+      if (s.includes("metro") || s.includes("метро")) return "metro";
+      return "other";
+    }
 
     function unique(values) {
       return [all, ...Array.from(new Set(values)).sort((a, b) => a.localeCompare(b, "uk"))];
@@ -489,7 +491,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
               </div>
             </div>
           </td>
-          <td class="store-name" data-label="Мережа">${escapeHTML(item.store)}</td>
+          <td class="store-name" data-label="Мережа"><span class="store-badge ${getStoreClass(item.store)}">${escapeHTML(item.store)}</span></td>
           <td data-label="Ціна">
             <div class="price-cell">
               <strong class="price">${money(item.price)}</strong>
@@ -521,7 +523,10 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
               <strong>${escapeHTML(item.name)} ${escapeHTML(item.size)}</strong>
               <span class="discount">-${discount(item)}%</span>
             </div>
-            <div>${escapeHTML(item.store)}, ${item.city} · <b>${money(item.price)}</b></div>
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; font-size: 12px;">
+              <span class="store-badge ${getStoreClass(item.store)}">${escapeHTML(item.store)}</span>
+              <span style="color: var(--muted); font-size: 11px;">${item.city}</span> · <b>${money(item.price)}</b>
+            </div>
             <div class="sub">${unitPriceLabel(item)} · ${termLabel(item)}</div>
             <div class="bar"><span style="width:${Math.min(100, discount(item) * 2.7)}%"></span></div>
           </div>
@@ -549,7 +554,10 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
             ${productThumb(item)}
             <strong>${escapeHTML(item.name)} ${escapeHTML(item.size)}</strong>
           </div>
-          <span>${escapeHTML(item.store)}, ${item.city} · <b>${money(item.price)}</b></span>
+          <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 4px; margin-bottom: 2px; font-size: 11px;">
+            <span class="store-badge ${getStoreClass(item.store)}" style="font-size: 9px; padding: 2px 6px;">${escapeHTML(item.store)}</span>
+            <span style="color: var(--muted); font-size: 11px;">${item.city}</span> · <b>${money(item.price)}</b>
+          </div>
           <span class="sub">${unitPriceLabel(item)} · знижка ${discount(item)}%</span>
         </article>
       `).join("") || `<p class="empty">Позначте товари в таблиці, щоб швидко порівняти їх між собою.</p>`;
@@ -910,14 +918,6 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
         deals = [];
       }
 
-      try {
-        const storedCustom = JSON.parse(localStorage.getItem("promowatch_custom_deals"));
-        if (Array.isArray(storedCustom)) {
-          deals.push(...storedCustom);
-        }
-      } catch (e) {
-        console.error("Failed to load custom deals from localStorage", e);
-      }
     }
 
     function initializeFilters() {
@@ -946,8 +946,6 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
         if (confirm("Ви дійсно хочете очистити весь список порівняння?")) {
           selected.clear();
           saveSelected();
-          localStorage.removeItem("promowatch_custom_deals");
-          deals = deals.filter(d => d.id < 100000);
           renderComparison();
           render();
         }
@@ -967,8 +965,6 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       visibleLimit = pageSize;
       selected.clear();
       saveSelected();
-      localStorage.removeItem("promowatch_custom_deals");
-      deals = deals.filter(d => d.id < 100000);
       renderComparison();
       render();
     });
@@ -1070,8 +1066,6 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       if (confirm("Ви дійсно хочете очистити весь список порівняння?")) {
         selected.clear();
         saveSelected();
-        localStorage.removeItem("promowatch_custom_deals");
-        deals = deals.filter(d => d.id < 100000);
         renderComparison();
         render();
         settingsModal.classList.remove("active");
@@ -1105,56 +1099,6 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       });
     });
     
-    const addCustomModal = document.getElementById("addCustomModal");
-    document.getElementById("closeAddModal").addEventListener("click", () => addCustomModal.classList.remove("active"));
-    
-    document.querySelector("#actionAdd").addEventListener("click", () => {
-      document.getElementById("customItemName").value = "";
-      document.getElementById("customItemStore").value = "Власний список";
-      document.getElementById("customItemPrice").value = "0.00";
-      addCustomModal.classList.add("active");
-      document.getElementById("customItemName").focus();
-    });
-    
-    document.getElementById("btnConfirmAdd").addEventListener("click", () => {
-      const name = document.getElementById("customItemName").value.trim();
-      if (!name) {
-        showAlert("Введіть назву товару!");
-        return;
-      }
-      const store = document.getElementById("customItemStore").value.trim() || "Власний список";
-      const priceStr = document.getElementById("customItemPrice").value;
-      const price = parseFloat(priceStr.replace(",", ".")) || 0;
-      
-      const customDeal = {
-        id: deals.length + 100000 + Math.floor(Math.random() * 1000),
-        name,
-        store,
-        price,
-        old: price,
-        discountPct: 0,
-        category: "Інше",
-        subcategory: "Інше",
-        _searchText: name.toLowerCase(),
-        storeUrl: "",
-        productUrl: "",
-        image: "",
-        endStatus: "known",
-        city: "Львів"
-      };
-      
-      deals.push(customDeal);
-      enrichDeals();
-      selected.add(customDeal.id);
-      saveSelected();
-      saveCustomDeals();
-      
-      render();
-      renderComparison();
-      
-      addCustomModal.classList.remove("active");
-      showAlert(`Товар "${name}" додано та позначено для порівняння!`);
-    });
     
     const checkoutModal = document.getElementById("checkoutModal");
     document.getElementById("closeCheckoutModal").addEventListener("click", () => checkoutModal.classList.remove("active"));
@@ -1240,7 +1184,9 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
 
     function openProductDetails(item) {
       document.getElementById("detailProductName").textContent = item.name;
-      document.getElementById("detailProductStore").textContent = item.store || "—";
+      document.getElementById("detailProductStore").innerHTML = item.store 
+        ? `<span class="store-badge ${getStoreClass(item.store)}">${escapeHTML(item.store)}</span>`
+        : "—";
       document.getElementById("detailProductCat").textContent = item.category || "—";
       document.getElementById("detailProductSubcat").textContent = item.subcategory || "—";
       document.getElementById("detailProductSize").textContent = item.size || "—";
@@ -1397,7 +1343,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
           <tr>
             <td class="row-label">Мережа</td>
             ${items.map(item => `
-              <td><span class="meta-pill">${escapeHTML(item.store)}</span></td>
+              <td><span class="store-badge ${getStoreClass(item.store)}">${escapeHTML(item.store)}</span></td>
             `).join("")}
           </tr>
           <tr>
