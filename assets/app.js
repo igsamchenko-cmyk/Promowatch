@@ -4,6 +4,32 @@
 
     const all = "Усі";
     const selected = new Set();
+    try {
+      const stored = JSON.parse(localStorage.getItem("promowatch_selected_ids"));
+      if (Array.isArray(stored)) {
+        stored.forEach(id => selected.add(id));
+      }
+    } catch (e) {
+      console.error("Failed to load selected from localStorage", e);
+    }
+
+    function saveSelected() {
+      try {
+        localStorage.setItem("promowatch_selected_ids", JSON.stringify(Array.from(selected)));
+      } catch (e) {
+        console.error("Failed to save selected to localStorage", e);
+      }
+    }
+
+    function saveCustomDeals() {
+      try {
+        const customDeals = deals.filter(d => d.id >= 100000);
+        localStorage.setItem("promowatch_custom_deals", JSON.stringify(customDeals));
+      } catch (e) {
+        console.error("Failed to save custom deals to localStorage", e);
+      }
+    }
+
     const pageSize = 90;
     let visibleLimit = pageSize;
     let searchTimer = null;
@@ -16,7 +42,9 @@
       subcategory: document.querySelector("#subcategoryFilter"),
       sort: document.querySelector("#sortFilter"),
       minDiscount: document.querySelector("#minDiscount"),
-      onlySelected: document.querySelector("#onlySelectedFilter")
+      onlySelected: document.querySelector("#onlySelectedFilter"),
+      priceMin: document.querySelector("#priceMin"),
+      priceMax: document.querySelector("#priceMax")
     };
 
     function unique(values) {
@@ -394,13 +422,17 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       const subcategory = controls.subcategory.value || all;
       const minDiscount = Number(controls.minDiscount.value);
       const onlySelected = controls.onlySelected.value === "true";
+      const priceMin = parseFloat(controls.priceMin ? controls.priceMin.value : "") || 0;
+      const priceMax = parseFloat(controls.priceMax ? controls.priceMax.value : "") || Number.POSITIVE_INFINITY;
 
       const filtered = deals.filter(item => {
         if (onlySelected && !selected.has(item.id)) return false;
+        const price = item.price;
         return (!queryTokens.length || queryTokens.every(token => item._searchText.includes(token)))
           && (store === all || item.store === store)
           && (category === all || item.category === category)
           && (subcategory === all || item.subcategory === subcategory)
+          && (price >= priceMin && price <= priceMax)
           && discount(item) >= minDiscount;
       });
 
@@ -726,6 +758,8 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       const subcategory = controls.subcategory.value || all;
       const minDiscount = Number(controls.minDiscount.value);
       const searchVal = controls.search.value.trim();
+      const priceMin = parseFloat(controls.priceMin ? controls.priceMin.value : "") || 0;
+      const priceMax = parseFloat(controls.priceMax ? controls.priceMax.value : "") || Number.POSITIVE_INFINITY;
 
       if (store !== all) {
         tags.push({ type: "store", label: `Мережа: ${store}` });
@@ -735,6 +769,17 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       }
       if (subcategory !== all) {
         tags.push({ type: "subcategory", label: `Підкатегорія: ${subcategory}` });
+      }
+      if (priceMin > 0 || priceMax < Number.POSITIVE_INFINITY) {
+        let priceLabel = "";
+        if (priceMin > 0 && priceMax < Number.POSITIVE_INFINITY) {
+          priceLabel = `Ціна: ${priceMin} - ${priceMax} грн`;
+        } else if (priceMin > 0) {
+          priceLabel = `Ціна від: ${priceMin} грн`;
+        } else if (priceMax < Number.POSITIVE_INFINITY) {
+          priceLabel = `Ціна до: ${priceMax} грн`;
+        }
+        tags.push({ type: "price", label: priceLabel });
       }
       if (minDiscount > 0) {
         tags.push({ type: "discount", label: `Знижка від ${minDiscount}%` });
@@ -762,6 +807,9 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
             controls.subcategory.value = all;
           } else if (type === "subcategory") {
             controls.subcategory.value = all;
+          } else if (type === "price") {
+            if (controls.priceMin) controls.priceMin.value = "";
+            if (controls.priceMax) controls.priceMax.value = "";
           } else if (type === "discount") {
             controls.minDiscount.value = "0";
           } else if (type === "search") {
@@ -782,6 +830,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       renderMetrics(list);
       renderTable(list);
       renderBestDeals(list);
+      updateAnalytics(list);
     }
 
     function renderAfterSearchInput() {
@@ -857,6 +906,16 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
         document.querySelector("#syncStatus").innerHTML = '<span class="status-dot warn"></span> Дані не завантажено';
         document.querySelector("#syncSource").textContent = "Потрібен data/deals.json з імпортованими цінами";
         document.querySelector("#syncFreshness").textContent = "Fallback-ціни вимкнено";
+        deals = [];
+      }
+
+      try {
+        const storedCustom = JSON.parse(localStorage.getItem("promowatch_custom_deals"));
+        if (Array.isArray(storedCustom)) {
+          deals.push(...storedCustom);
+        }
+      } catch (e) {
+        console.error("Failed to load custom deals from localStorage", e);
       }
     }
 
@@ -870,9 +929,12 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       const id = Number(checkbox.dataset.id);
       if (checkbox.checked) {
         selected.add(id);
+        saveSelected();
+        animateFlyToCompare(event);
         hideFilters();
       } else {
         selected.delete(id);
+        saveSelected();
       }
       renderComparison();
     });
@@ -882,6 +944,9 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       clearCompareBtn.addEventListener("click", () => {
         if (confirm("Ви дійсно хочете очистити весь список порівняння?")) {
           selected.clear();
+          saveSelected();
+          localStorage.removeItem("promowatch_custom_deals");
+          deals = deals.filter(d => d.id < 100000);
           renderComparison();
           render();
         }
@@ -896,8 +961,13 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       controls.sort.value = "price";
       controls.minDiscount.value = "0";
       controls.onlySelected.value = "false";
+      if (controls.priceMin) controls.priceMin.value = "";
+      if (controls.priceMax) controls.priceMax.value = "";
       visibleLimit = pageSize;
       selected.clear();
+      saveSelected();
+      localStorage.removeItem("promowatch_custom_deals");
+      deals = deals.filter(d => d.id < 100000);
       renderComparison();
       render();
     });
@@ -998,6 +1068,9 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     document.querySelector("#clearCompareCache").addEventListener("click", () => {
       if (confirm("Ви дійсно хочете очистити весь список порівняння?")) {
         selected.clear();
+        saveSelected();
+        localStorage.removeItem("promowatch_custom_deals");
+        deals = deals.filter(d => d.id < 100000);
         renderComparison();
         render();
         settingsModal.classList.remove("active");
@@ -1070,7 +1143,10 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       };
       
       deals.push(customDeal);
+      enrichDeals();
       selected.add(customDeal.id);
+      saveSelected();
+      saveCustomDeals();
       
       render();
       renderComparison();
@@ -1410,6 +1486,258 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
 
       lastScrollY = currentScrollY;
     }, { passive: true });
+
+    // Event listeners for price filters
+    [controls.priceMin, controls.priceMax].forEach(control => {
+      if (control) {
+        control.addEventListener("input", renderAfterSearchInput);
+        control.addEventListener("change", () => {
+          visibleLimit = pageSize;
+          render();
+          scrollToResults();
+        });
+      }
+    });
+
+    // Analytics panel toggle logic
+    const analyticsPanel = document.getElementById("analyticsPanel");
+    const analyticsHeader = document.getElementById("analyticsHeader");
+    const analyticsContent = document.getElementById("analyticsContent");
+    
+    if (analyticsHeader && analyticsPanel && analyticsContent) {
+      analyticsHeader.addEventListener("click", () => {
+        const isCollapsed = analyticsPanel.classList.contains("collapsed");
+        if (isCollapsed) {
+          analyticsPanel.classList.remove("collapsed");
+          analyticsPanel.classList.add("expanded");
+          analyticsContent.style.display = "block";
+          const toggleText = analyticsHeader.querySelector(".analytics-toggle-text");
+          if (toggleText) toggleText.textContent = "Приховати";
+          renderAnalyticsCharts();
+        } else {
+          analyticsPanel.classList.add("collapsed");
+          analyticsPanel.classList.remove("expanded");
+          analyticsContent.style.display = "none";
+          const toggleText = analyticsHeader.querySelector(".analytics-toggle-text");
+          if (toggleText) toggleText.textContent = "Показати";
+        }
+      });
+    }
+
+    let lastFilteredListForAnalytics = [];
+
+    function updateAnalytics(list) {
+      lastFilteredListForAnalytics = list;
+      updateAnalyticsInsights(list);
+      
+      const panel = document.getElementById("analyticsPanel");
+      if (panel && panel.classList.contains("expanded")) {
+        renderAnalyticsCharts();
+      }
+    }
+
+    function updateAnalyticsInsights(list) {
+      const container = document.getElementById("analyticsInsights");
+      if (!container) return;
+      
+      if (list.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: var(--muted); padding: 12px; font-size: 13px;">Немає даних для аналізу</div>`;
+        return;
+      }
+      
+      let discountSum = 0;
+      let maxDiscount = -1;
+      let bestItem = null;
+      
+      list.forEach(item => {
+        const pct = discount(item);
+        discountSum += pct;
+        if (pct > maxDiscount) {
+          maxDiscount = pct;
+          bestItem = item;
+        }
+      });
+      
+      const avgDiscount = Math.round(discountSum / list.length);
+      
+      let bestDealHtml = "";
+      if (bestItem) {
+        bestDealHtml = `
+          <div class="insight-best-deal">
+            <span class="title">🔥 Краща пропозиція</span>
+            <div class="name" title="${escapeHTML(bestItem.name)}">${escapeHTML(bestItem.name)}</div>
+            <div class="price-info">
+              <span>Ціна: <strong style="color: var(--green);">${money(bestItem.price)}</strong> <span style="text-decoration: line-through; color: var(--muted); font-size: 10px;">${bestItem.old ? money(bestItem.old) : ""}</span></span>
+              <span style="color: var(--green); font-weight: 700;">-${maxDiscount}%</span>
+            </div>
+            <div style="font-size: 9px; color: var(--muted); margin-top: 2px;">Мережа: ${escapeHTML(bestItem.store)}</div>
+          </div>
+        `;
+      }
+      
+      container.innerHTML = `
+        <div class="insight-stat">
+          <span>Кількість акцій:</span>
+          <strong>${list.length}</strong>
+        </div>
+        <div class="insight-stat">
+          <span>Середня знижка:</span>
+          <strong style="color: var(--green);">${avgDiscount}%</strong>
+        </div>
+        ${bestDealHtml}
+      `;
+    }
+
+    function renderAnalyticsCharts() {
+      const list = lastFilteredListForAnalytics || [];
+      drawStoreDiscountChart(list);
+      drawCategoryChart(list);
+    }
+
+    function drawStoreDiscountChart(list) {
+      const svg = document.getElementById("discountChart");
+      if (!svg) return;
+      
+      const storeStats = {};
+      list.forEach(item => {
+        if (!item.store) return;
+        if (!storeStats[item.store]) {
+          storeStats[item.store] = { sum: 0, count: 0 };
+        }
+        storeStats[item.store].sum += discount(item);
+        storeStats[item.store].count += 1;
+      });
+      
+      const stores = Object.keys(storeStats).map(name => {
+        return {
+          name,
+          avg: Math.round(storeStats[name].sum / storeStats[name].count)
+        };
+      }).sort((a, b) => b.avg - a.avg).slice(0, 5);
+      
+      if (stores.length === 0) {
+        svg.innerHTML = `<text x="150" y="75" text-anchor="middle" fill="var(--muted)" font-size="12">Немає даних</text>`;
+        return;
+      }
+      
+      const maxAvg = Math.max(...stores.map(s => s.avg), 10);
+      
+      let html = `
+        <defs>
+          <linearGradient id="bar-gradient-teal" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#2dd4bf" stop-opacity="0.85"/>
+            <stop offset="100%" stop-color="#0d9488" stop-opacity="1"/>
+          </linearGradient>
+          <linearGradient id="bar-gradient-purple" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.85"/>
+            <stop offset="100%" stop-color="#8b5cf6" stop-opacity="1"/>
+          </linearGradient>
+        </defs>
+      `;
+      
+      const rowHeight = 24;
+      const startY = 20;
+      const labelX = 10;
+      const barStartX = 75;
+      const maxBarWidth = 180;
+      
+      stores.forEach((store, index) => {
+        const y = startY + index * rowHeight;
+        const barWidth = (store.avg / maxAvg) * maxBarWidth;
+        
+        html += `
+          <text x="${labelX}" y="${y + 14}" fill="var(--ink)" font-size="10" font-weight="700" font-family="inherit">${escapeHTML(store.name)}</text>
+          <rect x="${barStartX}" y="${y + 4}" width="${maxBarWidth}" height="12" fill="var(--line)" rx="3" />
+          <rect class="bar-rect" x="${barStartX}" y="${y + 4}" width="${barWidth}" height="12" rx="3" />
+          <text x="${barStartX + barWidth + 8}" y="${y + 14}" fill="var(--green)" font-size="10" font-weight="800" font-family="inherit">${store.avg}%</text>
+        `;
+      });
+      
+      svg.innerHTML = html;
+    }
+
+    function drawCategoryChart(list) {
+      const svg = document.getElementById("categoryChart");
+      if (!svg) return;
+      
+      const catStats = {};
+      list.forEach(item => {
+        if (!item.category) return;
+        catStats[item.category] = (catStats[item.category] || 0) + 1;
+      });
+      
+      const categories = Object.keys(catStats).map(name => {
+        return {
+          name,
+          count: catStats[name]
+        };
+      }).sort((a, b) => b.count - a.count).slice(0, 5);
+      
+      if (categories.length === 0) {
+        svg.innerHTML = `<text x="150" y="75" text-anchor="middle" fill="var(--muted)" font-size="12">Немає даних</text>`;
+        return;
+      }
+      
+      const maxCount = Math.max(...categories.map(c => c.count), 1);
+      
+      let html = ``;
+      const rowHeight = 24;
+      const startY = 20;
+      const labelX = 10;
+      const barStartX = 85;
+      const maxBarWidth = 165;
+      
+      categories.forEach((cat, index) => {
+        const y = startY + index * rowHeight;
+        const barWidth = (cat.count / maxCount) * maxBarWidth;
+        
+        let displayName = cat.name;
+        if (displayName.length > 12) {
+          displayName = displayName.substring(0, 10) + "..";
+        }
+        
+        html += `
+          <text x="${labelX}" y="${y + 14}" fill="var(--ink)" font-size="10" font-weight="700" font-family="inherit" title="${escapeAttribute(cat.name)}">${escapeHTML(displayName)}</text>
+          <rect x="${barStartX}" y="${y + 4}" width="${maxBarWidth}" height="12" fill="var(--line)" rx="3" />
+          <rect class="bar-rect" x="${barStartX}" y="${y + 4}" width="${barWidth}" height="12" rx="3" style="fill: url(#bar-gradient-purple);" />
+          <text x="${barStartX + barWidth + 8}" y="${y + 14}" fill="var(--violet)" font-size="10" font-weight="800" font-family="inherit">${cat.count}</text>
+        `;
+      });
+      
+      svg.innerHTML = html;
+    }
+
+    function animateFlyToCompare(event) {
+      const checkbox = event.target.closest(".compare-check");
+      if (!checkbox || !checkbox.checked) return;
+      
+      const rect = checkbox.getBoundingClientRect();
+      const startX = rect.left + rect.width / 2;
+      const startY = rect.top + rect.height / 2;
+      
+      const targetEl = document.getElementById("compareCount");
+      if (!targetEl) return;
+      const targetRect = targetEl.getBoundingClientRect();
+      const targetX = targetRect.left + targetRect.width / 2;
+      const targetY = targetRect.top + targetRect.height / 2;
+      
+      const dot = document.createElement("div");
+      dot.className = "flying-dot";
+      dot.innerHTML = "✓";
+      dot.style.left = `${startX - 12}px`;
+      dot.style.top = `${startY - 12}px`;
+      dot.style.setProperty("--target-left", `${targetX - 12}px`);
+      dot.style.setProperty("--target-top", `${targetY - 12}px`);
+      
+      document.body.appendChild(dot);
+      
+      dot.addEventListener("animationend", () => {
+        dot.remove();
+        targetEl.classList.remove("badge-pulse");
+        void targetEl.offsetWidth;
+        targetEl.classList.add("badge-pulse");
+      });
+    }
 
     loadImportedData().finally(() => {
       initializeFilters();
