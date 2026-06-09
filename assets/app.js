@@ -491,7 +491,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
               </div>
             </div>
           </td>
-          <td class="store-name" data-label="Мережа"><span class="store-badge ${getStoreClass(item.store)}">${getStoreLogoMarkup(item.store)}${escapeHTML(item.store)}</span></td>
+          <td class="store-name" data-label="Мережа"><span class="store-badge ${getStoreClass(item.store)}">${getStoreLogoMarkup(item.store)}</span></td>
           <td data-label="Ціна">
             <div class="price-cell">
               <strong class="price">${money(item.price)}</strong>
@@ -524,7 +524,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
               <span class="discount">-${discount(item)}%</span>
             </div>
             <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; font-size: 12px;">
-              <span class="store-badge ${getStoreClass(item.store)}">${getStoreLogoMarkup(item.store)}${escapeHTML(item.store)}</span>
+              <span class="store-badge ${getStoreClass(item.store)}">${getStoreLogoMarkup(item.store)}</span>
               <span style="color: var(--muted); font-size: 11px;">${item.city}</span> · <b>${money(item.price)}</b>
             </div>
             <div class="sub">${unitPriceLabel(item)} · ${termLabel(item)}</div>
@@ -555,7 +555,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
             <strong>${escapeHTML(item.name)} ${escapeHTML(item.size)}</strong>
           </div>
           <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 4px; margin-bottom: 2px; font-size: 11px;">
-            <span class="store-badge ${getStoreClass(item.store)}" style="font-size: 9px; padding: 2px 6px;">${getStoreLogoMarkup(item.store)}${escapeHTML(item.store)}</span>
+            <span class="store-badge ${getStoreClass(item.store)}" style="font-size: 9px; padding: 2px 6px;">${getStoreLogoMarkup(item.store)}</span>
             <span style="color: var(--muted); font-size: 11px;">${item.city}</span> · <b>${money(item.price)}</b>
           </div>
           <span class="sub">${unitPriceLabel(item)} · знижка ${discount(item)}%</span>
@@ -715,9 +715,9 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       else if (s.includes("spar") || s.includes("спар")) key = "Spar";
       
       if (key && STORE_LOGOS[key]) {
-        return `<img src="${STORE_LOGOS[key]}" alt="" class="store-badge-logo">`;
+        return `<img src="${STORE_LOGOS[key]}" alt="${escapeAttribute(store)}" class="store-badge-logo">`;
       }
-      return "";
+      return escapeHTML(store);
     }
 
     function renderStoreCarousel() {
@@ -1201,7 +1201,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     function openProductDetails(item) {
       document.getElementById("detailProductName").textContent = item.name;
       document.getElementById("detailProductStore").innerHTML = item.store 
-        ? `<span class="store-badge ${getStoreClass(item.store)}">${getStoreLogoMarkup(item.store)}${escapeHTML(item.store)}</span>`
+        ? `<span class="store-badge ${getStoreClass(item.store)}">${getStoreLogoMarkup(item.store)}</span>`
         : "—";
       document.getElementById("detailProductCat").textContent = item.category || "—";
       document.getElementById("detailProductSubcat").textContent = item.subcategory || "—";
@@ -1359,7 +1359,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
           <tr>
             <td class="row-label">Мережа</td>
             ${items.map(item => `
-              <td><span class="store-badge ${getStoreClass(item.store)}">${getStoreLogoMarkup(item.store)}${escapeHTML(item.store)}</span></td>
+              <td><span class="store-badge ${getStoreClass(item.store)}">${getStoreLogoMarkup(item.store)}</span></td>
             `).join("")}
           </tr>
           <tr>
