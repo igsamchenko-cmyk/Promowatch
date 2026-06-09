@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PromoWatch UA</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
-  <link rel="stylesheet" href="assets/style.css?v=1.0.13">
+  <link rel="stylesheet" href="assets/style.css?v=1.0.14">
 </head>
 <body>
   <div class="app">
@@ -54,21 +54,33 @@
           <div class="store-carousel-scroll" id="storeCarousel" style="width: 100%;"></div>
         </div>
         
-        <!-- Toggle Filters Button -->
-        <button id="floatingFilterBtn" class="floating-filter-btn visible" aria-label="Параметри пошуку та фільтри" title="Параметри пошуку та фільтри" style="flex: 0 0 auto;">
-          <span class="icon-wrapper">
-            <!-- Filter Icon -->
-            <svg class="icon-filter" viewBox="0 0 24 24">
-              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-            </svg>
-            <!-- Close Icon -->
-            <svg class="icon-close" viewBox="0 0 24 24">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </span>
-          <span class="floating-btn-text">Фільтри</span>
-        </button>
+        <div style="display: flex; gap: 8px; flex: 0 0 auto;">
+          <!-- Reload Deals Button -->
+          <button id="reloadDealsBtn" class="floating-filter-btn reload-btn visible" aria-label="Оновити дані" title="Оновити дані">
+            <span class="icon-wrapper" style="display: flex; align-items: center; justify-content: center;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="position: relative; width: 18px; height: 18px;">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+              </svg>
+            </span>
+            <span class="floating-btn-text">Оновити</span>
+          </button>
+
+          <!-- Toggle Filters Button -->
+          <button id="floatingFilterBtn" class="floating-filter-btn visible" aria-label="Параметри пошуку та фільтри" title="Параметри пошуку та фільтри">
+            <span class="icon-wrapper">
+              <!-- Filter Icon -->
+              <svg class="icon-filter" viewBox="0 0 24 24">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+              </svg>
+              <!-- Close Icon -->
+              <svg class="icon-close" viewBox="0 0 24 24">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </span>
+            <span class="floating-btn-text">Фільтри</span>
+          </button>
+        </div>
       </section>
 
       <section class="filters panel">
@@ -376,7 +388,7 @@
 
 
 
-  <script src="assets/app.js?v=1.0.13" defer></script>
+  <script src="assets/app.js?v=1.0.14" defer></script>
 
 </body>
 </html>

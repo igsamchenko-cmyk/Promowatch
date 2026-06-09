@@ -1686,6 +1686,25 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       });
     }
 
+    // Reload Deals Button event listener
+    const reloadDealsBtn = document.querySelector("#reloadDealsBtn");
+    if (reloadDealsBtn) {
+      reloadDealsBtn.addEventListener("click", () => {
+        const svg = reloadDealsBtn.querySelector("svg");
+        if (svg) svg.style.animation = "spin 1s linear infinite";
+        
+        document.querySelector("#syncStatus").innerHTML = '<span class="status-dot"></span> Оновлення даних...';
+        loadImportedData().finally(() => {
+          if (svg) svg.style.animation = "";
+          initializeFilters();
+          renderStoreCarousel();
+          renderSources();
+          renderComparison();
+          render();
+        });
+      });
+    }
+
     loadImportedData().finally(() => {
       initializeFilters();
       renderStoreCarousel();

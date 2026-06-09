@@ -2334,3 +2334,17 @@
   border-color: rgba(56, 189, 248, 0.3);
 }
 
+/* Reload button theme & animations */
+.reload-btn {
+  background: linear-gradient(135deg, var(--blue), #1e3a8a);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+.reload-btn:hover {
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.35);
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
