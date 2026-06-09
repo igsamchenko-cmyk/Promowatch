@@ -938,59 +938,143 @@
         clip: rect(0 0 0 0);
       }
       tbody tr {
-        display: block;
-        position: relative;
-        padding: 16px;
+        display: grid;
+        grid-template-areas:
+          "select product product"
+          "select store price"
+          "select store promo";
+        grid-template-columns: 32px 1fr auto;
+        gap: 6px 12px;
+        padding: 12px;
         border-top: 1px solid var(--line);
         background: var(--card-bg);
+        align-items: center;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
       }
       tbody td {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 14px;
-        min-width: 0;
-        padding: 6px 0;
         border: 0;
         font-size: 14px;
-        text-align: right;
         overflow-wrap: anywhere;
+        padding: 0;
+        min-width: 0;
       }
       tbody td::before {
-        content: attr(data-label);
-        flex: 0 0 auto;
-        color: var(--muted);
-        font-size: 11px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
+        display: none !important;
       }
-      td.cell-product {
-        padding-right: 34px;
+      
+      tbody td.select-row {
+        grid-area: select;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        align-self: center;
       }
-      td.cell-product::before {
-        display: none;
-      }
-      td.cell-product .product {
+      
+      tbody td.cell-product {
+        grid-area: product;
+        display: block;
         text-align: left;
       }
+      tbody td.cell-product .product {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        text-align: left;
+      }
+      tbody td.cell-product .product-title {
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.35;
+        color: var(--ink);
+      }
+      tbody td.cell-product .product-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-top: 4px;
+      }
+      tbody td.cell-product .meta-pill {
+        font-size: 9px;
+        padding: 1px 4px;
+      }
+      
+      tbody td.store-name {
+        grid-area: store;
+        display: flex;
+        align-items: center;
+        text-align: left;
+        font-size: 12px;
+        font-weight: 800;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        align-self: start;
+        margin-top: 2px;
+      }
+      
+      tbody tr.deal-row td[data-label="Ціна"] {
+        grid-area: price;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        align-self: start;
+      }
+      tbody tr.deal-row td[data-label="Ціна"] .price-cell {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      tbody tr.deal-row td[data-label="Ціна"] .price {
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--green);
+      }
+      tbody tr.deal-row td[data-label="Ціна"] .old-price {
+        font-size: 11px;
+        color: var(--muted);
+        text-decoration: line-through;
+      }
+      tbody tr.deal-row td[data-label="Ціна"] .unit-price {
+        font-size: 9px;
+        color: var(--muted);
+        width: 100%;
+        text-align: right;
+        margin-top: 2px;
+      }
+      
+      tbody tr.deal-row td[data-label="Акція"] {
+        grid-area: promo;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        align-self: start;
+      }
+      tbody tr.deal-row td[data-label="Акція"] .promo-cell {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 2px;
+      }
+      tbody tr.deal-row td[data-label="Акція"] .discount {
+        font-size: 11px;
+        padding: 1px 4px;
+        border-radius: 4px;
+        font-weight: 800;
+      }
+      tbody tr.deal-row td[data-label="Акція"] .promo-term {
+        font-size: 9px;
+        color: var(--muted);
+        text-align: right;
+      }
+
       .product-title,
       .sub,
       .product-meta {
         overflow-wrap: anywhere;
-      }
-      td.select-row {
-        position: absolute;
-        top: 14px;
-        right: 12px;
-        width: auto;
-        padding: 0;
-      }
-      td.select-row::before {
-        display: none;
-      }
-      .price {
-        font-size: 16px;
       }
       .table-footer {
         flex-direction: column;
