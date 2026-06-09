@@ -1651,7 +1651,8 @@
   overflow: hidden;
   user-select: none;
 }
-.store-card-logo img {
+.store-card-logo img,
+.store-card-logo svg {
   max-width: 85%;
   max-height: 75%;
   object-fit: contain;
@@ -1672,7 +1673,8 @@
   box-shadow: 0 0 10px rgba(45, 212, 191, 0.2);
   transform: translateY(-2px);
 }
-.store-card-logo:hover img {
+.store-card-logo:hover img,
+.store-card-logo:hover svg {
   filter: grayscale(0) opacity(1);
 }
 .store-card-logo:hover span {
@@ -1683,7 +1685,8 @@
   background: var(--green-soft) !important;
   box-shadow: 0 0 14px rgba(45, 212, 191, 0.3) !important;
 }
-.store-card-logo.active img {
+.store-card-logo.active img,
+.store-card-logo.active svg {
   filter: grayscale(0) opacity(1) !important;
 }
 .store-card-logo.active span {

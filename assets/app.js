@@ -695,13 +695,13 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     }
 
     const STORE_LOGOS = {
-      "АТБ": "https://upload.wikimedia.org/wikipedia/commons/4/44/ATB_Market_logo.svg",
-      "Сільпо": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Silpo_logo.svg",
-      "Ашан": "https://upload.wikimedia.org/wikipedia/commons/5/52/Auchan_Logo.svg",
-      "Metro": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Metro-Logo.svg",
-      "Метро": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Metro-Logo.svg",
-      "Spar": "https://upload.wikimedia.org/wikipedia/commons/b/b8/SPAR_logo.svg",
-      "Спар": "https://upload.wikimedia.org/wikipedia/commons/b/b8/SPAR_logo.svg"
+      "АТБ": `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="store-svg-logo"><circle cx="50" cy="50" r="45" fill="#014b95" stroke="#e1001b" stroke-width="7"/><text x="50" y="58" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif" font-weight="900" font-size="36" fill="#fedd00" text-anchor="middle">АТБ</text></svg>`,
+      "Сільпо": `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="store-svg-logo"><circle cx="50" cy="50" r="45" fill="none" stroke="#f27226" stroke-width="12"/><path d="M 65 30 C 50 15, 30 35, 50 50 C 70 65, 50 85, 35 70" fill="none" stroke="#f27226" stroke-width="14" stroke-linecap="round"/></svg>`,
+      "Ашан": `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="store-svg-logo"><path d="M 10 80 Q 35 40, 60 40 Q 80 40, 95 20 Q 85 45, 60 55 Q 35 65, 10 80 Z" fill="#e1001b"/></svg>`,
+      "Metro": `<svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg" class="store-svg-logo" style="aspect-ratio: 1.67;"><rect width="100" height="60" fill="#002d73"/><text x="50" y="42" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif" font-weight="900" font-size="28" fill="#fedd00" text-anchor="middle" letter-spacing="1">METRO</text></svg>`,
+      "Метро": `<svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg" class="store-svg-logo" style="aspect-ratio: 1.67;"><rect width="100" height="60" fill="#002d73"/><text x="50" y="42" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif" font-weight="900" font-size="28" fill="#fedd00" text-anchor="middle" letter-spacing="1">METRO</text></svg>`,
+      "Spar": `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="store-svg-logo"><circle cx="50" cy="50" r="45" fill="#fff" stroke="#e1001b" stroke-width="8"/><polygon points="50,15 25,60 40,60 30,80 70,80 60,60 75,60" fill="#00a651"/></svg>`,
+      "Спар": `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="store-svg-logo"><circle cx="50" cy="50" r="45" fill="#fff" stroke="#e1001b" stroke-width="8"/><polygon points="50,15 25,60 40,60 30,80 70,80 60,60 75,60" fill="#00a651"/></svg>`
     };
 
     function getStoreLogoMarkup(store) {
@@ -715,7 +715,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       else if (s.includes("spar") || s.includes("спар")) key = "Spar";
       
       if (key && STORE_LOGOS[key]) {
-        return `<img src="${STORE_LOGOS[key]}" alt="" class="store-badge-logo">`;
+        return STORE_LOGOS[key].replace("store-svg-logo", "store-badge-logo");
       }
       return "";
     }
@@ -727,17 +727,14 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       
       const allStores = [all, ...uniqueStores];
       carouselEl.innerHTML = allStores.map(store => {
-        const logoUrl = STORE_LOGOS[store];
+        const logoSvg = STORE_LOGOS[store];
         const isActive = (controls.store.value || all) === store;
         
         let logoMarkup = "";
         if (store === all) {
           logoMarkup = `<span>Усі мережі</span>`;
-        } else if (logoUrl) {
-          logoMarkup = `
-            <img src="${logoUrl}" alt="${store}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-            <span style="display: none;">${store}</span>
-          `;
+        } else if (logoSvg) {
+          logoMarkup = logoSvg;
         } else {
           logoMarkup = `<span>${store}</span>`;
         }
