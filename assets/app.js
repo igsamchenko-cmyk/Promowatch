@@ -437,7 +437,8 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       });
 
       if (controls.sort.value === "discount") filtered.sort((a, b) => discount(b) - discount(a));
-      if (controls.sort.value === "price") filtered.sort((a, b) => a.price - b.price);
+      if (controls.sort.value === "price" || controls.sort.value === "price-asc") filtered.sort((a, b) => a.price - b.price);
+      if (controls.sort.value === "price-desc") filtered.sort((a, b) => b.price - a.price);
       if (controls.sort.value === "ending") filtered.sort((a, b) => endingSortValue(a) - endingSortValue(b));
       return filtered;
     }
@@ -958,7 +959,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       controls.store.value = all;
       controls.category.value = all;
       controls.subcategory.value = all;
-      controls.sort.value = "price";
+      controls.sort.value = "price-asc";
       controls.minDiscount.value = "0";
       controls.onlySelected.value = "false";
       if (controls.priceMin) controls.priceMin.value = "";
