@@ -46,6 +46,8 @@
       if (s.includes("сільпо") || s.includes("silpo")) return "silpo";
       if (s.includes("ашан") || s.includes("auchan")) return "auchan";
       if (s.includes("metro") || s.includes("метро")) return "metro";
+      if (s.includes("близенько")) return "blyzenko";
+      if (s.includes("рукавичка")) return "rukavychka";
       return "other";
     }
 
@@ -701,7 +703,9 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       "Metro": "assets/logos/metro.svg",
       "Метро": "assets/logos/metro.svg",
       "Spar": "assets/logos/spar.svg",
-      "Спар": "assets/logos/spar.svg"
+      "Спар": "assets/logos/spar.svg",
+      "Близенько": "assets/logos/blyzenko.png",
+      "Рукавичка": "assets/logos/rukavychka.png"
     };
 
     function getStoreLogoMarkup(store) {
@@ -713,6 +717,8 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       else if (s.includes("ашан") || s.includes("auchan")) key = "Ашан";
       else if (s.includes("metro") || s.includes("метро")) key = "Metro";
       else if (s.includes("spar") || s.includes("спар")) key = "Spar";
+      else if (s.includes("близенько")) key = "Близенько";
+      else if (s.includes("рукавичка")) key = "Рукавичка";
       
       if (key && STORE_LOGOS[key]) {
         return `<img src="${STORE_LOGOS[key]}" alt="${escapeAttribute(store)}" class="store-badge-logo">`;

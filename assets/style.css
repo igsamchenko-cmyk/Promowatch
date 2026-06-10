@@ -2320,6 +2320,7 @@
 }
 .store-badge.atb .store-badge-logo {
   height: 22px;
+  border-radius: 50%;
 }
 .store-badge.silpo {
   background: rgba(242, 114, 38, 0.08);
@@ -2348,6 +2349,25 @@
 .store-badge.metro .store-badge-logo {
   height: 14px;
 }
+.store-badge.blyzenko {
+  background: rgba(120, 190, 32, 0.08);
+  color: #5f9f18;
+  border-color: rgba(120, 190, 32, 0.25);
+  padding: 1px 4px;
+}
+.store-badge.blyzenko .store-badge-logo {
+  height: 22px;
+  border-radius: 50%;
+}
+.store-badge.rukavychka {
+  background: rgba(128, 26, 44, 0.06);
+  color: #801a2c;
+  border-color: rgba(128, 26, 44, 0.2);
+  padding: 3px 6px;
+}
+.store-badge.rukavychka .store-badge-logo {
+  height: 14px;
+}
 .store-badge.other {
   background: var(--meta-pill-bg);
   color: var(--meta-pill-color);
@@ -2374,6 +2394,16 @@
   background: rgba(56, 189, 248, 0.15);
   color: #38bdf8;
   border-color: rgba(56, 189, 248, 0.3);
+}
+[data-theme="dark"] .store-badge.blyzenko {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+[data-theme="dark"] .store-badge.rukavychka {
+  background: rgba(244, 63, 94, 0.12);
+  color: #fb7185;
+  border-color: rgba(244, 63, 94, 0.25);
 }
 
 /* Reload button theme & animations */
