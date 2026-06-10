@@ -1764,17 +1764,18 @@
   align-items: flex-start;
 }
 .detail-image-card {
-  width: 180px;
-  height: 180px;
+  width: 220px;
+  height: 220px;
   background: #ffffff;
   border-radius: 14px;
-  padding: 12px;
+  padding: 6px;
   box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
   border: 1px solid var(--glass-border);
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 [data-theme="dark"] .detail-image-card {
   border-color: rgba(255, 255, 255, 0.05);
@@ -1804,6 +1805,11 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+  transform: scale(1.28);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.detail-img-container .thumb.has-image img:hover {
+  transform: scale(1.38);
 }
 
 /* Right column sheet styling */
@@ -1968,7 +1974,7 @@
   }
   .detail-image-card {
     width: 100%;
-    max-width: 220px;
+    max-width: 260px;
     height: auto;
     aspect-ratio: 1 / 1;
   }
