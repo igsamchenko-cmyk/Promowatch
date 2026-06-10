@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PromoWatch UA</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
-  <link rel="stylesheet" href="assets/style.css?v=1.0.21">
+  <link rel="stylesheet" href="assets/style.css?v=1.0.22">
 </head>
 <body>
   <div class="app">
@@ -337,18 +337,42 @@
       </div>
       <div class="modal-body detail-modal-body">
         <div class="detail-product-info">
-          <div id="detailProductImgContainer" class="detail-img-container"></div>
-          <div class="detail-product-specs">
+          <!-- Left Column: Image Card -->
+          <div class="detail-image-card">
+            <div id="detailProductImgContainer" class="detail-img-container"></div>
+          </div>
+          
+          <!-- Right Column: Product Sheet -->
+          <div class="detail-product-sheet">
             <h4 id="detailProductName">Назва товару</h4>
-            <div class="specs-grid">
-              <div><span>Мережа:</span> <strong id="detailProductStore">-</strong></div>
-              <div><span>Категорія:</span> <strong id="detailProductCat">-</strong></div>
-              <div><span>Підкатегорія:</span> <strong id="detailProductSubcat">-</strong></div>
-              <div><span>Розмір/Вага:</span> <strong id="detailProductSize">-</strong></div>
-              <div><span>Акційна ціна:</span> <strong id="detailProductPrice" style="color: var(--green); font-size: 16px;">-</strong></div>
-              <div><span>Стара ціна:</span> <strong id="detailProductOld" style="text-decoration: line-through; color: var(--muted);">-</strong></div>
-              <div><span>Питома ціна:</span> <strong id="detailProductUnitPrice">-</strong></div>
-              <div><span>Термін акції:</span> <strong id="detailProductTerm">-</strong></div>
+            
+            <div class="detail-meta-row">
+              <span id="detailProductStore">-</span>
+              <span class="detail-category-pill">
+                <span id="detailProductCat">-</span> / <span id="detailProductSubcat">-</span>
+              </span>
+            </div>
+            
+            <!-- Hero Price Section -->
+            <div class="detail-price-box">
+              <div class="detail-price-row">
+                <span class="detail-current-price" id="detailProductPrice">-</span>
+                <span class="detail-old-price" id="detailProductOld">-</span>
+                <span class="detail-discount-badge" id="detailProductDiscount">-%</span>
+              </div>
+              <div class="detail-unit-price" id="detailProductUnitPrice">-</div>
+            </div>
+            
+            <!-- Product Specs Grid -->
+            <div class="detail-specs-card">
+              <div class="spec-item">
+                <div class="spec-label">Вага/Розмір</div>
+                <div class="spec-value" id="detailProductSize">-</div>
+              </div>
+              <div class="spec-item">
+                <div class="spec-label">Термін дії акції</div>
+                <div class="spec-value" id="detailProductTerm">-</div>
+              </div>
             </div>
           </div>
         </div>
@@ -388,7 +412,7 @@
 
 
 
-  <script src="assets/app.js?v=1.0.21" defer></script>
+  <script src="assets/app.js?v=1.0.22" defer></script>
 
 </body>
 </html>

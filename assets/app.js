@@ -1213,7 +1213,20 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       document.getElementById("detailProductSubcat").textContent = item.subcategory || "—";
       document.getElementById("detailProductSize").textContent = item.size || "—";
       document.getElementById("detailProductPrice").textContent = money(item.price);
-      document.getElementById("detailProductOld").textContent = item.old ? money(item.old) : "—";
+      
+      const oldPriceEl = document.getElementById("detailProductOld");
+      const discountEl = document.getElementById("detailProductDiscount");
+      const pct = (item.old && item.old > item.price) ? discount(item) : 0;
+      if (pct > 0) {
+        oldPriceEl.textContent = money(item.old);
+        oldPriceEl.style.display = "inline-block";
+        discountEl.textContent = `-${pct}%`;
+        discountEl.style.display = "inline-flex";
+      } else {
+        oldPriceEl.style.display = "none";
+        discountEl.style.display = "none";
+      }
+      
       document.getElementById("detailProductUnitPrice").innerHTML = unitPriceLabel(item);
       document.getElementById("detailProductTerm").textContent = termLabel(item);
       
