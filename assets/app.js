@@ -406,15 +406,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     }
 
     function isValidDeal(item) {
-      return Boolean(item?.externalId)
-        && Boolean(item?.name)
-        && typeof item.price === "number"
-        && typeof item.old === "number"
-        && Number.isFinite(item.price)
-        && Number.isFinite(item.old)
-        && item.price > 0
-        && item.old > 0
-        && item.price < item.old;
+      return window.PromoWatchDealValidation.isValidDeal(item);
     }
 
     function filterValidDeals(items) {

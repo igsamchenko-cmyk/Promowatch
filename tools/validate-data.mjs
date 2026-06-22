@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import dealValidation from "../assets/deal-validation.js";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dealsPath = join(root, "data", "deals.json");
@@ -15,21 +16,8 @@ function fail(message, details = []) {
   process.exit(1);
 }
 
-function isPositiveNumber(value) {
-  return typeof value === "number" && Number.isFinite(value) && value > 0;
-}
-
 function validateDeal(deal, index) {
-  const errors = [];
-
-  if (!deal?.externalId) errors.push("missing externalId");
-  if (!deal?.name) errors.push("missing name");
-  if (!deal?.source) errors.push("missing source");
-  if (!isPositiveNumber(deal?.price)) errors.push("invalid price");
-  if (!isPositiveNumber(deal?.old)) errors.push("invalid old");
-  if (isPositiveNumber(deal?.price) && isPositiveNumber(deal?.old) && deal.price >= deal.old) {
-    errors.push("price must be lower than old");
-  }
+  const errors = dealValidation.getDealValidationErrors(deal);
 
   return errors.length
     ? {
