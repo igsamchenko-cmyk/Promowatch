@@ -287,9 +287,19 @@
       });
     }
 
+    let missingDealFormattingReported = false;
+
+    function getDealFormattingHelper() {
+      const helper = window.PromoWatchDealFormatting;
+      if (!helper?.money && !missingDealFormattingReported) {
+        missingDealFormattingReported = true;
+        console.error("PromoWatch deal formatting helper is not loaded.");
+      }
+      return helper;
+    }
+
     function discount(item) {
-      if (Number.isFinite(item._discount)) return item._discount;
-      return Math.round((1 - item.price / item.old) * 100);
+      return getDealFormattingHelper()?.discount?.(item) ?? 0;
     }
 
     function unitPrice(item) {
@@ -341,8 +351,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     }
 
     function money(value) {
-      if (value === null || typeof value === "undefined") return "0 грн";
-      return `${value.toLocaleString("uk-UA", { minimumFractionDigits: value % 1 ? 2 : 0, maximumFractionDigits: 2 })} грн`;
+      return getDealFormattingHelper()?.money?.(value) ?? "0 грн";
     }
 
     function escapeHTML(value = '') { return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;'); }
@@ -374,30 +383,15 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     }
 
     function todayIso() {
-      const parts = new Intl.DateTimeFormat("uk-UA", {
-        timeZone: "Europe/Kyiv",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit"
-      }).formatToParts(new Date()).reduce((acc, part) => {
-        acc[part.type] = part.value;
-        return acc;
-      }, {});
-      return `${parts.year}-${parts.month}-${parts.day}`;
+      return getDealFormattingHelper()?.todayIso?.() ?? "";
     }
 
     function parseIsoDate(value) {
-      if (!value) return null;
-      const [year, month, day] = value.split("-").map(Number);
-      if (!year || !month || !day) return null;
-      return new Date(Date.UTC(year, month - 1, day));
+      return getDealFormattingHelper()?.parseIsoDate?.(value) ?? null;
     }
 
     function daysLeft(item) {
-      const end = parseIsoDate(item.end);
-      if (!end) return null;
-      const today = parseIsoDate(todayIso());
-      return Math.ceil((end - today) / 86400000);
+      return getDealFormattingHelper()?.daysLeft?.(item) ?? null;
     }
 
     function isActivePromo(item) {
@@ -430,24 +424,15 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     }
 
     function dateLabel(value) {
-      const date = parseIsoDate(value);
-      if (!date) return "";
-      return date.toLocaleDateString("uk-UA", { timeZone: "UTC", day: "2-digit", month: "2-digit", year: "numeric" });
+      return getDealFormattingHelper()?.dateLabel?.(value) ?? "";
     }
 
     function termLabel(item, compact = false) {
-      const days = "_daysLeft" in item ? item._daysLeft : daysLeft(item);
-      if (days === null) return "термін не вказано";
-      if (days < 0) return "завершено";
-      if (days === 0) return compact ? "сьогодні" : `до ${dateLabel(item.end)} · сьогодні`;
-      if (days === 1) return compact ? "завтра" : `до ${dateLabel(item.end)} · завтра`;
-      return compact ? `${days} дн.` : `до ${dateLabel(item.end)} · ${days} дн.`;
+      return getDealFormattingHelper()?.termLabel?.(item, compact) ?? "";
     }
 
     function endingSortValue(item) {
-      if (Number.isFinite(item._endingSort)) return item._endingSort;
-      const days = daysLeft(item);
-      return days === null ? Number.POSITIVE_INFINITY : days;
+      return getDealFormattingHelper()?.endingSortValue?.(item) ?? Number.POSITIVE_INFINITY;
     }
 
     function formatDateTime(value) {

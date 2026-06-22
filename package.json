@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "check:syntax": "node --check tools/import-promos.mjs && node --check assets/app.js && node --check assets/deal-validation.js && node --check tools/validate-data.mjs",
+    "check:syntax": "node --check tools/import-promos.mjs && node --check assets/app.js && node --check assets/deal-validation.js && node --check assets/deal-formatting.js && node --check tools/validate-data.mjs",
     "check:data": "node tools/validate-data.mjs",
     "test": "node --test --experimental-test-isolation=none tools/__tests__/*.test.mjs",
     "check": "npm run check:syntax && npm run check:data && npm test"
