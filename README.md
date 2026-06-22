@@ -19,3 +19,7 @@ Live site after GitHub Pages is enabled:
 The workflow in `.github/workflows/update-promos.yml` can refresh `data/deals.json` every day and can also be run manually from the repository's `Actions` tab.
 
 The dashboard is static, so visitors only need the public GitHub Pages link. They do not need to download files.
+
+## Architecture
+
+See `ARCHITECTURE.md` for the static-first architecture, data validation rules, and production safety guidelines.
