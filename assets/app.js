@@ -405,8 +405,19 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       return days === null || days >= 0;
     }
 
+    let missingDealValidationReported = false;
+
+    function getDealValidationHelper() {
+      const helper = window.PromoWatchDealValidation;
+      if (!helper?.isValidDeal && !missingDealValidationReported) {
+        missingDealValidationReported = true;
+        console.error("PromoWatch deal validation helper is not loaded.");
+      }
+      return helper;
+    }
+
     function isValidDeal(item) {
-      return window.PromoWatchDealValidation.isValidDeal(item);
+      return getDealValidationHelper()?.isValidDeal?.(item) === true;
     }
 
     function filterValidDeals(items) {
