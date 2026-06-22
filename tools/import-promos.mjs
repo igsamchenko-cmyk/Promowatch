@@ -1,10 +1,13 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { classifyDeal, colors as refinedColors } from "./classifier.mjs";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dataDir = join(root, "data");
+const dealsPath = join(dataDir, "deals.json");
+const MIN_DEALS_TOTAL = 2000;
+const MIN_PREVIOUS_TOTAL_RATIO = 0.6;
 
 const sources = [
   { store: "АТБ", slug: "atbmarket.com", url: "https://de-deshevshe.com.ua/city/lviv/shop/atbmarket.com/" },
@@ -75,6 +78,35 @@ function todayIso() {
     return acc;
   }, {});
   return `${parts.year}-${parts.month}-${parts.day}`;
+}
+
+async function readPreviousDealsTotal() {
+  try {
+    const previous = JSON.parse(await readFile(dealsPath, "utf8"));
+    if (Number.isFinite(previous?.meta?.total)) return previous.meta.total;
+    if (Array.isArray(previous?.deals)) return previous.deals.length;
+  } catch (error) {
+    if (error?.code !== "ENOENT") {
+      console.warn(`Could not read previous deals.json for import guard: ${error.message}`);
+    }
+  }
+  return null;
+}
+
+function assertSafeImportTotal(previousTotal, newTotal) {
+  if (newTotal < MIN_DEALS_TOTAL) {
+    console.error(
+      `Aborting import: new deals total is below absolute minimum. previous total: ${previousTotal ?? "none"}, new total: ${newTotal}, minimum: ${MIN_DEALS_TOTAL}.`
+    );
+    process.exit(1);
+  }
+
+  if (previousTotal !== null && newTotal < previousTotal * MIN_PREVIOUS_TOTAL_RATIO) {
+    console.error(
+      `Aborting import: new deals total dropped below ${Math.round(MIN_PREVIOUS_TOTAL_RATIO * 100)}% of previous total. previous total: ${previousTotal}, new total: ${newTotal}.`
+    );
+    process.exit(1);
+  }
 }
 
 function parseSaleEnd(card) {
@@ -270,6 +302,9 @@ const deals = results
   .sort((a, b) => a.store.localeCompare(b.store, "uk") || b.discountPct - a.discountPct || a.name.localeCompare(b.name, "uk"))
   .map((deal, index) => ({ id: index + 1, ...deal }));
 
+const previousDealsTotal = await readPreviousDealsTotal();
+assertSafeImportTotal(previousDealsTotal, deals.length);
+
 const expiredSkipped = results.reduce((sum, result) => sum + (result.expiredCount || 0), 0);
 const withoutEndDate = deals.filter((deal) => !deal.end).length;
 const knownEndDate = deals.length - withoutEndDate;
@@ -283,7 +318,7 @@ const sourceHealth = results.map((result) => ({
   url: result.source.url
 }));
 
-await writeFile(join(dataDir, "deals.json"), JSON.stringify({
+await writeFile(dealsPath, JSON.stringify({
   meta: {
     city: "Львів",
     generatedAt: new Date().toISOString(),

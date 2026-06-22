@@ -7,7 +7,7 @@
     try {
       const stored = JSON.parse(localStorage.getItem("promowatch_selected_ids"));
       if (Array.isArray(stored)) {
-        stored.forEach(id => selected.add(id));
+        stored.forEach(id => selected.add(String(id)));
       }
     } catch (e) {
       console.error("Failed to load selected from localStorage", e);
@@ -19,6 +19,37 @@
       } catch (e) {
         console.error("Failed to save selected to localStorage", e);
       }
+    }
+
+    function getDealKey(deal) {
+      return String(deal?.externalId || deal?.id || "");
+    }
+
+    function isSelectedDeal(deal) {
+      const key = getDealKey(deal);
+      return key && selected.has(key);
+    }
+
+    function migrateSelectedToStableKeys() {
+      if (!selected.size || !deals.length) return;
+      const currentKeys = new Set(deals.map(getDealKey).filter(Boolean));
+      const byLegacyId = new Map(deals.map(deal => [String(deal.id), deal]));
+      const migrated = new Set();
+
+      selected.forEach(key => {
+        if (currentKeys.has(key)) {
+          migrated.add(key);
+          return;
+        }
+
+        const legacyDeal = byLegacyId.get(key);
+        const stableKey = legacyDeal ? getDealKey(legacyDeal) : "";
+        if (stableKey) migrated.add(stableKey);
+      });
+
+      selected.clear();
+      migrated.forEach(key => selected.add(key));
+      saveSelected();
     }
 
 
@@ -374,6 +405,27 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       return days === null || days >= 0;
     }
 
+    function isValidDeal(item) {
+      return Boolean(item?.externalId)
+        && Boolean(item?.name)
+        && typeof item.price === "number"
+        && typeof item.old === "number"
+        && Number.isFinite(item.price)
+        && Number.isFinite(item.old)
+        && item.price > 0
+        && item.old > 0
+        && item.price < item.old;
+    }
+
+    function filterValidDeals(items) {
+      const valid = items.filter(isValidDeal);
+      const rejected = items.length - valid.length;
+      if (rejected > 0) {
+        console.warn(`PromoWatch: rejected ${rejected} invalid deals from data/deals.json.`);
+      }
+      return valid;
+    }
+
     function dateLabel(value) {
       const date = parseIsoDate(value);
       if (!date) return "";
@@ -430,7 +482,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       const priceMax = parseFloat(controls.priceMax ? controls.priceMax.value : "") || Number.POSITIVE_INFINITY;
 
       const filtered = deals.filter(item => {
-        if (onlySelected && !selected.has(item.id)) return false;
+        if (onlySelected && !isSelectedDeal(item)) return false;
         const price = item.price;
         return (!queryTokens.length || queryTokens.every(token => item._searchText.includes(token)))
           && (store === all || item.store === store)
@@ -476,9 +528,9 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
         ? "Нічого не знайдено. Спробуйте змінити фільтри."
         : "Дані не завантажено. Перевірте файл data/deals.json.";
       document.querySelector("#dealsTable").innerHTML = visibleRows.map(item => `
-        <tr class="deal-row" data-id="${item.id}">
+        <tr class="deal-row" data-id="${escapeAttribute(getDealKey(item))}">
           <td class="select-row">
-            <input class="compare-check" type="checkbox" data-id="${item.id}" ${selected.has(item.id) ? "checked" : ""} aria-label="Додати до порівняння">
+            <input class="compare-check" type="checkbox" data-id="${escapeAttribute(getDealKey(item))}" ${isSelectedDeal(item) ? "checked" : ""} aria-label="Додати до порівняння">
           </td>
           <td class="cell-product">
             <div class="product">
@@ -537,7 +589,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     }
 
     function renderComparison() {
-      const items = deals.filter(item => selected.has(item.id)).sort((a, b) => unitSortValue(a) - unitSortValue(b));
+      const items = deals.filter(isSelectedDeal).sort((a, b) => unitSortValue(a) - unitSortValue(b));
       document.querySelector("#compareCount").textContent = items.length;
       
       const compareSelectedActions = document.getElementById("compareSelectedActions");
@@ -920,11 +972,13 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     async function loadImportedData() {
       showTableShimmer();
       try {
-        const response = await fetch(`data/deals.json?v=${dataVersion}`, { cache: "no-store" });
+        const response = await fetch(`data/deals.json?v=${dataVersion}`);
         if (!response.ok) throw new Error(`data/deals.json: ${response.status}`);
         const payload = await response.json();
         if (!Array.isArray(payload.deals) || !payload.deals.length) throw new Error("data/deals.json порожній");
-        deals = payload.deals.filter(isActivePromo);
+        deals = filterValidDeals(payload.deals).filter(isActivePromo);
+        if (!deals.length) throw new Error("data/deals.json has no valid promo deals");
+        migrateSelectedToStableKeys();
         if (Array.isArray(payload.sourceHealth)) {
           sourceHealth = payload.sourceHealth;
         }
@@ -949,7 +1003,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     document.querySelector("#dealsTable").addEventListener("change", event => {
       const checkbox = event.target.closest(".compare-check");
       if (!checkbox) return;
-      const id = Number(checkbox.dataset.id);
+      const id = checkbox.dataset.id;
       if (checkbox.checked) {
         selected.add(id);
         saveSelected();
@@ -1112,7 +1166,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
         showAlert("Немає вибраних товарів для збереження!");
         return;
       }
-      const itemsToSave = deals.filter(d => selected.has(d.id));
+      const itemsToSave = deals.filter(isSelectedDeal);
       const textToCopy = itemsToSave.map(item => `${escapeHTML(item.name)} (${escapeHTML(item.store)}) — ${item.price} грн`).join("\n");
       navigator.clipboard.writeText(textToCopy).then(() => {
         showAlert("Список відібраних товарів збережено в буфер обміну!");
@@ -1131,7 +1185,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
         return;
       }
       
-      const items = deals.filter(d => selected.has(d.id));
+      const items = deals.filter(isSelectedDeal);
       const grouped = {};
       let total = 0;
       
@@ -1185,10 +1239,10 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       }
       const tr = event.target.closest(".deal-row");
       if (!tr) return;
-      const id = Number(tr.dataset.id);
+      const id = tr.dataset.id;
       if (!id) return;
       
-      const item = deals.find(d => d.id === id);
+      const item = deals.find(d => getDealKey(d) === id);
       if (item) {
         openProductDetails(item);
       }
@@ -1347,7 +1401,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
     });
 
     function renderComparisonMatrix() {
-      const items = deals.filter(item => selected.has(item.id)).sort((a, b) => a.price - b.price);
+      const items = deals.filter(isSelectedDeal).sort((a, b) => a.price - b.price);
       if (items.length === 0) return;
       
       const lowestPrice = Math.min(...items.map(item => item.price));
@@ -1362,7 +1416,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
               <th>
                 <div class="matrix-product-header">
                   ${productThumb(item, "matrix-thumb")}
-                  <button class="remove-matrix-item" data-id="${item.id}">&times;</button>
+                  <button class="remove-matrix-item" data-id="${escapeAttribute(getDealKey(item))}">&times;</button>
                 </div>
               </th>
             `).join("")}
@@ -1437,7 +1491,7 @@ if (item.unitLabel === "кг" || item.unitLabel === "л") return value >= 0.01 &
       // Add remove action inside the matrix
       document.querySelectorAll(".remove-matrix-item").forEach(btn => {
         btn.addEventListener("click", () => {
-          const id = Number(btn.dataset.id);
+          const id = btn.dataset.id;
           selected.delete(id);
           renderComparison();
           render();
